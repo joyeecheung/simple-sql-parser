@@ -1,0 +1,104 @@
+first
+
+#create_stmt ->  CREATE TABLE id L_PAREN decl_list R_PAREN SEMICOLON
+create_stmt = {CREATE}
+# decl_list -> decl _decl_list
+decl_list = {id, PRIMARY}
+#_decl_list -> COMMA decl _decl_list
+#_decl_list -> epsilon
+_decl_list = {COMMA, epsilon}
+#decl -> id INT default_spec
+#decl -> PRIMARY KEY L_PAREN column_list R_PAREN
+decl = {id, PRIMARY}
+#default_spec -> DEFAULT EQ num
+#default_spec -> epsilon
+default_spec = {DEFAULT, epsilon}
+#column_list ->  id _column_list
+column_list = {id}
+#_column_list ->  COMMA id _column_list
+#_column_list ->  epsilon
+_column_list = {COMMA, epsilon}
+# INSERT INTO id L_PAREN column_list R_PAREN VALUES L_PAREN value_list R_PAREN SEMICOLON
+insert_stmt = {INSERT}
+#value_list ->  num _value_list
+value_list = {num}
+#_value_list ->  COMMA num _value_list
+#_value_list ->  epsilon
+_value_list = {COMMA, epsilon}
+#delete_stmt -> DELETE FROM id where_clause SEMICOLON
+delete_stmt = {DELETE}
+#where_clause -> WHERE conjunct_list
+#where_clause -> epsilon
+where_clause = {WHERE, epsilon}
+#conjunct_list -> bool _conjunct_list
+conjunct_list = {num, id}
+#_conjunct_list -> AND bool _conjunct_list
+#_conjunct_list -> epsilon
+_conjunct_list = {AND, epsilon}
+#bool -> operand rop operand
+bool = {num, id}
+#operand -> num
+#operand -> id
+operand = {num, id}
+#rop -> NEQ | EQ | LT | GT | LEQ | GEQ
+rop = {NEQ, EQ, LT, GT, LEQ, GEQ}
+#query_stmt -> SELECT select_list FROM id where_clause SEMICOLON
+query_stmt = {SELECT}
+#select_list -> MUL
+#select_list -> column_list
+#first column_list
+select_list = {MUL, id}
+
+==============================
+follow
+
+create_stmt = {$}
+#create_stmt ->  CREATE TABLE id L_PAREN decl_list R_PAREN SEMICOLON
+decl_list = {R_PAREN, $}
+#decl_list -> decl _decl_list
+_decl_list = {R_PAREN, $}
+#decl_list -> decl _decl_list
+#_decl_list -> COMMA decl _decl_list
+#first(_decl_list) + follow(decl_list) + follow(_decl_list)
+decl = {COMMA, R_PAREN, $}
+#decl ->  id INT default_spec
+# follow(decl)
+default_spec = {COMMA, R_PAREN, $}
+#decl -> RIMARY KEY L_PAREN column_list R_PAREN
+#insert_stmt -> INSERT INTO id L_PAREN column_list R_PAREN VALUES L_PAREN value_list R_PAREN SEMICOLON
+#select_list -> column_list
+# follow(select_list)
+column_list = {FROM, R_PAREN, $}
+#column_list ->  id _column_list
+_column_list = {FROM, R_PAREN, $}
+
+insert_stmt = {$}
+#insert_stmt -> INSERT INTO id L_PAREN column_list R_PAREN VALUES L_PAREN value_list R_PAREN SEMICOLON
+value_list = {R_PAREN, $}
+#value_list ->  num _value_list
+_value_list = {R_PAREN, $}
+
+delete_stmt = {$}
+#delete_stmt -> DELETE FROM id where_clause SEMICOLON
+#query_stmt -> SELECT select_list FROM id where_clause SEMICOLON
+where_clause = {SEMICOLON, $}
+#where_clause -> WHERE conjunct_list
+# follow(where_clause)
+conjunct_list = {SEMICOLON, $}
+#conjunct_list -> bool _conjunct_list
+_conjunct_list = {SEMICOLON, $}
+#conjunct_list -> bool _conjunct_list
+#_conjunct_list ->  AND bool _conjunct_list
+#first(_conjunc_list) + follow(conjnct_list) + follow(_conjunct_list)
+bool = {AND, SEMICOLON, $}
+#bool -> operand rop operand
+#follow(bool) + first(rop)
+operand = {AND, SEMICOLON, NEQ, EQ, LT, GT, LEQ, GEQ, $}
+#bool -> operand rop operand
+#first(operand)
+rop = {num, id}
+
+query_stmt = {$}
+#query_stmt -> SELECT select_list FROM id where_clause SEMICOLON
+select_list = {FROM, $}
+

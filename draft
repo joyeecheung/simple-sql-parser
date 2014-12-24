@@ -1,0 +1,165 @@
+enum Word {
+    CREATE,
+    TABLE,
+    INT,
+    DEFAULT,
+    PRIMARY,
+    KEY,
+    INSERT,
+    INTO,
+    VALUES,
+    DELETE,
+    FROM,
+    WHERE,
+    SELECT
+}
+
+keyword = {
+    "create",
+    "table",
+    "int",
+    "default",
+    "primary",
+    "key",
+    "insert",
+    "into",
+    "values",
+    "delete",
+    "from",
+    "where",
+    "select"
+}
+
+enum Arith {
+    PLUS,
+    MINUS,
+    MUL,
+    DIV
+}
+
+arith_op = {
+    "+",
+    "-",
+    "*",
+    "/"
+}
+
+enum Rel {
+    LT,
+    GT,
+    NEQ,
+    EQ,
+    GEQ,
+    LEQ
+}
+
+rel_op = {
+    "<",
+    ">",
+    "<>",
+    "==",
+    ">=",
+    "<="
+}
+
+enum Logic {
+    AND,
+    OR,
+    NOT
+}
+
+
+logic_op = {
+    "&&",
+    "||",
+    "!"
+}
+
+enum Sep {
+
+}
+L = 5
+
+other = {
+    "(",
+    ")",
+    ",",
+    ";"
+}
+
+map keywords to Word
+=====================
+
+Lexer:
+
+
+ssql_stmt -> create_stmt
+           | insert_stmt
+           | delete_stmt
+           | query_stmt
+
+===================CREATE=================
+create_stmt ->  CREATE TABLE id L_PAREN decl_list R_PAREN SEMICOLON
+
+#decl_list ->  decl | decl_list COMMA decl
+decl_list -> decl _decl_list
+_decl_list -> COMMA decl _decl_list | epsilon
+
+decl ->  id INT default_spec | PRIMARY KEY L_PAREN column_list R_PAREN
+
+default_spec ->  DEFAULT EQ num | epsilon
+
+#column_list -> id | column_list COMMA id
+column_list ->  id _column_list
+_column_list ->  COMMA id _column_list | epsilon
+
+
+==================INSERT===================
+insert_stmt -> INSERT INTO id L_PAREN column_list R_PAREN VALUES L_PAREN value_list R_PAREN SEMICOLON
+#value_list -> num | value_list COMMA num
+value_list ->  num _value_list
+_value_list ->  COMMA num _value_list | epsilon
+
+==================DELETE==================
+
+delete_stmt -> DELETE FROM id where_clause SEMICOLON
+where_clause -> WHERE conjunct_list | epsilon
+
+#conjunct_list -> bool | conjunct_list AND bool
+conjunct_list -> bool _conjunct_list
+_conjunct_list ->  AND bool _conjunct_list | epsilon
+
+bool -> operand rop operand
+operand -> num | id
+rop -> NEQ | EQ | LT | GT | LEQ | GEQ
+
+====================SELECT=================
+
+query_stmt -> SELECT select_list FROM id where_clause SEMICOLON
+select_list -> column_list | MUL
+
+====================SUMMARY===============
+
+terminals:
+id, num, CREATE, TABLE, INT, DEFAULT, PRIMARY, KEY, INSERT, INTO, VALUES, DELETE, FROM, WHERE, SELECT, LT, GT, NEQ, EQ, GEQ, LEQ, PLUS, MINUS, MUL, DIV, AND, OR, NOT, L_PAREN, R_PAREN, COMMA, SEMICOLON
+
+nonterminals:
+create_stmt,
+decl_list,
+_decl_list,
+decl,
+default_spec,
+column_list,
+_column_list,
+insert_stmt,
+value_list,
+_value_list,
+delete_stmt,
+where_clause,
+conjunct_list,
+_conjunct_list,
+bool,
+operand,
+rop,
+query_stmt,
+select_list

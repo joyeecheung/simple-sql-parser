@@ -1,0 +1,199 @@
+create_stmt
+------------
+{CREATE}, {$}
+------------
+CREATE:
+create_stmt ->  CREATE TABLE id L_PAREN decl_list R_PAREN SEMICOLON
+
+------------------------
+decl_list
+------------
+{id, PRIMARY}, {R_PAREN, $}
+------------
+id:
+decl_list -> decl _decl_list
+num:
+decl_list -> decl _decl_list
+
+------------------------
+_decl_list
+------------
+{COMMA, epsilon}, {R_PAREN, $}
+------------
+COMMA:
+_decl_list -> COMMA decl _decl_list
+R_PAREN:
+_decl_list -> epsilon
+$:
+_decl_list -> epsilon
+
+------------------------
+decl
+------------
+{id, PRIMARY}, {COMMA, R_PAREN, $}
+------------
+id:
+decl -> id INT default_spec
+PRIMARY:
+PRIMARY KEY L_PAREN column_list R_PAREN
+
+------------------------
+default_spec
+------------
+{DEFAULT, epsilon}, {COMMA, R_PAREN, $}
+------------
+DEFAULT:
+default_spec -> DEFAULT EQ num
+COMMA:
+default_spec -> epsilon
+R_PAREN:
+default_spec -> epsilon
+$:
+default_spec -> epsilon
+
+-----------------------
+column_list
+------------
+{id}, {FROM, R_PAREN, $}
+------------
+id:
+column_list ->  id _column_list
+
+-----------------------
+_column_list
+------------
+{id}, {FROM, R_PAREN, $}
+------------
+COMMA:
+_column_list ->  COMMA id _column_list
+R_PAREN:
+_column_list ->  epsilon
+$:
+_column_list ->  epsilon
+
+-----------------------
+insert_stmt
+------------
+{INSERT}, {$}
+------------
+INSERT:
+insert_stmt -> INSERT INTO id L_PAREN column_list R_PAREN VALUES L_PAREN value_list R_PAREN SEMICOLON
+
+-----------------------
+value_list
+------------
+{num}, {R_PAREN, $}
+------------
+num:
+value_list ->  num _value_list
+
+-----------------------
+_value_list
+------------
+{COMMA, epsilon}, {R_PAREN, $}
+------------
+COMMA:
+_value_list ->  COMMA num _value_list
+R_PAREN:
+_value_list ->  epsilon
+$:
+_value_list ->  epsilon
+
+-----------------------
+delete_stmt
+------------
+{DELETE}, {$}
+------------
+DELETE:
+delete_stmt -> DELETE FROM id where_clause SEMICOLON
+
+
+-----------------------
+where_clause
+------------
+{WHERE, epsilon}, {SEMICOLON, $}
+------------
+WHERE:
+where_clause -> WHERE conjunct_list
+SEMICOLON:
+where_clause -> epsilon
+$:
+where_clause -> epsilon
+
+-----------------------
+conjunct_list
+------------
+{num, id}, {SEMICOLON, $}
+------------
+num:
+conjunct_list -> bool _conjunct_list
+id:
+conjunct_list -> bool _conjunct_list
+
+-----------------------
+_conjunct_list
+------------
+{AND, epsilon}, {SEMICOLON, $}
+------------
+AND:
+_conjunct_list -> AND bool _conjunct_list
+SEMICOLON:
+_conjunct_list -> epsilon
+$:
+_conjunct_list -> epsilon
+
+-----------------------
+bool
+------------
+{num, id}, {AND, SEMICOLON, $}
+------------
+num:
+bool -> operand rop operand
+id:
+bool -> operand rop operand
+
+-----------------------
+operand
+------------
+{num, id}, {AND, SEMICOLON, NEQ, EQ, LT, GT, LEQ, GEQ, $}
+------------
+num:
+operand -> num
+id:
+operand -> id
+
+-----------------------
+rop
+------------
+{NEQ, EQ, LT, GT, LEQ, GEQ}, {num, id}
+------------
+NEQ:
+rop -> NEQ
+EQ:
+rop -> EQ
+LT:
+rop -> LT
+GT:
+rop -> GT
+LEQ:
+rop -> LEQ
+GEQ:
+rop -> GEQ
+
+-----------------------
+query_stmt
+------------
+{SELECT}, {$}
+------------
+SELECT:
+query_stmt -> SELECT select_list FROM id where_clause SEMICOLON
+
+-----------------------
+select_list
+------------
+{MUL, id}, {FROM, $}
+------------
+MUL:
+select_list -> MUL
+id:
+select_list -> column_list
