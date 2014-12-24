@@ -9,10 +9,14 @@ enum Type {
     NUM, ID, CREATE, INSERT, DELETE, SELECT
 };
 
-class ParseError : std::exception {
+bool isKeyword(Type type) {
+    return type != NUM && type != ID;
+}
+
+class LexError : std::exception {
 public:
-   ParseError(string _msg) : msg(_msg) {}
-   ~ParseError() throw () {} // Updated
+   LexError(string _msg) : msg(_msg) {}
+   ~LexError() throw () {} // Updated
    const char* what() const throw() { return msg.c_str(); }
 private:
     string msg;
@@ -20,20 +24,27 @@ private:
 
 class Token {
 public:
-    Token(Type _type, const void *raw, int size) {
-        if (_type == ID) {
-            data = (char *)malloc(size + 1);  // trailing '\0'
-        } else {
-            data = (char *)malloc(size);
+    Token(Type _type, const void *raw=NULL, const int size=0) {
+        if (!isKeyword(_type) && (raw == NULL) || size == 0) {
+            throw LexError("Expected non-keyword");
         }
-        memcpy(data, (char *)raw, size / sizeof(char));
+
+        int real_size = size;
+        if (_type == ID) {
+            real_size++;  // '\0'
+        }
+
+        if (_type == ID || _type == NUM) {
+            data = (char *)malloc(real_size);
+            memcpy(data, (char *)raw, real_size / sizeof(char));
+        }
         type = _type;
     }
 
     // identifiers
     string getId() const {
         if (type != ID){
-            throw ParseError("Expected identifer, get otherwise");
+            throw LexError("Expected identifer, get otherwise");
         } else {
             return string(data);
         }
@@ -42,7 +53,7 @@ public:
     // keywords
     Type getKeyword() const {
         if (type == ID or type == NUM) {
-            throw ParseError("Expected keywords, get otherwise");
+            throw LexError("Expected keywords, get otherwise");
         } else {
             return type;
         }
@@ -51,7 +62,7 @@ public:
     // numbers
     int getNumber() const {
         if (type != NUM) {
-            throw ParseError("Expected number, get otherwise");
+            throw LexError("Expected number, get otherwise");
         } else {
             int result = 0;
             memcpy(&result, data, sizeof(int));
@@ -80,18 +91,18 @@ int main(void) {
         cout << value << '\n';
         cout << s.size() << '\n';
 
-        Token token2(ID, s.c_str(), s.size()*sizeof(char) + 1);
+        Token token2(ID, s.c_str(), s.size());
         string str = token2.getId();
         cout << str << '\n';
 
-        Token token3(SELECT, s.c_str(), s.size()*sizeof(char) + 1);
+        Token token3(SELECT, s.c_str(), s.size());
         cout << (token3.getKeyword() == SELECT) << '\n';
 
-        Token token4(SELECT, s.c_str(), s.size()*sizeof(char) + 1);
+        Token token4(SELECT, s.c_str(), s.size());
         string str2 = token3.getId();  // throw expection
         cout << str2 << '\n';
 
-    } catch(ParseError e) {
+    } catch(LexError e) {
         cout << e.what() << '\n';
     }
 
