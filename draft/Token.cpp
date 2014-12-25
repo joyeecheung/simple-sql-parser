@@ -70,6 +70,10 @@ public:
         }
     }
 
+    bool operator== (Type rhs) {
+        return type == rhs;
+    }
+
     Type getType() const {
         return type;
     }

@@ -15,7 +15,10 @@ public:
         stream = s;
     }
 
-    Token next () {
+    // after returen, peek and buffers will retain recent values,
+    // in particular, peek may contain values put back in the stream during last call
+    // so next time next() is called, we need to intialize them properly
+    Token next() {
         while(stream.get(peek)) {
             if (isdigit(peek)) {  // numbers
                 num_buffer = 0;
@@ -42,7 +45,7 @@ public:
                     stream.putback(peek);
                 }
 
-                string str(buffer);
+                string str(tolower(buffer));  // case insensitive
 
                 if (WORDS.find(str) != WORDS.end()) {  // keyword
                     return Token(WORDS[str]);
@@ -70,7 +73,7 @@ public:
                 while (str.size() != 0 && OP.find(str) == OP.end()) { // too long
                     char temp = str[str.size() - 1]; // last charactor
                     str = str.substr(0, str.size() - 1);
-                    stream.pushback(temp);
+                    stream.putback(temp);
                 }
 
                 if (str.size() == 0) {
