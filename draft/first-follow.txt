@@ -1,5 +1,13 @@
 first
+# RULES:
+#   1. right is terminal X, put X in first
+#   2. right is epsilon, put epsilon in first
+#   3. right is Y1Y2Y3..，put first(Y1) in first,
+#       then if Y1 can derive epsilon, put first(Y2)... and so forth
 
+
+#ssql_stmt -> create_stmt | insert_stmt | delete_stmt | query_stmt
+ssql_stmt = {CREATE, INSERT, DELETE, SELECT}
 #create_stmt ->  CREATE TABLE id L_PAREN decl_list R_PAREN SEMICOLON
 create_stmt = {CREATE}
 # decl_list -> decl _decl_list
@@ -51,7 +59,16 @@ select_list = {MUL, id}
 
 ==============================
 follow
+# RULES:
+#   1. put $ i follow(every one)
+#   2. find all production where the left symbol is in the body
+#   3. If A -> aXb,
+#       put everything except epsilon in first(b) in follow(X).
+#       if first(b) contains epsilon(b can derive epsilon),
+#       put everything in follow(A) into follow(X)
+#   4. If A -> aX, put everything in follow(A) into follow(X)
 
+ssql_stmt = {$}
 create_stmt = {$}
 #create_stmt ->  CREATE TABLE id L_PAREN decl_list R_PAREN SEMICOLON
 decl_list = {R_PAREN, $}

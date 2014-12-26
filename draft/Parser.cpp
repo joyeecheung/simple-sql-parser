@@ -14,6 +14,20 @@
 
 class Parser {
 public:
+    Parser &ssql_stmt() {
+        if (lookahead == CREATE) {
+            create_stmt();
+        } else if (lookahead == INSERT) {
+            insert_stmt();
+        } else if (lookahead == DELETE) {
+            delete_stmt();
+        } else if (lookahead == SELECT) {
+            query_stmt();
+        } else {
+            throw ParseError("Syntax error");
+        }
+    }
+
     Parser &create_stmt() {
         if (lookahead == CREATE) {
             match(CREATE); match(TABLE); id(); match(L_PAREN); decl_list(); match(R_PAREN) match(SEMICOLON);
