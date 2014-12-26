@@ -81,7 +81,8 @@ public:
                 }
 
                 return Token(OP[str]);
-
+            } else if (peek == EOF) {  // error
+                return Token(END);  // $
             } else {  // error
                 throw LexError("Invalid lexeme");
             }

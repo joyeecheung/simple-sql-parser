@@ -9,10 +9,6 @@ enum Type {
     NUM, ID, CREATE, INSERT, DELETE, SELECT
 };
 
-bool isKeyword(Type type) {
-    return type != NUM && type != ID;
-}
-
 class LexError : std::exception {
 public:
    LexError(string _msg) : msg(_msg) {}
@@ -22,10 +18,15 @@ private:
     string msg;
 };
 
+// avoid RTTI since Token's value will be frequently needed
 class Token {
 public:
+    bool isValue(Type type) {  // number or identifier
+        return type == NUM || type == ID;
+    }
+
     Token(Type _type, const void *raw=NULL, const int size=0) {
-        if (!isKeyword(_type) && (raw == NULL) || size == 0) {
+        if (isValue(_type) && (raw == NULL) || size == 0) {
             throw LexError("Expected non-keyword");
         }
 
@@ -34,7 +35,7 @@ public:
             real_size++;  // '\0'
         }
 
-        if (_type == ID || _type == NUM) {
+        if (isValue(_type)) {
             data = (char *)malloc(real_size);
             memcpy(data, (char *)raw, real_size / sizeof(char));
         }
@@ -52,7 +53,7 @@ public:
 
     // keywords
     Type getKeyword() const {
-        if (type == ID or type == NUM) {
+        if (isValue(type)) {
             throw LexError("Expected keywords, get otherwise");
         } else {
             return type;

@@ -12,14 +12,74 @@
 //  the  decl -> ID => name = id(); num = default_spec(); spec[name] = num;
 //            -> PRIMARY => keys.concatenate(column_list())
 
+// class Statement {
+// public:
+//     Statement(string _id) : id(_id) {}
+//     string getId() { return id; }
+//     virtual void execute();
+// private:
+//     string id;
+// };
+
+// class Create : Statement {
+// public:
+//     Create(const string _id, const map<string, int> &_default_spec,
+//            const vector<strings> &_keys) :
+//             Statement(_id),
+//             default_spec(_default_spec),
+//             keys(_keys) {}
+
+//     const map<string, int> &getDefaults() const {
+//         return default_spec;
+//     }
+
+//     const vector<string> &getKeys() const {
+//         return keys;
+//     }
+
+// private:
+//     string id;
+//     map<string, int> default_spec;
+//     vector<string> keys;
+// };
+
+// class Insert : Statement {
+// public:
+//     Create(const string _id, const vector<string> &columns,
+//            const vector<int> &values) :
+//             Statement(_id),
+//             default_spec(_default_spec),
+//             keys(_keys) {}
+
+//     const vector<string> &getColumns() const {
+//         return columns;
+//     }
+
+//     const vector<ing> &getVales() const {
+//         return values;
+//     }
+
+// private:
+//     string id;
+//     map<string, int> default_spec;
+//     vector<string> keys;
+// };
 
 struct Create {
+    Create(const string _id, const map<string, int> &_default_spec,
+           const vector<string> &_keys)
+        : id(_id), default_spec(_default_spec), keys(_keys) {}
+
     string id;
     map<string, int> default_spec;
-    vector<strings> keys;
+    vector<string> keys;
 };
 
 struct Insert {
+    Insert(const string _id, const vector<string> &_columns,
+           const vector<int> &_values)
+        : id(_id), columns(_columns), values(_values) {}
+
     string id;
     vector<string> columns,
     vector<int> values;
@@ -27,11 +87,18 @@ struct Insert {
 
 // construct a string key -> value table, pass to Expr to evaluate
 struct Delete {
+    Delete(const string _id, const Expr &_where)
+        : id(_id), where(_where) {}
+
     string id;
     Expr where;
 };
 
 struct Query {
+    Query(const string _id, const vector<string> _select_list,
+          const Expr &_where)
+        : id(_id), select_list(_select_list), where(_where) {}
+
     string id;
     vector<string> select_list;  // can contain '*'
     Expr where;
@@ -39,23 +106,30 @@ struct Query {
 
 class Parser {
 public:
-    Parser &ssql_stmt() {
+    const Statement &ssql_stmt() {
         if (lookahead == CREATE) {
-            create_stmt();
+            return create_stmt();
         } else if (lookahead == INSERT) {
-            insert_stmt();
+            return insert_stmt();
         } else if (lookahead == DELETE) {
-            delete_stmt();
+            return delete_stmt();
         } else if (lookahead == SELECT) {
-            query_stmt();
+            return query_stmt();
         } else {
             throw ParseError("Syntax error");
         }
     }
 
-    Parser &create_stmt() {
+    const Create &create_stmt() {
         if (lookahead == CREATE) {
-            match(CREATE); match(TABLE); id(); match(L_PAREN); decl_list(); match(R_PAREN) match(SEMICOLON);
+            match(CREATE); match(TABLE);
+            string table_id = id();
+            match(L_PAREN);
+            map<string, int> default_spec;
+            vector<string> keys;
+            decl_list(default_spec, keys);
+            match(R_PAREN) match(SEMICOLON);
+            return Create(id, default_spec, keys);
         } else {
             throw ParseError("Syntax error");
         }
@@ -117,7 +191,7 @@ public:
         }
     }
 
-    Parser &insert_stmt() {
+    const Insert &insert_stmt() {
         if (lookahead == INSERT) {
             match(INSERT); match(TABLE); id(); match(L_PAREN); decl_list(); match(R_PAREN) match(SEMICOLON);
         } else {
@@ -143,7 +217,7 @@ public:
         }
     }
 
-    Parser &delete_stmt() {
+    const Delete &delete_stmt() {
         if (lookahead == DELETE) {
             match(DELETE); match(FROM); id(); where_clause(); match(SEMICOLON);
         } else {
@@ -208,7 +282,7 @@ public:
         }
     }
 
-    Parser &query_stmt() {
+    const Query &query_stmt() {
         if (lookahead == SELECT) {
             match(SELECT); select_list(); match(FROM); id(); where_clause(); match(SEMICOLON);
         } else {
@@ -241,6 +315,11 @@ public:
             throw ParseError("Syntax error");
         }
     }
+
+    bool isEnd() {
+        return lookahead == END;
+    }
+
 private:
     Token lookahead;
     Lexer &lexer;

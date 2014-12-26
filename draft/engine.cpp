@@ -17,51 +17,129 @@ struct Column {
     : name(_name), def(_def), is_key(_is_key) {}
 };
 
+
+int main(int argc, char **argv) {
+  Engine engine;
+  istream in = ...//
+  ostream out = ...//
+  Lexer lexer(in);
+  Parser parser(lexer);
+
+  while (!parser.isEnd()) {
+    const Statement &stmt = parser.ssql_stmt();
+
+    if (engine.create(stmt)) {
+      out << 'Created successfully' << '\n';
+    } else if (engine.insert(stmt)) {
+      out << 'Insert successfully' << '\n';
+    } else if (engine.del(stmt)) {
+      out << 'Delete successfully' << '\n';
+    } else {
+      vector<vector<int> > results;
+       if (engine.query(stmt, results)) {
+        const vector<string> &names = engine.getColumnNames(stmt.getId());
+        for (auto name : names) {
+          out << name << '\t';
+        }
+        out << '\n';
+
+        for (auto record : results) {
+          for (auto field : record) {
+            out << field << '\t'
+          }
+          out << '\n';
+        }
+
+       } else {
+        out << 'Something went wrong.' << '\n';
+       }
+    }
+
+  }
+
+  return 0;
+}
+
+
 class Engine {
  public:
-  Engine &create(const string table_id, const map<string, int> defs,
-                 const vector<string> strkeys) {
+  bool create(const Statement &stmt) {
+    const Create& create_stmt = dynamic_cast<const Create&>(stmt);
+    if (create_stmt == NULL) {
+      return false;
+    }
+
+    string table_id = create_stmt.getId();
     if (tables.find(table_id) != tables.end()) {
       throw ParseError(string("Table") + table_id + string("already exists"));
     }
-    Table new_table = Table(table_id, defs, strkeys);
-    tables[table_id] = new_table;
-    return *this;
+
+    Table new_table = Table(table_id, create_stmt.getDefaults(),
+                            create_stmt.getKeys());
+    tables[create_stmt.id] = new_table;
+    return true;
   }
 
   // insert the values
-  Engine &insert(const string table_id, const vector<string> columns,
-                 const vector<int> values) {
+  bool insert(const Statement &stmt) {
+    const Insert& insert_stmt = dynamic_cast<const Insert&>(stmt);
+    if (insert_stmt == NULL) {
+      return false;
+    }
+
+    string table_id = insert_stmt.getId();
     auto it = tables.find(table_id);
     if (it == tables.end()) {
       throw ParseError(string("Cannot find table") + table_id);
     }
 
-    it->insert(columns, values);
-    return *this;
+    it->insert(insert_stmt.getColumns(), insert_stmt.getValues());
+    return true;
   }
+
   // delete the records
-  Engine &del(const string table_id, const Expr expr) {
+  bool del(const Statement &stmt) {
+    const Delete& delete_stmt = dynamic_cast<const Delete&>(stmt);
+    if (delete_stmt == NULL) {
+      return false;
+    }
+
+    string table_id = delete_stmt.getId();
     auto it = tables.find(table_id);
     if (it == tables.end()) {
       throw ParseError(string("Cannot find table") + table_id);
     }
 
-    it->del(expr);
-    return *this;
+    it->del(delete_stmt.getWhere());
+    return true;
   }
 
   // query the records
-  Engine &query(const string table_id, const Expr expr,
-                vector<int> &results) const {
+  Engine &query(const Statement &stmt, vector<vector<int> > &results) const {
+    const Query& query_stmt = dynamic_cast<const Query&>(stmt);
+    if (query_stmt == NULL) {
+      return false;
+    }
+
+    string table_id = query_stmt.getId();
     auto it = tables.find(table_id);
     if (it == tables.end()) {
       throw ParseError(string("Cannot find table") + table_id);
     }
 
-    it->query(expr, results);
-    return *this;
+    it->query(query_stmt.where(), results);
+    return bool;
   }
+
+  vector<string> &getColumnNames(string table_id) {
+    auto it = tables.find(table_id);
+    if (it == tables.end()) {
+      throw ParseError(string("Cannot find table") + table_id);
+    }
+
+    return it->getColumnNames();
+  }
+
  private:
   map<id, Table> tables;
 };
@@ -76,6 +154,7 @@ class Table {
       Column new_column = Column(it->first, it->second; counter, false);
       indexes[it->first] = counter;
       columns.push_back(new_column);
+      columnNames.push_back(it->first);
     }
   }
 
@@ -117,7 +196,7 @@ class Table {
     // match the expression against each record
     auto it = data.begin()
     while (it != data.end()) {
-      if (match(*it, expr)) {
+      if (expr.eval(*it, indexes)) {
         data.erase(it++);
       } else {
         it++;
@@ -128,7 +207,7 @@ class Table {
   Table &query(const Expr expr, vector<vector<int> > &results) const {
     auto it = data.begin()
     while (it != data.end()) {
-      if (match(*it, expr)) {
+      if (expr.eval(*it, indexes)) {
         results.push_back(*it);
         it++;
       } else {
@@ -141,7 +220,8 @@ class Table {
     return strkeys;
   }
 
-  bool match(const vector<int> record, const Expr expr) const {
+  const vector<string> &getColumnNames() const {
+    return columnNames;
   }
 
   bool conflict(const vector<int> record, const vector<string> cols,
@@ -163,7 +243,8 @@ class Table {
 
   vector<string> strkeys;
 
-  vector<vector<int>> data;
+  vector<vector<int> > data;
   map<string, int> indexes;
   vector<Column> columns;
+  vector<string> columnNames;
 };
