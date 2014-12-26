@@ -26,34 +26,39 @@ int main(int argc, char **argv) {
   Parser parser(lexer);
 
   while (!parser.isEnd()) {
-    const Statement &stmt = parser.ssql_stmt();
+    try {
+      const Statement &stmt = parser.ssql_stmt();
 
-    if (engine.create(stmt)) {
-      out << 'Created successfully' << '\n';
-    } else if (engine.insert(stmt)) {
-      out << 'Insert successfully' << '\n';
-    } else if (engine.del(stmt)) {
-      out << 'Delete successfully' << '\n';
-    } else {
-      vector<vector<int> > results;
-      vector<string> names;
+      if (engine.create(stmt)) {
+        out << 'Created successfully' << '\n';
+      } else if (engine.insert(stmt)) {
+        out << 'Insert successfully' << '\n';
+      } else if (engine.del(stmt)) {
+        out << 'Delete successfully' << '\n';
+      } else {
+        vector<vector<int> > results;
+        vector<string> names;
 
-       if (engine.query(stmt, names, results)) {
-        for (auto name : names) {
-          out << name << '\t';
-        }
-        out << '\n';
-
-        for (auto record : results) {
-          for (auto field : record) {
-            out << field << '\t'
+         if (engine.query(stmt, names, results)) {
+          for (auto name : names) {
+            out << name << '\t';
           }
           out << '\n';
-        }
 
-       } else {
-        out << 'Something went wrong.' << '\n';
-       }
+          for (auto record : results) {
+            for (auto field : record) {
+              out << field << '\t'
+            }
+            out << '\n';
+
+          } else {
+            out << 'Something went wrong.' << '\n';
+          }
+        }
+      }
+    } catch(LexError e) {
+        cout << "line " << lexer.getLine() << ": " << e.what() << '\n';
+        break;
     }
 
   }
