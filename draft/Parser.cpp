@@ -12,6 +12,31 @@
 //  the  decl -> ID => name = id(); num = default_spec(); spec[name] = num;
 //            -> PRIMARY => keys.concatenate(column_list())
 
+
+struct Create {
+    string id;
+    map<string, int> default_spec;
+    vector<strings> keys;
+};
+
+struct Insert {
+    string id;
+    vector<string> columns,
+    vector<int> values;
+};
+
+// construct a string key -> value table, pass to Expr to evaluate
+struct Delete {
+    string id;
+    Expr where;
+};
+
+struct Query {
+    string id;
+    vector<string> select_list;  // can contain '*'
+    Expr where;
+};
+
 class Parser {
 public:
     Parser &ssql_stmt() {
