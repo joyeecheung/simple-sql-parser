@@ -36,8 +36,9 @@ int main(int argc, char **argv) {
       out << 'Delete successfully' << '\n';
     } else {
       vector<vector<int> > results;
-       if (engine.query(stmt, results)) {
-        const vector<string> &names = engine.getColumnNames(stmt.getId());
+      vector<string> names;
+
+       if (engine.query(stmt, names, results)) {
         for (auto name : names) {
           out << name << '\t';
         }
@@ -115,7 +116,8 @@ class Engine {
   }
 
   // query the records
-  Engine &query(const Statement &stmt, vector<vector<int> > &results) const {
+  Engine &query(const Statement &stmt, vector<strings> &names,
+                vector<vector<int> > &results) const {
     const Query& query_stmt = dynamic_cast<const Query&>(stmt);
     if (query_stmt == NULL) {
       return false;
@@ -127,7 +129,7 @@ class Engine {
       throw ParseError(string("Cannot find table") + table_id);
     }
 
-    it->query(query_stmt.where(), results);
+    it->query(names, query_stmt.getWhere(), results);
     return bool;
   }
 
@@ -204,16 +206,36 @@ class Table {
     }
   }
 
-  Table &query(const Expr expr, vector<vector<int> > &results) const {
+  Table &query(vector<string> &names, const Expr expr,
+               vector<vector<int> > &results) const {
+    vector<string> query_columns = query_stmt.getColumns();
+    if (std::find(query_columns.begin(), query_columns.end(), '*')) {
+      std::copy(columnNames.begin(), columnNames.end(), names.begin());
+    } else {
+      std::copy(query_columns.begin(), query_columns.end(), names.begin());
+    }
+
+    vector<int> query_indexes;
+    for (auto name : names) {
+      query_indexes.push_back(indexes[name]);
+    }
+
     auto it = data.begin()
     while (it != data.end()) {
-      if (expr.eval(*it, indexes)) {
-        results.push_back(*it);
+      const vector<int> &record = *it;
+      if (expr.eval(record, indexes)) {
+        vector<int> reordered;
+        for (index : query_indexes) {
+          reordered.push_back(record[index]);
+        }
+
+        results.push_back(reordered);
         it++;
       } else {
         it++;
       }
     }
+
   }
 
   vector<string> getKeys() const {

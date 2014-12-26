@@ -1,3 +1,8 @@
+ssql_stmt → create_stmt
+| insert_stmt
+| delete_stmt
+| query_stmt
+
 create_stmt
 ------------
 {CREATE}, {$}
