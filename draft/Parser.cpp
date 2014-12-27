@@ -314,9 +314,9 @@ public:
     Expr boolean() {
         if (lookahead == NUM || lookahead == ID) {
             Expr temp;
-            temp.left = operand();
-            temp.type = rop();
-            temp.right = operand();
+            temp.setLeft(operand());
+            temp.setType(rop());
+            temp.setRight(operand());
             return temp;
         } else {
             throw ParseError("Syntax error");
@@ -326,15 +326,13 @@ public:
     Expr operand() {
         if (lookahead == NUM) {
             int result = num();
-            Expr temp;
-            temp.type = NUM;
-            temp.value = Token(NUM, &result, sizeof(result));
+            Expr temp(NUM);
+            temp.setValue(Token(NUM, &result, sizeof(result)));
             return temp;
         } else if (lookahead == ID) {
             string result = id();
-            Expr temp;
-            temp.type = ID;
-            temp.value = Token(ID, result.c_str(), result.size());
+            Expr temp(ID);
+            temp.setValue(Token(ID, result.c_str(), result.size()));
             return temp;
         } else {
             throw ParseError("Syntax error");
@@ -420,13 +418,67 @@ private:
 
 class Expr {
 public:
-    Expr(Type type=NONE) {}
+    Expr(Type t=NONE) : type(t), left(NULL), right(NULL) {}
     int eval(vector<int> record, vector<string> indexes) const;
     bool isNull() const {
         return type == NONE;
     }
-    Expr left;
-    Expr right;
+
+    void setLeft(const Expr &other) const {
+        if (left != NULL) {
+            delete left;
+        }
+
+        left = new Expr(other.type);
+        *left = other;
+    }
+
+    void setRight(const Expr &other) const {
+        if (right != NULL) {
+            delete right;
+        }
+
+        right = new Expr(other.type)
+        *right = other;
+    }
+
+    void setValue(Token v) {
+        value = v;
+    }
+
+    void setType(Type t) {
+        type = t;
+    }
+
+    Expr &operator=(const Expr &rhs) {
+        if (rhs.left != NULL) {
+            setLeft(*(rhs.left));
+        } else {
+            left = NULL;
+        }
+
+        if (rhs.right != NULL) {
+            setRight((*rhs.right));
+        } else {
+            right = NULL;
+        }
+
+        value = rhs.value;
+        type = rhs.type;
+    }
+
+    ~Expr() {
+        if (left != NULL) {
+            delete left;
+        }
+
+        if (right != NULL) {
+            delete right;
+        }
+    }
+
+    Expr *left;
+    Expr *right;
     Token value;
     Type type;
     static Expr NULL_EXPR;
