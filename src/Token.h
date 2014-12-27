@@ -30,8 +30,7 @@ private:
 // avoid RTTI since Token's value will be frequently needed
 class Token {
 public:
-    Token(Type _type, const void *raw=NULL, const int size=0);
-    static void initNameMap();
+    Token(Type _type=NONE, const void *raw=NULL, const int size=0);
 
     // number or identifier
     bool isValue(Type t) const {  // number or identifier
@@ -53,11 +52,15 @@ public:
     bool operator== (Type rhs) const {
         return type == rhs;
     }
+    bool operator!= (Type rhs) const {
+        return !(*this == rhs);
+    }
     Token &operator=(const Token &rhs);
 
     ~Token();
     static map<Type, string> name;
 private:
+    static void initNameMap();
     Type type;
     char *data;
     int real_size;

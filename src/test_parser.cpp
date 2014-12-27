@@ -3,6 +3,8 @@
 
 #include "Token.h"
 #include "Lexer.h"
+#include "Parser.h"
+#include "Expr.h"
 
 using std::cin;
 using std::cout;
@@ -27,18 +29,13 @@ int main(int argc, char const *argv[]) {
     }
 
     Lexer &lexer = *lexptr;
-    Token lookahead = lexer.next();
-    while (lookahead != END) {
+    Parser parser(lexer);
+    while (!lexer.isEnd()) {
         try {
-            cout << lookahead << '\n';
-            lookahead = lexer.next();
+            cout << lexer.next() << '\n';
         } catch (LexError e) {
             cout << e.what() << '\n';
         }
-    }
-
-    if (lookahead == END) {
-        cout << lookahead << '\n';
     }
     return 0;
  }

@@ -4,7 +4,7 @@ map<string, Type> Lexer::words;
 map<char, Type> Lexer::singleOp;
 map<string, Type> Lexer::ops;
 
-void Lexer::initLookups() const {
+void Lexer::initLookups() {
     words["create"] = CREATE;
     words["table"] = TABLE;
     words["int"] = INT;
@@ -124,12 +124,12 @@ Token Lexer::next() {
             }
 
             return Token(ops[str]);
-        } else if (peek == EOF) {  // error
+        } else if (peek == EOF) {
             return Token(END);  // $
         } else {  // error
             throw LexError("Invalid lexeme");
         }
     }
 
-    return Token(NONE);
+    return Token(END);
 }

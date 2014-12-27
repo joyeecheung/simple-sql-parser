@@ -29,8 +29,6 @@ public:
         initLookups();
     }
 
-    void initLookups() const;
-
     bool isOp (char ch) const;
 
     Token next();
@@ -43,14 +41,11 @@ public:
         return stream.peek() == EOF;
     }
 
-    int peekstream() const {
-      return stream.peek();
-    }
-
     static map<string, Type> words;
     static map<char, Type> singleOp;
     static map<string, Type> ops;
 private:
+    static void initLookups();
     char peek;
     char buffer[BUF_SIZE];
     int num_buffer;

@@ -59,6 +59,7 @@ void Token::initNameMap() {
     name[COMMA] = "COMMA";
     name[SEMICOLON] = "SEMICOLON";
     name[END] = "END";
+    name[NONE] = "NONE";
 }
 
 // identifiers
@@ -91,15 +92,19 @@ int Token::getNumber() const {
 }
 
 ostream & operator<<(ostream &s, const Token &token) {
-    Type type = token.getType();
+    if (Token::name.size() == 0) {
+        Token::initNameMap();
+    }
+
+    Type type = token.type;
     string token_name = Token::name[type];
 
     if (type == ID) {
-        s << "(" << token_name << ", " << token.getId() << ") ";
+        s << "(" << token_name << ", " << token.getId() << ")";
     } else if (type == NUM) {
-        s << "(" << token_name << ", " << token.getNumber() << ") ";
+        s << "(" << token_name << ", " << token.getNumber() << ")";
     } else {
-        s << token_name << " ";
+        s << token_name;
     }
     return s;
 }
@@ -110,6 +115,9 @@ Token & Token::operator=(const Token &rhs) {
         real_size = rhs.real_size;
         data = new char[real_size];
         memcpy(data, rhs.data, real_size);
+    } else {
+        real_size = 0;
+        data = NULL;
     }
     return *this;
 }
