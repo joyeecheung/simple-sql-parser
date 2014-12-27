@@ -1,13 +1,16 @@
-class ParseError : std::exception {
-  ParseError(string _msg) : msg(_msg) {}
-  ~ParseError() throw () {} // Updated
-  const char *what() const throw() {
-    return msg.c_str();
-  }
- private:
-  string msg;
-};
-
+// should do more than invoking functions
+// todo: proper return type and parameters to build up 4 kinds of statements
+// maybe one class for each statement, e.g.
+// create statement ---- id
+//                   |-- decl_list
+//                          |--- default spec <string, int>(key, num)
+//                          |--- primary keys vector
+// so maybe create.id = id();
+//            spec = map<string, int>; keys = vector<string>
+//            decl_list(spec, keys)
+//  then decl_list -> decl(spec, keys); _decl_list(spec, keys)  // by ref
+//  the  decl -> ID => name = id(); num = default_spec(); spec[name] = num;
+//            -> PRIMARY => keys.concatenate(column_list())
 
 class Statement {
 public:
@@ -248,8 +251,9 @@ public:
             // delete_stmt -> DELETE FROM id where_clause SEMICOLON
             match(DELETE); match(FROM);
             string table_id = id();
-            Expr where = where_clause(where);
+            Expr where = where_clause();
             match(SEMICOLON);
+            return Delete(table_id, where);
         } else {
             throw ParseError("Syntax error");
         }
@@ -276,7 +280,7 @@ public:
             if (test.isNull()) {  // test lack a left node
                 return temp;
             } else {
-                test.left = temp;
+                test.setLeft(temp);
                 return test;
             }
         } else {
@@ -287,41 +291,51 @@ public:
     Expr _conjunct_list() {
         if (lookahead == AND) {
             // _conjunct_list -> AND bool _conjunct_list
-            Expr temp;
             match(AND);
-            temp.op = AND;
+            Expr root(AND);
 
+            Expr temp = boolean();
             Expr test = _conjunct_list();
             if (test.isNull()) {
-                temp.right = boolean();
-                return temp;
+                root.setRight(temp);
+                return root;
             } else {
-                test.right = ;
-                return test;
+                test.setLeft(temp);
+                root.setRight(test);
+                return root;
             }
-            _conjunct_list(where.right);
         } else if (lookahead == SEMICOLON || lookahead == END) {
-            where.right = NONE;  // epsilon
+            return NULL_EXPR;
         } else {
             throw ParseError("Syntax error");
         }
     }
 
-    Parser &boolean() {
+    Expr boolean() {
         if (lookahead == NUM || lookahead == ID) {
-            operand(); rop(); operand();
+            Expr temp;
+            temp.left = operand();
+            temp.type = rop();
+            temp.right = operand();
+            return temp;
         } else {
             throw ParseError("Syntax error");
         }
     }
 
-    Token operand() {
+    Expr operand() {
         if (lookahead == NUM) {
             int result = num();
-            return Token(NUM, &result, sizeof(result))
+            Expr temp;
+            temp.type = NUM;
+            temp.value = Token(NUM, &result, sizeof(result));
+            return temp;
         } else if (lookahead == ID) {
             string result = id();
-            return Token(ID, result.c_str(), result.size());
+            Expr temp;
+            temp.type = ID;
+            temp.value = Token(ID, result.c_str(), result.size());
+            return temp;
         } else {
             throw ParseError("Syntax error");
         }
@@ -402,3 +416,20 @@ private:
     Token lookahead;
     Lexer &lexer;
 };
+
+
+class Expr {
+public:
+    Expr(Type type=NONE) {}
+    int eval(vector<int> record, vector<string> indexes) const;
+    bool isNull() const {
+        return type == NONE;
+    }
+    Expr left;
+    Expr right;
+    Token value;
+    Type type;
+    static Expr NULL_EXPR;
+};
+
+Expr Expr::NULL_EXPR;
