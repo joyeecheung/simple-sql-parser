@@ -1,16 +1,13 @@
-// should do more than invoking functions
-// todo: proper return type and parameters to build up 4 kinds of statements
-// maybe one class for each statement, e.g.
-// create statement ---- id
-//                   |-- decl_list
-//                          |--- default spec <string, int>(key, num)
-//                          |--- primary keys vector
-// so maybe create.id = id();
-//            spec = map<string, int>; keys = vector<string>
-//            decl_list(spec, keys)
-//  then decl_list -> decl(spec, keys); _decl_list(spec, keys)  // by ref
-//  the  decl -> ID => name = id(); num = default_spec(); spec[name] = num;
-//            -> PRIMARY => keys.concatenate(column_list())
+class ParseError : std::exception {
+  ParseError(string _msg) : msg(_msg) {}
+  ~ParseError() throw () {} // Updated
+  const char *what() const throw() {
+    return msg.c_str();
+  }
+ private:
+  string msg;
+};
+
 
 class Statement {
 public:

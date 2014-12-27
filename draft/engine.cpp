@@ -1,6 +1,6 @@
-class ParseError : std::exception {
-  ParseError(string _msg) : msg(_msg) {}
-  ~ParseError() throw () {} // Updated
+class DataBaseError : std::exception {
+  DataBaseError(string _msg) : msg(_msg) {}
+  ~DataBaseError() throw () {} // Updated
   const char *what() const throw() {
     return msg.c_str();
   }
@@ -30,11 +30,11 @@ int main(int argc, char **argv) {
       const Statement &stmt = parser.ssql_stmt();
 
       if (engine.create(stmt)) {
-        out << 'Created successfully' << '\n';
+        out << "Created successfully" << '\n';
       } else if (engine.insert(stmt)) {
-        out << 'Insert successfully' << '\n';
+        out << "Insert successfully" << '\n';
       } else if (engine.del(stmt)) {
-        out << 'Delete successfully' << '\n';
+        out << "Delete successfully" << '\n';
       } else {
         vector<vector<int> > results;
         vector<string> names;
@@ -52,7 +52,7 @@ int main(int argc, char **argv) {
             out << '\n';
 
           } else {
-            out << 'Something went wrong.' << '\n';
+            out << "Something went wrong." << '\n';
           }
         }
       }
@@ -77,7 +77,7 @@ class Engine {
 
     string table_id = create_stmt.getId();
     if (tables.find(table_id) != tables.end()) {
-      throw ParseError(string("Table") + table_id + string("already exists"));
+      throw DataBaseError(string("Table") + table_id + string("already exists"));
     }
 
     Table new_table = Table(table_id, create_stmt.getDefaults(),
@@ -96,7 +96,7 @@ class Engine {
     string table_id = insert_stmt.getId();
     auto it = tables.find(table_id);
     if (it == tables.end()) {
-      throw ParseError(string("Cannot find table") + table_id);
+      throw DataBaseError(string("Cannot find table") + table_id);
     }
 
     it->insert(insert_stmt.getColumns(), insert_stmt.getValues());
@@ -113,7 +113,7 @@ class Engine {
     string table_id = delete_stmt.getId();
     auto it = tables.find(table_id);
     if (it == tables.end()) {
-      throw ParseError(string("Cannot find table") + table_id);
+      throw DataBaseError(string("Cannot find table") + table_id);
     }
 
     it->del(delete_stmt.getWhere());
@@ -131,7 +131,7 @@ class Engine {
     string table_id = query_stmt.getId();
     auto it = tables.find(table_id);
     if (it == tables.end()) {
-      throw ParseError(string("Cannot find table") + table_id);
+      throw DataBaseError(string("Cannot find table") + table_id);
     }
 
     it->query(names, query_stmt.getWhere(), results);
@@ -141,7 +141,7 @@ class Engine {
   vector<string> &getColumnNames(string table_id) {
     auto it = tables.find(table_id);
     if (it == tables.end()) {
-      throw ParseError(string("Cannot find table") + table_id);
+      throw DataBaseError(string("Cannot find table") + table_id);
     }
 
     return it->getColumnNames();
@@ -167,19 +167,19 @@ class Table {
 
   Table &insert(const vector<string> cols, const vector<int> values) {
     if (columns.size() < values.size()) {
-      throw ParseError(string("Too many values");
+      throw DataBaseError(string("Too many values");
     } else if (columns.size() == values.size()) {
       // check no missed key
       for (auto strkey : strkeys) {
         if (std::find(cols.begin(), cols.end(), strkey) == cols.end()) {
-          throw ParseError(string("Key ") + strkey + string(" not found"));
+          throw DataBaseError(string("Key ") + strkey + string(" not found"));
         }
       }
 
       // check not already exists
       for (auto record : data) {
         if (conflict(record, cols, values)) {
-          throw ParseError(string("Record already exists"));
+          throw DataBaseError(string("Record already exists"));
         }
       }
 
