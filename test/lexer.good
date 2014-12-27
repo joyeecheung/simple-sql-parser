@@ -1,0 +1,105 @@
+CREATE 
+TABLE 
+(ID, student) 
+L_PAREN 
+(ID, sid) 
+INT 
+COMMA 
+(ID, age) 
+INT 
+DEFAULT 
+ASSIGN 
+(NUM, 18) 
+COMMA 
+PRIMARY 
+KEY 
+L_PAREN 
+(ID, sid) 
+R_PAREN 
+R_PAREN 
+SEMICOLON 
+SELECT 
+(ID, sid) 
+COMMA 
+(ID, age) 
+FROM 
+(ID, student) 
+WHERE 
+(ID, age) 
+GT 
+(NUM, 15) 
+AND 
+(ID, age) 
+LT 
+(NUM, 18) 
+SEMICOLON 
+INSERT 
+INTO 
+(ID, student) 
+L_PAREN 
+(ID, sid) 
+COMMA 
+(ID, age) 
+R_PAREN 
+VALUES 
+L_PAREN 
+(NUM, 1111) 
+COMMA 
+(NUM, 18) 
+R_PAREN 
+SEMICOLON 
+DELETE 
+FROM 
+(ID, student) 
+WHERE 
+(ID, age) 
+LT 
+(NUM, 18) 
+AND 
+(ID, age) 
+GT 
+(NUM, 14) 
+SEMICOLON 
+DELETE 
+FROM 
+(ID, student) 
+WHERE 
+(ID, age) 
+PLUS 
+(NUM, 18) 
+DIV 
+(NUM, 5) 
+MINUS 
+(NUM, 6) 
+MUL 
+(NUM, 1) 
+EQ 
+(NUM, 7) 
+OR 
+(ID, age) 
+NEQ 
+(NUM, 14) 
+SEMICOLON 
+DELETE 
+FROM 
+(ID, student) 
+WHERE 
+(ID, age) 
+GEQ 
+(NUM, 1) 
+AND 
+(ID, age) 
+LEQ 
+(NUM, 14) 
+SEMICOLON 
+SELECT 
+MUL 
+FROM 
+(ID, student) 
+WHERE 
+NOT 
+(ID, age) 
+GT 
+(NUM, 15) 
+SEMICOLON 
+ 

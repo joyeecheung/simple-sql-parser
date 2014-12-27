@@ -13,7 +13,7 @@ using std::map;
 
 enum Type {
     ID, NUM, CREATE, TABLE, INT, DEFAULT, PRIMARY, KEY, INSERT,
-    INTO, VALUES, DELETE, FROM, WHERE, SELECT, LT, GT, NEQ, EQ,
+    INTO, VALUES, DELETE, FROM, WHERE, SELECT, ASSIGN, LT, GT, NEQ, EQ,
     GEQ, LEQ, PLUS, MINUS, MUL, DIV, AND, OR, NOT, L_PAREN, R_PAREN,
     COMMA, SEMICOLON, END, NONE
 };
@@ -53,11 +53,14 @@ public:
     bool operator== (Type rhs) const {
         return type == rhs;
     }
+    Token &operator=(const Token &rhs);
 
+    ~Token();
     static map<Type, string> name;
 private:
     Type type;
     char *data;
+    int real_size;
 };
 
 #endif

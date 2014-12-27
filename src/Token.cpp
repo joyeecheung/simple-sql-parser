@@ -3,20 +3,25 @@
 map<Type, string> Token::name;
 
 Token::Token(Type _type, const void *raw, const int size) {
-    if (isValue(_type) && ((raw == NULL) || size == 0)) {
-        throw TokenError("Expected non-keyword");
-    }
-
-    int real_size = size;
-    if (_type == ID) {
-        real_size++;  // '\0'
-    }
-
     if (isValue(_type)) {
-        data = (char *)malloc(real_size);
-        memcpy(data, (char *)raw, real_size / sizeof(char));
+        if (raw == NULL || size == 0) {
+            throw TokenError("Expected non-keyword");
+        } else {
+            type = _type;
+
+            real_size = size / sizeof(char);
+            if (type == ID) {
+                real_size++;  // '\0'
+            }
+
+            data = new char[real_size];
+            memcpy(data, (char *)raw, real_size);
+        }
+    } else {
+        type = _type;
+        data = NULL;
+        real_size = 0;
     }
-    type = _type;
 }
 
 void Token::initNameMap() {
@@ -35,6 +40,7 @@ void Token::initNameMap() {
     name[FROM] = "FROM";
     name[WHERE] = "WHERE";
     name[SELECT] = "SELECT";
+    name[ASSIGN] = "ASSIGN";
     name[LT] = "LT";
     name[GT] = "GT";
     name[NEQ] = "NEQ";
@@ -96,4 +102,20 @@ ostream & operator<<(ostream &s, const Token &token) {
         s << token_name << " ";
     }
     return s;
+}
+
+Token & Token::operator=(const Token &rhs) {
+    type = rhs.type;
+    if (isValue(type)) {
+        real_size = rhs.real_size;
+        data = new char[real_size];
+        memcpy(data, rhs.data, real_size);
+    }
+    return *this;
+}
+
+Token::~Token() {
+    if (data != NULL) {
+        delete data;
+    }
 }

@@ -169,8 +169,8 @@ public:
 
     int default_spec(map<string, int> &defaults) {
         if (lookahead == DEFAULT) {
-            // default_spec -> DEFAULT EQ num
-            match(DEFAULT); match(EQ);
+            // default_spec -> DEFAULT ASSIGN num
+            match(DEFAULT); match(ASSIGN);
             return num();
         } else if (lookahead == COMMA || lookahead == R_PAREN || lookahead == END) {
             // default_spec -> epsilon

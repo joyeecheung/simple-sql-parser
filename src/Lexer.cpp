@@ -34,6 +34,7 @@ void Lexer::initLookups() const {
     ops["<"] = LT;
     ops[">"] = GT;
     ops["!="] = NEQ;
+    ops["="] = ASSIGN;
     ops["=="] = EQ;
     ops[">="] = GEQ;
     ops["<="] = LEQ;

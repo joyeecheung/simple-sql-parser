@@ -43,6 +43,10 @@ public:
         return stream.peek() == EOF;
     }
 
+    int peekstream() const {
+      return stream.peek();
+    }
+
     static map<string, Type> words;
     static map<char, Type> singleOp;
     static map<string, Type> ops;

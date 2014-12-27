@@ -20,3 +20,9 @@ $(EXECUTABLE): $(OBJECTS)
 
 clean:
 	rm src/*.o $(EXECUTABLE)
+
+test: $(EXECUTABLE)
+	bin/ssql test/lexer.in > test/lexer.out
+	diff test/lexer.out test/lexer.good
+
+.PHONY: test
