@@ -1,6 +1,8 @@
 #include <string>
 #include <cstring>
 #include <iostream>
+#include <map>
+
 using std::string;
 using std::cin;
 using std::cout;
@@ -24,10 +26,6 @@ private:
 // avoid RTTI since Token's value will be frequently needed
 class Token {
 public:
-    bool isValue(Type t) const {  // number or identifier
-        return t == NUM || t == ID;
-    }
-
     Token(Type _type, const void *raw=NULL, const int size=0) {
         if (isValue(_type) && (raw == NULL) || size == 0) {
             throw TokenError("Expected non-keyword");
@@ -43,6 +41,46 @@ public:
             memcpy(data, (char *)raw, real_size / sizeof(char));
         }
         type = _type;
+    }
+
+    bool isValue(Type t) const {  // number or identifier
+        return t == NUM || t == ID;
+    }
+
+    void initNameMap() {
+        name[ID] = "ID";
+        name[NUM] = "NUM";
+        name[CREATE] = "CREATE";
+        name[TABLE] = "TABLE";
+        name[INT] = "INT";
+        name[DEFAULT] = "DEFAULT";
+        name[PRIMARY] = "PRIMARY";
+        name[KEY] = "KEY";
+        name[INSERT] = "INSERT";
+        name[INTO] = "INTO";
+        name[VALUES] = "VALUES";
+        name[DELETE] = "DELETE";
+        name[FROM] = "FROM";
+        name[WHERE] = "WHERE";
+        name[SELECT] = "SELECT";
+        name[LT] = "LT";
+        name[GT] = "GT";
+        name[NEQ] = "NEQ";
+        name[EQ] = "EQ";
+        name[GEQ] = "GEQ";
+        name[LEQ] = "LEQ";
+        name[PLUS] = "PLUS";
+        name[MINUS] = "MINUS";
+        name[MUL] = "MUL";
+        name[DIV] = "DIV";
+        name[AND] = "AND";
+        name[OR] = "OR";
+        name[NOT] = "NOT";
+        name[L_PAREN] = "L_PAREN";
+        name[R_PAREN] = "R_PAREN";
+        name[COMMA] = "COMMA";
+        name[SEMICOLON] = "SEMICOLON";
+        name[END] = "END";
     }
 
     // identifiers
@@ -78,14 +116,28 @@ public:
         return type == rhs;
     }
 
+    friend ostream &operator<<(ostream &s, const Token &token) {
+        s << name[type] << ": ";
+        if (type == ID) {
+            s << "(" << name[type] << ", " << getId() << " ) ";
+        } else if (type == NUM) {
+            s << "(" << name[type] << ", " << getNumber() << " ) ";
+        } else {
+            s << name[type] << " ";
+        }
+    }
+
     Type getType() const {
         return type;
     }
+
+    static map<Type, string> name;
 private:
     Type type;
     char *data;
 };
 
+/*
 int main(void) {
     // usage:
     int v = 15;
@@ -117,3 +169,4 @@ int main(void) {
 
     return 0;
 }
+*/
