@@ -24,6 +24,18 @@ Token::Token(Type _type, const void *raw, const int size) {
     }
 }
 
+Token::Token(const Token &other) {
+    type = other.type;
+    if (isValue(type)) {
+        real_size = other.real_size;
+        data = new char[real_size];
+        memcpy(data, other.data, real_size);
+    } else {
+        real_size = 0;
+        data = NULL;
+    }
+}
+
 void Token::initNameMap() {
     name[ID] = "ID";
     name[NUM] = "NUM";
@@ -125,5 +137,6 @@ Token & Token::operator=(const Token &rhs) {
 Token::~Token() {
     if (data != NULL) {
         delete data;
+        data = NULL;
     }
 }

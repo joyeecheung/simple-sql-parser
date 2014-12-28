@@ -1,28 +1,17 @@
 #include "Parser.h"
 
 
-const Statement *Parser::ssql_stmt() {
-    if (current_stmt != NULL) {
-        delete current_stmt;
-        current_stmt = NULL;
-    }
-
-    if (lookahead == CREATE) {
-        current_stmt = create_stmt();
-    } else if (lookahead == INSERT) {
-        current_stmt = insert_stmt();
-    } else if (lookahead == DELETE) {
-        current_stmt = delete_stmt();
-    } else if (lookahead == SELECT) {
-        current_stmt = query_stmt();
+Type Parser::next_stmt_type() const {
+    if (lookahead == CREATE ||lookahead == INSERT
+        || lookahead == DELETE || lookahead == SELECT) {
+        return lookahead.getType();
     } else {
-        throw ParseError("Syntax error");
+        throw ParseError("Syntax error: statments \
+            should start with CREATE, INSERT, DELETE or SELECT");
     }
-
-    return current_stmt;
 }
 
-Create *Parser::create_stmt() {
+Create Parser::create_stmt() {
     if (lookahead == CREATE) {
         // create_stmt ->  CREATE TABLE id L_PAREN decl_list
         //                 R_PAREN SEMICOLON
@@ -33,7 +22,7 @@ Create *Parser::create_stmt() {
         vector<string> keys;
         decl_list(defaults, keys);
         match(R_PAREN); match(SEMICOLON);
-        return new Create(table_id, defaults, keys);
+        return Create(table_id, defaults, keys);
     } else {
         throw ParseError("Syntax error");
     }
@@ -111,7 +100,7 @@ Parser & Parser::_column_list(vector<string> &names) {
         match(COMMA);
         names.push_back(id());
         _column_list(names);
-    } else if (lookahead == R_PAREN || lookahead == END){
+    } else if (lookahead == FROM || lookahead == R_PAREN || lookahead == END){
         ;  // _column_list ->  epsilon
     } else {
         throw ParseError("Syntax error");
@@ -119,7 +108,7 @@ Parser & Parser::_column_list(vector<string> &names) {
     return *this;
 }
 
-Insert *Parser::insert_stmt() {
+Insert Parser::insert_stmt() {
     if (lookahead == INSERT) {
         // insert_stmt -> INSERT INTO id L_PAREN column_list R_PAREN
         //                VALUES L_PAREN value_list R_PAREN SEMICOLON
@@ -129,17 +118,19 @@ Insert *Parser::insert_stmt() {
         vector<string> columns;
         column_list(columns);
         match(R_PAREN);
+        match(VALUES);
+        match(L_PAREN);
         vector<int> values;
         value_list(values);
         match(R_PAREN);
         match(SEMICOLON);
-        return new Insert(table_id, columns, values);
+        return Insert(table_id, columns, values);
     } else {
         throw ParseError("Syntax error");
     }
 }
 
-Parser & Parser::value_list(vector<int> values) {
+Parser & Parser::value_list(vector<int> &values) {
     if (lookahead == NUM) {
         // value_list ->  num _value_list
         values.push_back(num());
@@ -150,7 +141,7 @@ Parser & Parser::value_list(vector<int> values) {
     return *this;
 }
 
-Parser & Parser::_value_list(vector<int> values) {
+Parser & Parser::_value_list(vector<int> &values) {
     if (lookahead == COMMA) {
         // _value_list ->  COMMA num _value_list
         match(COMMA);
@@ -164,14 +155,14 @@ Parser & Parser::_value_list(vector<int> values) {
     return *this;
 }
 
-Delete *Parser::delete_stmt() {
+Delete Parser::delete_stmt() {
     if (lookahead == DELETE) {
         // delete_stmt -> DELETE FROM id where_clause SEMICOLON
         match(DELETE); match(FROM);
         string table_id = id();
         Expr where = where_clause();
         match(SEMICOLON);
-        return new Delete(table_id, where);
+        return Delete(table_id, where);
     } else {
         throw ParseError("Syntax error");
     }
@@ -268,15 +259,17 @@ Type Parser::rop() {
     }
 }
 
-Query *Parser::query_stmt() {
+Query Parser::query_stmt() {
     if (lookahead == SELECT) {
         // query_stmt -> SELECT select_list FROM id where_clause SEMICOLON
         vector<string> columns;
-        match(SELECT); select_list(columns); match(FROM);
+        match(SELECT);
+        select_list(columns);
+        match(FROM);
         string table_id = id();
         Expr where = where_clause();
         match(SEMICOLON);
-        return new Query(table_id, columns, where);
+        return Query(table_id, columns, where);
     } else {
         throw ParseError("Syntax error");
     }
@@ -298,26 +291,37 @@ Parser & Parser::select_list(vector<string> &columns) {
 
 string Parser::id() {
     if (lookahead == ID) {
+#ifdef TRACK
+        std::cout << lookahead << ' ';
+#endif
         string result = lookahead.getId();
         lookahead = lexer.next();
         return result;
     } else {
-        throw ParseError("Syntax error");
+        throw ParseError("Syntax error: Expected ID");
     }
 }
 
 int Parser::num() {
     if (lookahead == NUM) {
+#ifdef TRACK
+        std::cout << lookahead << ' ';
+#endif
         int result = lookahead.getNumber();
         lookahead = lexer.next();
         return result;
     } else {
-        throw ParseError("Syntax error");
+        throw ParseError("Syntax error: Expected number");
     }
 }
 
 Parser & Parser::match(Type t) {
     if (lookahead == t) {
+#ifdef TRACK
+        std::cout << lookahead << ' ';
+        if (lookahead == SEMICOLON)
+            std::cout << '\n';
+#endif
         lookahead = lexer.next();
     } else {
         throw ParseError("Syntax error");

@@ -1,8 +1,27 @@
 #include "Expr.h"
 
+Expr::Expr(const Expr &other) {
+    value = other.value;
+    type = other.type;
+    left = right = NULL;
+
+    if (other.left != NULL) {  // other has a left
+        setLeft(*(other.left));
+    } else {  // others doesn't have left
+        left = NULL;
+    }
+
+    if (other.right != NULL) {
+        setRight((*other.right));
+    } else {
+        right = NULL;
+    }
+}
+
 void Expr::setLeft(const Expr &other) {
     if (left != NULL) {
         delete left;
+        left = NULL;
     }
 
     left = new Expr(other.type);
@@ -12,23 +31,30 @@ void Expr::setLeft(const Expr &other) {
 void Expr::setRight(const Expr &other) {
     if (right != NULL) {
         delete right;
+        right = NULL;
     }
 
     right = new Expr(other.type);
     *right = other;
 }
 
-Expr & Expr::operator=(const Expr &rhs) {
-    if (rhs.left != NULL) {
+Expr &Expr::operator=(const Expr &rhs) {
+    if (rhs.left != NULL) {  // other has a left
         setLeft(*(rhs.left));
-    } else {
-        left = NULL;
+    } else {  // others doesn't have left
+        if (left != NULL) {
+            delete left;
+            left = NULL;
+        }
     }
 
     if (rhs.right != NULL) {
         setRight((*rhs.right));
     } else {
-        right = NULL;
+        if (right != NULL) {
+            delete right;
+            right = NULL;
+        }
     }
 
     value = rhs.value;
@@ -89,9 +115,11 @@ int Expr::eval(vector<int> record, map<string, int> indexes) const {
 Expr::~Expr() {
     if (left != NULL) {
         delete left;
+        left = NULL;
     }
 
     if (right != NULL) {
         delete right;
+        right = NULL;
     }
 }

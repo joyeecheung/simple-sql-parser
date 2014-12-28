@@ -71,6 +71,8 @@ _column_list
 ------------
 COMMA:
 _column_list ->  COMMA id _column_list
+FROM:
+_column_list ->  epsilon
 R_PAREN:
 _column_list ->  epsilon
 $:

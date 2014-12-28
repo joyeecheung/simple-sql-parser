@@ -31,7 +31,7 @@ private:
 class Token {
 public:
     Token(Type _type=NONE, const void *raw=NULL, const int size=0);
-
+    Token(const Token &other);
     // number or identifier
     bool isValue(Type t) const {  // number or identifier
         return t == NUM || t == ID;

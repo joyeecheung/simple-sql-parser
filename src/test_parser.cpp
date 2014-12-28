@@ -28,13 +28,56 @@ int main(int argc, char const *argv[]) {
         lexptr = new Lexer(cin);
     }
 
-    Lexer &lexer = *lexptr;
-    Parser parser(lexer);
-    while (!lexer.isEnd()) {
+    Parser parser(*lexptr);
+    while (!parser.isEnd()) {
         try {
-            cout << lexer.next() << '\n';
+            Type next = parser.next_stmt_type();
+            if (next == CREATE) {
+                Create create = parser.create_stmt();
+                cout << "create ID: " << create.getId() << '\n';
+                cout << "create defaults" << '\n';
+                const map<string, int> &defs = create.getDefaults();
+                for (auto it = defs.begin(); it != defs.end(); ++it) {
+                    cout << it->first << ": " << it->second << "\n";
+                }
+                cout << "create keys:\n";
+                const vector<string> &keys = create.getKeys();
+                for (auto key : keys) {
+                    cout << key << "\n";
+                }
+                cout << "\n";
+            } else if (next == INSERT) {
+                Insert insert = parser.insert_stmt();
+                cout << "insert ID: " << insert.getId() << '\n';
+                cout << "insert values" << '\n';
+                const vector<string> &columns = insert.getColumns();
+                const vector<int> &values = insert.getValues();
+                for (int i = 0; i < columns.size(); ++i) {
+                    cout << columns[i] << ": " << values[i] << '\n';
+                }
+                cout << "\n";
+            } else if (next == DELETE) {
+                Delete del = parser.delete_stmt();
+                cout << "delete ID: " << del.getId() << '\n';
+                cout << "delete clause" << '\n';
+                cout << del.getWhere();
+                cout << "\n\n";
+            } else if (next == SELECT) {
+                Query query = parser.query_stmt();
+                cout << "query ID: " << query.getId() << '\n';
+                cout << "query columns: ";
+                const vector<string> &columns = query.getColumns();
+                for (int i = 0; i < columns.size(); ++i) {
+                    cout << columns[i] << ' ';
+                }
+                cout << "\nquery clause" << '\n';
+                cout << query.getWhere();
+                cout << "\n\n";
+            }
         } catch (LexError e) {
-            cout << e.what() << '\n';
+            cout << lexptr->getLine() << ": " << e.what()  << '\n';
+        } catch(ParseError e) {
+            cout << lexptr->getLine() << ": " << e.what() << '\n';
         }
     }
     return 0;

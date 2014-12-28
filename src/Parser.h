@@ -29,7 +29,6 @@ public:
     }
 
 private:
-    string id;
     map<string, int> default_spec;
     vector<string> keys;
 };
@@ -46,12 +45,11 @@ public:
         return columns;
     }
 
-    const vector<int> &getVales() const {
+    const vector<int> &getValues() const {
         return values;
     }
 
 private:
-    string id;
     vector<string> columns;
     vector<int> values;
 };
@@ -64,7 +62,6 @@ public:
         return where;
     }
 private:
-    string id;
     Expr where;
 };
 
@@ -80,7 +77,6 @@ public:
         return where;
     }
 private:
-    string id;
     vector<string> columns;  // can contain '*'
     Expr where;
 };
@@ -99,10 +95,12 @@ private:
 
 class Parser {
 public:
-    Parser(Lexer &l) : lexer(l), current_stmt(NULL) {}
-    const Statement *ssql_stmt();
+    Parser(Lexer &l) : lexer(l) {
+        lookahead = lexer.next();
+    }
+    Type next_stmt_type() const;
 
-    Create *create_stmt();
+    Create create_stmt();
     Parser &decl_list(map<string, int> &defaults, vector<string> &keys);
     Parser &_decl_list(map<string, int> &defaults, vector<string> &keys);
     Parser &decl(map<string, int> &defaults, vector<string> &keys);
@@ -110,11 +108,11 @@ public:
     Parser &column_list(vector<string> &names);
     Parser &_column_list(vector<string> &names);
 
-    Insert *insert_stmt();
-    Parser &value_list(vector<int> values);
-    Parser &_value_list(vector<int> values);
+    Insert insert_stmt();
+    Parser &value_list(vector<int> &values);
+    Parser &_value_list(vector<int> &values);
 
-    Delete *delete_stmt();
+    Delete delete_stmt();
     Expr where_clause();
     Expr conjunct_list();
     Expr _conjunct_list();
@@ -122,7 +120,7 @@ public:
     Expr operand();
     Type rop();
 
-    Query *query_stmt();
+    Query query_stmt();
     Parser &select_list(vector<string> &columns);
 
     string id();
@@ -134,16 +132,11 @@ public:
         return lookahead == END;
     }
 
-    ~Parser() {
-        if (current_stmt != NULL) {
-            delete current_stmt;
-        }
-    }
+    ~Parser() {}
 
 private:
     Token lookahead;
     Lexer &lexer;
-    Statement *current_stmt;
 };
 
 #endif

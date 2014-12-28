@@ -14,7 +14,7 @@ using std::map;
 class Expr {
 public:
     Expr(Type t=NONE) : left(NULL), right(NULL), value(NONE), type(t) {}
-
+    Expr(const Expr &other);
     void setLeft(const Expr &other);
     void setRight(const Expr &other);
     void setValue(Token v) {
