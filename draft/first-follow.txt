@@ -18,9 +18,38 @@ _decl_list = {COMMA, epsilon}
 #decl -> id INT default_spec
 #decl -> PRIMARY KEY L_PAREN column_list R_PAREN
 decl = {id, PRIMARY}
-#default_spec -> DEFAULT EQ num
+
+#default_spec -> DEFAULT EQ expr[true]
 #default_spec -> epsilon
 default_spec = {DEFAULT, epsilon}
+
+# expr[] -> term[] _expr[]
+# first(term)
+expr[simple=true] = {PLUS, MINUS, num, L_PAREN}
+expr[simple=false] = {PLUS, MINUS, num, id}
+
+# _expr[] -> PLUS term[] _expr[]
+# _expr[] -> MINUS term[] _expr[]
+# _expr[] -> epsilon
+_expr[] = {PLUS, MINUS, epsilon}
+
+#term[] -> unary[] _term[]
+#first(unary)
+term[simple=true] = {PLUS, MINUS, num, L_PAREN}
+term[simple=false] = {PLUS, MINUS, num, id}
+
+# _term[] -> MUL unary[] _term[]
+# _term[] -> DIV unary[] _term[]
+# _term[] -> epsilon
+_term[] = {MUL, DIV, epsilon}
+
+# unary[] -> PLUS unary[] | MINUS unary[]
+# unary[] -> num
+# unary[simple=true] -> L_PAREN expr[true] R_PAREN
+# unary[simple=false] -> id
+unary[simple=true] = {PLUS, MINUS, num, L_PAREN}
+unary[simple=false] = {PLUS, MINUS, num, id}
+
 #column_list ->  id _column_list
 column_list = {id}
 #_column_list ->  COMMA id _column_list
@@ -28,28 +57,45 @@ column_list = {id}
 _column_list = {COMMA, epsilon}
 # INSERT INTO id L_PAREN column_list R_PAREN VALUES L_PAREN value_list R_PAREN SEMICOLON
 insert_stmt = {INSERT}
-#value_list ->  num _value_list
-value_list = {num}
-#_value_list ->  COMMA num _value_list
+
+#value_list -> expr[true] _value_list
+# first(expr[true])
+value_list = {PLUS, MINUS, num, L_PAREN}
+#_value_list ->  COMMA expr[true] _value_list
 #_value_list ->  epsilon
 _value_list = {COMMA, epsilon}
+
 #delete_stmt -> DELETE FROM id where_clause SEMICOLON
 delete_stmt = {DELETE}
-#where_clause -> WHERE conjunct_list
+
+#where_clause -> WHERE disjunct
 #where_clause -> epsilon
 where_clause = {WHERE, epsilon}
-#conjunct_list -> bool _conjunct_list
-conjunct_list = {num, id}
-#_conjunct_list -> AND bool _conjunct_list
-#_conjunct_list -> epsilon
-_conjunct_list = {AND, epsilon}
-#bool -> operand rop operand
-bool = {num, id}
-#operand -> num
-#operand -> id
-operand = {num, id}
+
+# disjunct -> conjunct _disjunct
+# first(conjunct)
+disjunct = {L_PAREN, NOT, PLUS, MINUS, num, id}
+
+# _disjunct -> OR conjunct _disjunct | epsilon
+_disjunct = {OR, epsilon}
+
+# conjunct -> bool _conjunct
+# first(bool)
+conjunct = {L_PAREN, NOT, PLUS, MINUS, num, id}
+
+# _conjunct -> AND bool _conjunct | epsilon
+_conjunct = {AND, epsilon}
+
+# bool -> L_PAREN disjunct R_PAREN | NOT bool | comp
+# first(comp)
+bool = {L_PAREN, NOT, PLUS, MINUS, num, id}
+# comp -> expr[false] rop expr[false]
+# first(expr[false])
+comp = {PLUS, MINUS, num, id}
+
 #rop -> NEQ | EQ | LT | GT | LEQ | GEQ
 rop = {NEQ, EQ, LT, GT, LEQ, GEQ}
+
 #query_stmt -> SELECT select_list FROM id where_clause SEMICOLON
 query_stmt = {SELECT}
 #select_list -> MUL
@@ -60,7 +106,7 @@ select_list = {MUL, id}
 ==============================
 follow
 # RULES:
-#   1. put $ i follow(every one)
+#   1. put $ i follow(start symbol)
 #   2. find all production where the left symbol is in the body
 #   3. If A -> aXb,
 #       put everything except epsilon in first(b) in follow(X).
@@ -71,51 +117,116 @@ follow
 ssql_stmt = {$}
 create_stmt = {$}
 #create_stmt ->  CREATE TABLE id L_PAREN decl_list R_PAREN SEMICOLON
-decl_list = {R_PAREN, $}
+decl_list = {R_PAREN}
 #decl_list -> decl _decl_list
-_decl_list = {R_PAREN, $}
+_decl_list = {R_PAREN}
 #decl_list -> decl _decl_list
 #_decl_list -> COMMA decl _decl_list
 #first(_decl_list) + follow(decl_list) + follow(_decl_list)
-decl = {COMMA, R_PAREN, $}
+decl = {COMMA, R_PAREN}
 #decl ->  id INT default_spec
 # follow(decl)
-default_spec = {COMMA, R_PAREN, $}
+default_spec = {COMMA, R_PAREN}
+
+# default_spec ->  DEFAULT EQ expr[true]
+# value_list ->  expr[true]
+# _value_list ->  COMMA expr[true] _value_list
+# unary[simple=true] -> L_PAREN expr[true] R_PAREN
+# follow(default_spec) + follow(value_list)
+# + first(_value_list) + follow(_value_list)
+expr[true] = {COMMA, R_PAREN}
+
+# comp -> expr[false] rop expr[false]
+# first(rop) + follow(comp)
+expr[false] = {NEQ, EQ, LT, GT, LEQ, GEQ, AND, OR, SEMICOLON, R_PAREN}
+
+# expr[] -> term[] _expr[]
+# _expr[] -> PLUS term[] _expr[]
+# _expr[] -> MINUS term[] _expr[]
+# follow(expr[true])
+_expr[true] = {COMMA, R_PAREN}
+# follow(expr[false])
+_expr[false] = {NEQ, EQ, LT, GT, LEQ, GEQ, AND, OR, SEMICOLON, R_PAREN}
+
+# expr[] -> term[] _expr[]
+# _expr[] -> PLUS term[] _expr[]
+# _expr[] -> MINUS term[] _expr[]
+# first(_expr[]) + follow(expr[]) + follow(_expr[])
+term[true] = {PLUS, MINUS, COMMA, R_PAREN}
+term[false] = {PLUS, MINUS, NEQ, EQ, LT, GT, LEQ, GEQ, AND, OR, SEMICOLON, R_PAREN}
+
+# term[] -> unary[] _term[]
+# _term[] -> MUL unary[] _term[]
+# _term[] -> DIV unary[] _term[]
+# follow(term)
+_term[true] = {PLUS, MINUS, COMMA, R_PAREN}
+_term[false] = {PLUS, MINUS, NEQ, EQ, LT, GT, LEQ, GEQ, AND, OR, SEMICOLON, R_PAREN}
+
+# term[] -> unary[] _term[]
+# _term[] -> MUL unary[] _term[]
+# _term[] -> DIV unary[] _term[]
+# unary[] -> PLUS unary[]
+# unary[] -> MINUS unary[]
+# first(_term[]) + follow(term[]) + follow(_term[])
+unary[true] = {MUL, DIV, PLUS, MINUS, COMMA, R_PAREN}
+unary[false] = {MUL, DIV, PLUS, MINUS, NEQ, EQ, LT, GT, LEQ, GEQ, AND, OR, SEMICOLON, R_PAREN}
+
 #decl -> RIMARY KEY L_PAREN column_list R_PAREN
 #insert_stmt -> INSERT INTO id L_PAREN column_list R_PAREN VALUES L_PAREN value_list R_PAREN SEMICOLON
 #select_list -> column_list
 # follow(select_list)
-column_list = {FROM, R_PAREN, $}
-#column_list ->  id _column_list
-_column_list = {FROM, R_PAREN, $}
+column_list = {FROM, R_PAREN}
+#column_list -> id _column_list
+_column_list = {FROM, R_PAREN}
 
 insert_stmt = {$}
 #insert_stmt -> INSERT INTO id L_PAREN column_list R_PAREN VALUES L_PAREN value_list R_PAREN SEMICOLON
-value_list = {R_PAREN, $}
-#value_list ->  num _value_list
-_value_list = {R_PAREN, $}
+value_list = {R_PAREN}
+# value_list ->  expr[true] _value_list
+# _value_list ->  COMMA expr[true] _value_list
+# follow(value_list)
+_value_list = {R_PAREN}
 
 delete_stmt = {$}
 #delete_stmt -> DELETE FROM id where_clause SEMICOLON
 #query_stmt -> SELECT select_list FROM id where_clause SEMICOLON
-where_clause = {SEMICOLON, $}
-#where_clause -> WHERE conjunct_list
-# follow(where_clause)
-conjunct_list = {SEMICOLON, $}
-#conjunct_list -> bool _conjunct_list
-_conjunct_list = {SEMICOLON, $}
-#conjunct_list -> bool _conjunct_list
-#_conjunct_list ->  AND bool _conjunct_list
-#first(_conjunc_list) + follow(conjnct_list) + follow(_conjunct_list)
-bool = {AND, SEMICOLON, $}
-#bool -> operand rop operand
-#follow(bool) + first(rop)
-operand = {AND, SEMICOLON, NEQ, EQ, LT, GT, LEQ, GEQ, $}
-#bool -> operand rop operand
-#first(operand)
-rop = {num, id}
+where_clause = {SEMICOLON}
+
+# where_clause -> WHERE disjunct
+# bool -> L_PAREN disjunct R_PAREN
+# follow(where)
+disjunct = {SEMICOLON, R_PAREN}
+
+#disjunct -> conjunct _disjunct
+#_disjunct -> OR conjunct _disjunct
+#follow(disjunct)
+_disjunct = {SEMICOLON, R_PAREN}
+
+# disjunct -> conjunct _disjunct
+# _disjunct -> OR conjunct _disjunct
+# first(_disjunct) + follow(disjunct) + follow(_disjunct)
+conjunct = {OR, SEMICOLON, R_PAREN}
+
+# conjunct -> bool _conjunct
+# _conjunct -> AND bool _conjunct
+# follow(conjunct)
+_conjunct = {OR, SEMICOLON, R_PAREN}
+
+# conjunct -> bool _conjunct
+# _conjunct -> AND bool _conjunct
+# bool -> NOT bool
+# first(_conjunct) + follow(conjunct) + follow(_conjunct)
+bool = {AND, OR, SEMICOLON, R_PAREN}
+
+# bool -> comp
+# follow(bool)
+comp = {AND, OR, SEMICOLON, R_PAREN}
+
+# comp -> expr[false] rop expr[false]
+# first(expr[false])
+rop = {PLUS, MINUS, num, id}
 
 query_stmt = {$}
 #query_stmt -> SELECT select_list FROM id where_clause SEMICOLON
-select_list = {FROM, $}
+select_list = {FROM}
 

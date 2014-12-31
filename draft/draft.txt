@@ -137,28 +137,7 @@ decl ->  id INT default_spec | PRIMARY KEY L_PAREN column_list R_PAREN
 # !!!
 # default_spec ->  DEFAULT EQ num | epsilon
 
-default_spec ->  DEFAULT EQ simple_expr | epsilon
-
-# simple_expr -> simple_term
-#             | simple_expr PLUS simple_term
-#             | simple_expr MINUS simple_term
-
-simple_expr -> simple_term _simple_expr
-
-_simple_expr -> PLUS simple_term _simple_expr
-               | MINUS simple_term _simple_expr
-               | epsilon
-
-simple_term -> simple_unary _simple_term
-
-_simple_term -> MUL simple_unary _simple_term
-              | DIV simple_unary _simple_term
-              | epsilon
-
-simple_unary -> L_PAREN simple_expr R_PAREN
-              | PLUS simple_unary
-              | MINUS simple_unary
-              | num
+default_spec ->  DEFAULT EQ expr[true] | epsilon
 
 
 #column_list -> id | column_list COMMA id
@@ -168,20 +147,25 @@ _column_list ->  COMMA id _column_list | epsilon
 
 ==================INSERT===================
 insert_stmt -> INSERT INTO id L_PAREN column_list R_PAREN VALUES L_PAREN value_list R_PAREN SEMICOLON
-#value_list -> simple_expr | value_list COMMA simple_expr
-value_list ->  simple_expr _value_list
-_value_list ->  COMMA simple_expr _value_list | epsilon
+
+#value_list -> expr[true] | value_list COMMA expr[true]
+
+#!!!
+value_list ->  expr[true] _value_list
+_value_list ->  COMMA expr[true] _value_list | epsilon
 
 ==================DELETE==================
 
 delete_stmt -> DELETE FROM id where_clause SEMICOLON
 
-
-
 #!!!
 # where_clause -> WHERE conjunct_list | epsilon
 
 where_clause -> WHERE disjunct | epsilon
+
+#conjunct_list -> bool | conjunct_list AND bool
+#conjunct_list -> bool _conjunct_list
+#_conjunct_list ->  AND bool _conjunct_list | epsilon
 
 disjunct -> conjunct _disjunct
 _disjunct -> OR conjunct _disjunct | epsilon
@@ -190,20 +174,18 @@ conjunct -> bool _conjunct
 _conjunct -> AND bool _conjunct | epsilon
 
 bool -> L_PAREN disjunct R_PAREN | NOT bool | comp
-comp -> expr rop expr
-expr -> term _expr
-_expr | PLUS term _expr | MINUS term _expr | epsilon
-term -> unary _term
-_term -> MUL unary _term | DIV unary _term | epsilon
-unary -> L_PAREN expr R_PAREN | PLUS unary | MINUS unary | id | num
+comp -> expr[false] rop expr[false]
 
+expr[] -> term[] _expr[]
+_expr[] -> PLUS term[] _expr[] | MINUS term[] _expr[] | epsilon
+term[] -> unary[] _term[]
+_term[] -> MUL unary[] _term[] | DIV unary[] _term[] | epsilon
+unary[] -> PLUS unary[] | MINUS unary[] | num
+unary[simple=true] -> L_PAREN expr[simple=true] R_PAREN
+unary[simple=false] -> id
 
-#conjunct_list -> bool | conjunct_list AND bool
-conjunct_list -> bool _conjunct_list
-_conjunct_list ->  AND bool _conjunct_list | epsilon
-
-bool -> operand rop operand
-operand -> num | id
+# bool -> operand rop operand
+# operand -> num | id
 rop -> NEQ | EQ | LT | GT | LEQ | GEQ
 
 ====================SELECT=================
