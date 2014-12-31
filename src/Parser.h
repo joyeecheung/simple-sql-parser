@@ -38,10 +38,18 @@ public:
 
     Delete delete_stmt();
     Expr where_clause();
-    Expr conjunct_list();
-    Expr _conjunct_list();
+    Expr disjunct();
+    Expr _disjunct();
+    Expr conjunct();
+    Expr _conjunct();
     Expr boolean();
-    Expr operand();
+    Expr comp();
+    Expr expr();
+    Expr _expr();
+    Expr term();
+    Expr _term();
+    Expr unary();
+
     Type rop();
 
     Query query_stmt();
@@ -51,6 +59,7 @@ public:
     int num();
 
     Parser &match(Type t);
+    void advance();
 
     bool isEnd() const {
         return lookahead == END;
@@ -63,8 +72,6 @@ public:
     int getLine() const {
         return line;
     }
-
-    void advance();
 
     ~Parser() {}
 

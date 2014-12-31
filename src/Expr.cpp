@@ -106,10 +106,37 @@ int Expr::eval(vector<int> record, map<string, int> indexes) const {
         return left->eval(record, indexes) <= right->eval(record, indexes);
     } else if (type == GEQ) {
         return left->eval(record, indexes) >= right->eval(record, indexes);
+    } else if (type == PLUS) {
+        if (hasLeft()) {
+            return left->eval(record, indexes) + right->eval(record, indexes);
+        } else {
+            right->eval(record, indexes);
+        }
+    } else if (type == MINUS) {
+        if (hasLeft()) {
+            return left->eval(record, indexes) - right->eval(record, indexes);
+        } else {
+            0 - right->eval(record, indexes);
+        }
+    } else if (type == MUL) {
+        return left->eval(record, indexes) * right->eval(record, indexes);
+    } else if (type == DIV) {
+        // TODO: div by zero
+        return left->eval(record, indexes) / right->eval(record, indexes);
+    } else if (type == OR) {
+        return left->eval(record, indexes) || right->eval(record, indexes);
+    } else if (type == NOT) {
+        return ! right->eval(record, indexes);
     } else if (type == NONE) {
-        return true;
+        return true;  // for empty where
     }
     return 0;
+}
+
+int Expr::eval() const {
+    vector<int> record;
+    map<string, int> indexes;
+    return eval(record, indexes);  // empty
 }
 
 Expr::~Expr() {
