@@ -1,6 +1,6 @@
+CREATE TABLE Student(sid INT, age INT DEFAULT = 18, PRIMARY KEY (sid));
 SELECT sid, age FROM Student WHERE age > 15 && age < 18;
 INSERT INTO Student(sid, age) VALUES(1111, 18);
-CREATE TABLE Student(sid INT, age INT DEFAULT = 18, PRIMARY KEY (sid));
 DELETE FROM Student WHERE age < 18 && age > 14;
 DELETE FROM Student WHERE age + 18 / 5 - 6 * 1 == 7 || age != 14;
 DELETE FROM Student WHERE age >= 1 && age <= 14;

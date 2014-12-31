@@ -59,30 +59,23 @@ bool Lexer::isOp (char ch) const {
 // in particular, peek may contain values put back in the stream during last call
 // so next time next() is called, we need to intialize them properly
 Token Lexer::next() {
-    while(stream.get(peek)) {
+    while(!isEnd()) {
         if (isdigit(peek)) {  // numbers
             num_buffer = 0;
             do {
-                num_buffer = num_buffer * 10 + peek - '0';
-            } while (stream.get(peek) && isdigit(peek));
-
-            if (peek != EOF) {
-                stream.putback(peek);
-            }
+                num_buffer = num_buffer * 10 + advance() - '0';
+            } while (isdigit(peek));
 
             return Token(NUM, &num_buffer, sizeof(int));
         } else if (isalpha(peek) || peek == '_') {  // keywords or identifilers
             memset(buffer, '\0', sizeof(buffer));
-            int cur = 0;
+            int count = 0;
             do {
-                buffer[cur++] = peek;
-            } while (cur < BUF_SIZE && stream.get(peek) && (isalnum(peek) || peek == '_'));
+                buffer[count++] = advance();
+            } while (count < BUF_SIZE && (isalnum(peek) || peek == '_'));
 
-            if (cur == BUF_SIZE) {
+            if (count == BUF_SIZE) {
                 throw LexError("Exceed maximun identifier length");
-            }
-            if (peek != EOF) {
-                stream.putback(peek);
             }
 
             string str(buffer);
@@ -96,27 +89,24 @@ Token Lexer::next() {
                 return Token(ID, str.c_str(), str.size());
             }
         } else if (isspace(peek)) {  // white space
-            if (peek == '\n')
+            if (advance() == '\n')
                 line++;
         } else if (singleOp.find(peek) != singleOp.end()) {
-            return Token(singleOp[peek]);  // deterministic single character operators
+            // deterministic single character operators
+            return Token(singleOp[advance()]);
         } else if (isOp(peek)) {  // operators
             memset(buffer, '\0', sizeof(buffer));
-            int cur = 0;
+            int count = 0;
             do {
-                buffer[cur++] = peek;
-            } while (stream.get(peek) && isOp(peek));
-
-            if (peek != EOF) {
-                stream.putback(peek);
-            }
+                buffer[count++] = advance();
+            } while (isOp(peek));
 
             string str(buffer);
 
             while (str.size() != 0 && ops.find(str) == ops.end()) { // too long
                 char temp = str[str.size() - 1]; // last charactor
                 str = str.substr(0, str.size() - 1);
-                stream.putback(temp);
+                retreat(temp);
             }
 
             if (str.size() == 0) {
@@ -124,12 +114,12 @@ Token Lexer::next() {
             }
 
             return Token(ops[str]);
-        } else if (peek == EOF) {
-            return Token(END);  // $
         } else {  // error
             throw LexError("Invalid lexeme");
         }
     }
 
-    return Token(END);
+    // peek == EOF
+    advance();
+    return Token(END);  // $
 }

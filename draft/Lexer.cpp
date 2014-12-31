@@ -79,16 +79,25 @@ public:
                || ch == ',' || ch == ';';
     }
 
+    char read_char() {
+        stream.get(peek);
+        col++;
+        return peek;
+    }
+
     // after returen, peek and buffers will retain recent values,
     // in particular, peek may contain values put back in the stream during last call
     // so next time next() is called, we need to intialize them properly
     Token next() {
-        while (stream.get(peek)) {
+        peek = stream.peek();
+        while (peek != EOF) {
+            read_char();
             if (isdigit(peek)) {  // numbers
                 num_buffer = 0;
                 do {
                     num_buffer = num_buffer * 10 + peek - '0';
-                } while (stream.get(peek) && isdigit(peek));
+                    read_char();
+                } while (!isEnd() && isdigit(peek));
 
                 if (peek != EOF) {
                     stream.putback(peek);

@@ -18,49 +18,73 @@ struct Column {
 };
 
 
-int main(int argc, char **argv) {
+int main(int argc, char const *argv[]) {
+    Lexer *lexptr;
+    ofstream out;
+    ifstream in;  // must be in the scope until stop scanning
+
+    if (argc > 1) {
+        in.open(argv[1], ifstream::in);
+        if (in.is_open()) {
+            lexptr = new Lexer(in);
+        } else {
+            cout << "Fail to open " << argv[1] << '\n';
+            exit(1);
+        }
+    } else {
+        lexptr = new Lexer(cin);
+    }
+
+    Parser parser(*lexptr);
     Engine engine;
-    istream in = ...;//
-    ostream out = ...;//
-    Lexer lexer(in);
-    Parser parser(lexer);
 
     while (!parser.isEnd()) {
         try {
-            const Statement &stmt = parser.ssql_stmt();
+            Type next = parser.next_stmt_type();
+            if (next == CREATE) {
+                Create create_stmt = parser.create_stmt();
+                engine.create(create_stmt);
+                cout << "Created table " << create_stmt.getId() << "\n";
+            } else if (next == INSERT) {
+                Insert insert_stmt = parser.insert_stmt();
+                int number = engine.insert(insert_stmt);
+                cout << "Inserted " << number << " rows into table ";
+                cout << insert_stmt.getId() << "\n";
+            } else if (next == DELETE) {
+                Delete delete_stmt = parser.delete_stmt();
+                int number = engine.del(insert_stmt);
+                cout << "Deleted " << number << " rows from table ";
+                cout << delete_stmt.getId() << "\n";
+            } else if (next == SELECT) {
+                Query query_stmt = parser.query_stmt();
 
-            if (engine.create(stmt)) {
-                out << "Created successfully" << '\n';
-            } else if (engine.insert(stmt)) {
-                out << "Insert successfully" << '\n';
-            } else if (engine.del(stmt)) {
-                out << "Delete successfully" << '\n';
-            } else {
                 vector<vector<int> > results;
                 vector<string> names;
-
-                if (engine.query(stmt, names, results)) {
+                int number = engine.query(stmt, names, results);
+                if (number > 0) {
                     for (auto name : names) {
-                        out << name << '\t';
+                        cout << name << '\t';
                     }
-                    out << '\n';
+                    cout << '\n';
 
                     for (auto record : results) {
-                        for (auto field : record) {
-                            out << field << '\t'
+                        for (auto col : record) {
+                            cout << col << '\t'
                         }
-                        out << '\n';
-
-                    } else {
-                        out << "Something went wrong." << '\n';
+                        cout << '\n';
                     }
+                    cout << number <<< " matching rows in " << query_stmt.getId() << "\n";
+                } else {
+                    cout << "No matching rows in " << query_stmt.getId() << "\n";
                 }
             }
         } catch (LexError e) {
-            cout << "line " << lexer.getLine() << ": " << e.what() << '\n';
-            break;
+            cout << lexptr->getLine() << ": " << e.what()  << '\n';
+        } catch (ParseError e) {
+            cout << lexptr->getLine() << ": " << e.what() << '\n';
+        } catch(DataBaseError e) {
+            cout << lexptr->getLine() << ": " << e.what()  << '\n';
         }
-
     }
 
     return 0;

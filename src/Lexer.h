@@ -33,12 +33,30 @@ public:
 
     Token next();
 
+    int getCol() const {
+        return col;
+    }
+
     int getLine() const {
         return line;
     }
 
-    bool isEnd() const {
-        return stream.peek() == EOF;
+    bool isEnd() {
+        peek = stream.peek();
+        return peek == EOF;
+    }
+
+    char advance() {
+        char last = stream.get();
+        peek = stream.peek();
+        col++;
+        return last;
+    }
+
+    void retreat(char ch) {
+        stream.putback(ch);
+        col--;
+        peek = ch;
     }
 
     static map<string, Type> words;
@@ -50,6 +68,7 @@ private:
     char buffer[BUF_SIZE];
     int num_buffer;
     int line;  // line number
+    int col; // column number
     istream &stream;
 };
 
