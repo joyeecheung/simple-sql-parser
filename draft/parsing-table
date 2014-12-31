@@ -52,7 +52,7 @@ decl
 -> id INT default_spec
 -> PRIMARY KEY L_PAREN column_list R_PAREN
 ------------
-{id, PRIMARY}, {COMMA, R_PAREN, $}
+{id, PRIMARY}, {COMMA, R_PAREN}
 ------------
 id:
 decl -> id INT default_spec
@@ -61,13 +61,13 @@ PRIMARY KEY L_PAREN column_list R_PAREN
 
 ------------------------
 default_spec
--> DEFAULT EQ expr[true]
+-> DEFAULT ASSIGN expr[true]
 -> epsilon
 ------------
 {DEFAULT, epsilon}, {COMMA, R_PAREN}
 ------------
 DEFAULT:
-default_spec -> DEFAULT EQ num
+default_spec -> DEFAULT ASSIGN expr[true]
 COMMA:
 default_spec -> epsilon
 R_PAREN:
@@ -77,7 +77,7 @@ default_spec -> epsilon
 column_list
 -> id _column_list
 ------------
-{id}, {FROM, R_PAREN, $}
+{id}, {FROM, R_PAREN}
 ------------
 id:
 column_list ->  id _column_list
@@ -220,7 +220,7 @@ _conjunct
 {AND, epsilon}, {OR, SEMICOLON, R_PAREN}
 ------------
 AND:
-conjunct_list -> bool _conjunct_list
+conjunct_list -> bool _conjunct
 OR:
 _conjunct -> epsilon
 SEMICOLON:
@@ -364,15 +364,15 @@ true {MUL, DIV, PLUS, MINUS, COMMA, R_PAREN}
 false {MUL, DIV, PLUS, MINUS, NEQ, EQ, LT, GT, LEQ, GEQ, AND, OR, SEMICOLON, R_PAREN}
 ------------
 PLUS:
-    unary[true] -> PLUS unary[]
+    unary[] -> PLUS unary[]
 MINUS:
-    unary[true] -> MINUS unary[]
+    unary[] -> MINUS unary[]
 num:
-    unary[true] -> num
+    unary[] -> num
 L_PAREN && simple == true:
     unary[true] -> L_PAREN expr[true] R_PAREN
 id && simple == false:
-    unary[true] -> id
+    unary[false] -> id
 
 
 -----------------------
