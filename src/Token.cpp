@@ -76,7 +76,7 @@ void Token::initNameMap() {
 
 // identifiers
 string Token::getId() const {
-    if (type != ID){
+    if (type != ID) {
         throw TokenError("Expected identifer, get otherwise");
     } else {
         return string(data);
@@ -103,7 +103,7 @@ int Token::getNumber() const {
     }
 }
 
-ostream & operator<<(ostream &s, const Token &token) {
+ostream &operator<<(ostream &s, const Token &token) {
     if (Token::name.size() == 0) {
         Token::initNameMap();
     }
@@ -121,7 +121,7 @@ ostream & operator<<(ostream &s, const Token &token) {
     return s;
 }
 
-Token & Token::operator=(const Token &rhs) {
+Token &Token::operator=(const Token &rhs) {
     type = rhs.type;
     if (isValue(type)) {
         real_size = rhs.real_size;

@@ -1,5 +1,6 @@
 #include "Parser.h"
 
+using std::pair;
 
 Type Parser::next_stmt_type() const {
     if (lookahead == CREATE ||lookahead == INSERT
@@ -18,8 +19,8 @@ Create Parser::create_stmt() {
         match(CREATE); match(TABLE);
         string table_id = id();
         match(L_PAREN);
-        map<string, int> defaults;
-        vector<string> keys;
+        multimap<string, int> defaults;
+        vector<vector<string> > keys;
         decl_list(defaults, keys);
         match(R_PAREN); match(SEMICOLON);
         return Create(table_id, defaults, keys);
@@ -28,7 +29,7 @@ Create Parser::create_stmt() {
     }
 }
 
-Parser & Parser::decl_list(map<string, int> &defaults, vector<string> &keys) {
+Parser & Parser::decl_list(multimap<string, int> &defaults, vector<vector<string> > &keys) {
     if (lookahead == NUM || lookahead == ID) {
         // decl_list -> decl _decl_list
         decl(defaults, keys);
@@ -39,7 +40,7 @@ Parser & Parser::decl_list(map<string, int> &defaults, vector<string> &keys) {
     return *this;
 }
 
-Parser & Parser::_decl_list(map<string, int> &defaults, vector<string> &keys) {
+Parser & Parser::_decl_list(multimap<string, int> &defaults, vector<vector<string> > &keys) {
     if (lookahead == COMMA) {
         // _decl_list -> COMMA decl _decl_list
         match(COMMA); decl(defaults, keys);
@@ -52,17 +53,19 @@ Parser & Parser::_decl_list(map<string, int> &defaults, vector<string> &keys) {
     return *this;
 }
 
-Parser & Parser::decl(map<string, int> &defaults, vector<string> &keys) {
+Parser & Parser::decl(multimap<string, int> &defaults, vector<vector<string> > &keys) {
     if (lookahead == ID) {
         // decl -> id INT default_spec
         string name = id();
         match(INT);
-        int num = default_spec(defaults);
-        defaults[name] = num;
+        int number = default_spec();
+        defaults.insert(std::pair<string,int>(name, number));
     } else if (lookahead == PRIMARY) {
         // decl -> PRIMARY KEY L_PAREN column_list R_PAREN
         match(PRIMARY); match(KEY); match(L_PAREN);
-        column_list(keys);
+        vector<string> columns;
+        column_list(columns);
+        keys.push_back(columns);
         match(R_PAREN);
     } else {
         throw ParseError("Syntax error");
@@ -70,7 +73,7 @@ Parser & Parser::decl(map<string, int> &defaults, vector<string> &keys) {
     return *this;
 }
 
-int Parser::default_spec(map<string, int> &defaults) {
+int Parser::default_spec() {
     if (lookahead == DEFAULT) {
         // default_spec -> DEFAULT ASSIGN num
         match(DEFAULT); match(ASSIGN);

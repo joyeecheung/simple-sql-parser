@@ -36,14 +36,16 @@ int main(int argc, char const *argv[]) {
                 Create create = parser.create_stmt();
                 cout << "create ID: " << create.getId() << '\n';
                 cout << "create defaults" << '\n';
-                const map<string, int> &defs = create.getDefaults();
+                const multimap<string, int> &defs = create.getDefaults();
                 for (auto it = defs.begin(); it != defs.end(); ++it) {
                     cout << it->first << ": " << it->second << "\n";
                 }
                 cout << "create keys:\n";
-                const vector<string> &keys = create.getKeys();
+                const vector<vector<string> > &keys = create.getKeys();
                 for (auto key : keys) {
-                    cout << key << "\n";
+                    for (auto col: key) {
+                        cout << col << "\n";
+                    }
                 }
                 cout << "\n";
             } else if (next == INSERT) {
@@ -76,9 +78,9 @@ int main(int argc, char const *argv[]) {
             }
         } catch (LexError e) {
             cout << lexptr->getLine() << ": " << e.what()  << '\n';
-        } catch(ParseError e) {
+        } catch (ParseError e) {
             cout << lexptr->getLine() << ": " << e.what() << '\n';
         }
     }
     return 0;
- }
+}

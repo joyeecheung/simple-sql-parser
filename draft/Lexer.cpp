@@ -13,9 +13,11 @@ using std::map;
 
 class LexError : std::exception {
 public:
-   LexError(string _msg) : msg(_msg) {}
-   ~LexError() throw () {} // Updated
-   const char* what() const throw() { return msg.c_str(); }
+    LexError(string _msg) : msg(_msg) {}
+    ~LexError() throw () {} // Updated
+    const char *what() const throw() {
+        return msg.c_str();
+    }
 private:
     string msg;
 };
@@ -72,16 +74,16 @@ public:
 
     bool isOp (char ch) {
         return ch == '&' || ch == '|' || ch == '!' || ch == '<'
-            || ch == '>' || ch == '=' || ch == '+' || ch == '-'
-            || ch == '*' || ch == '/' || ch == '(' || ch == ')'
-            || ch == ',' || ch == ';';
+               || ch == '>' || ch == '=' || ch == '+' || ch == '-'
+               || ch == '*' || ch == '/' || ch == '(' || ch == ')'
+               || ch == ',' || ch == ';';
     }
 
     // after returen, peek and buffers will retain recent values,
     // in particular, peek may contain values put back in the stream during last call
     // so next time next() is called, we need to intialize them properly
     Token next() {
-        while(stream.get(peek)) {
+        while (stream.get(peek)) {
             if (isdigit(peek)) {  // numbers
                 num_buffer = 0;
                 do {
