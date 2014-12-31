@@ -61,8 +61,8 @@ insert_stmt = {INSERT}
 #value_list -> expr[true] _value_list
 # first(expr[true])
 value_list = {PLUS, MINUS, num, L_PAREN}
-#_value_list ->  COMMA expr[true] _value_list
-#_value_list ->  epsilon
+#_value_list -> COMMA expr[true] _value_list
+#_value_list -> epsilon
 _value_list = {COMMA, epsilon}
 
 #delete_stmt -> DELETE FROM id where_clause SEMICOLON
