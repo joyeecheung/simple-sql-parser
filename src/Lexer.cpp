@@ -89,8 +89,11 @@ Token Lexer::next() {
                 return Token(ID, str.c_str(), str.size());
             }
         } else if (isspace(peek)) {  // white space
-            if (advance() == '\n')
+            if (advance() == '\n') {
                 line++;
+                col = 1;
+            }
+
         } else if (singleOp.find(peek) != singleOp.end()) {
             // deterministic single character operators
             return Token(singleOp[advance()]);

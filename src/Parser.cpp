@@ -294,11 +294,8 @@ Parser & Parser::select_list(vector<string> &columns) {
 
 string Parser::id() {
     if (lookahead == ID) {
-#ifdef TRACK
-        std::cout << lookahead << ' ';
-#endif
         string result = lookahead.getId();
-        lookahead = lexer.next();
+        advance();
         return result;
     } else {
         throw ParseError("Syntax error: Expected ID");
@@ -307,11 +304,8 @@ string Parser::id() {
 
 int Parser::num() {
     if (lookahead == NUM) {
-#ifdef TRACK
-        std::cout << lookahead << ' ';
-#endif
         int result = lookahead.getNumber();
-        lookahead = lexer.next();
+        advance();
         return result;
     } else {
         throw ParseError("Syntax error: Expected number");
@@ -320,14 +314,20 @@ int Parser::num() {
 
 Parser & Parser::match(Type t) {
     if (lookahead == t) {
-#ifdef TRACK
-        std::cout << lookahead << ' ';
-        if (lookahead == SEMICOLON)
-            std::cout << '\n';
-#endif
-        lookahead = lexer.next();
+        advance();
     } else {
         throw ParseError("Syntax error");
     }
     return *this;
+}
+
+void Parser::advance() {
+#ifdef TRACK
+    std::cout << lookahead << ' ';
+    if (lookahead == SEMICOLON)
+        std::cout << '\n';
+#endif
+    col = lexer.getCol();
+    line = lexer.getLine();
+    lookahead = lexer.next();
 }

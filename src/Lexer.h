@@ -25,7 +25,8 @@ private:
 class Lexer {
 public:
     Lexer(istream &s) : stream(s) {
-        line = 0;
+        line = 1;
+        col = 1;
         initLookups();
     }
 

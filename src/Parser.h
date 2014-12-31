@@ -52,15 +52,27 @@ public:
 
     Parser &match(Type t);
 
-    bool isEnd() {
+    bool isEnd() const {
         return lookahead == END;
     }
+
+    int getCol() const {
+        return col;
+    }
+
+    int getLine() const {
+        return line;
+    }
+
+    void advance();
 
     ~Parser() {}
 
 private:
     Token lookahead;
     Lexer &lexer;
+    int col;  // column number
+    int line;  // line number
 };
 
 #endif
