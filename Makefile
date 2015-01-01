@@ -60,4 +60,4 @@ checkmem: $(testparser)
 test: $(EXECUTABLE)
 	$(EXECUTABLE) $(ALLIN)
 
-.PHONY: testparser testlexer checkmem
+.PHONY: testparser testlexer checkmem test

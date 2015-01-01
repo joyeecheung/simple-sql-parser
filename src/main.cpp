@@ -14,18 +14,17 @@ using namespace ssql;
 
 
 void print_data(const vector<string> &names, vector<vector<int> > &results) {
-    cout << "------------------------------------\n|";
+    cout << "------------------------------------\n";
     for (const auto &name : names) {
-        cout << name << "\t|";
+        cout << "|" << name << "\t";
     }
-    cout << "\n------------------------------------\n|";
+    cout << "|\n------------------------------------\n";
     for (const auto &record : results) {
         for (auto col : record) {
-            cout << col << "\t|";
+            cout << "|" << col << "\t";
         }
-        cout << "\n";
+        cout << "|\n------------------------------------\n";
     }
-    cout << "------------------------------------\n";
 }
 
 

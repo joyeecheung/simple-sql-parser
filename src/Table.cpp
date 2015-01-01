@@ -69,6 +69,9 @@ int Table::del(const Expr expr) {
 int Table::query(const vector<string> &names, const Expr expr,
              vector<vector<int> > &results) const {
     int count = 0;
+    if (data.size() <= 0) {
+        return 0;
+    }
 
     // get queried columns
     if (std::find(names.begin(), names.end(), "*") != names.end()) { // all
