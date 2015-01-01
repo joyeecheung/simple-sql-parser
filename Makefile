@@ -50,4 +50,7 @@ testlexer: $(OBJECTS) $(LEXMAINOBJ) $(LEXIN)
 	$(EXECUTABLE) $(LEXIN) > test/lexer.out
 	diff test/lexer.out test/lexer.good
 
-.PHONY: testparser testlexer
+checkmem: $(testparser)
+	valgrind --leak-check=full -v $(EXECUTABLE) $(PARSEIN)
+
+.PHONY: testparser testlexer checkmem
