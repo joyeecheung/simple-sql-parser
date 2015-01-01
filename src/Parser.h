@@ -22,6 +22,8 @@ private:
 class Parser {
 public:
     Parser(Lexer &l) : lexer(l) {
+        col = lexer.getCol();
+        line = lexer.getLine();
         lookahead = lexer.next();
     }
     Type next_stmt_type() const;

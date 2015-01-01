@@ -91,8 +91,6 @@ Token Lexer::next() {
             if (advance() == '\n') {
                 line++;
                 col = 1;
-            } else {
-                col++;
             }
         } else if (singleOp.find(peek) != singleOp.end()) {
             // deterministic single character operators
