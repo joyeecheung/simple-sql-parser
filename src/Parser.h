@@ -18,7 +18,17 @@ private:
     string msg;
 };
 
-
+/* Predictive parser.
+ *
+ * Use RVO instead of move semantics for performance.
+ * Usage:
+ *     Parser parser(lexer);  // get a lexer for it first.
+ *     // type of next statement. CREATE/DELETE/INSERT/SELECT
+ *     Type next_type = parser.next_stmt_type();
+ *     if (next_type == CREATE) {  // check the type first
+ *         Create stmt = parser.create_stmt();  // get the statment
+ *     } // and so forth...
+ */
 class Parser {
 public:
     Parser(Lexer &l) : lexer(l) {
@@ -26,7 +36,8 @@ public:
         line = lexer.getLine();
         lookahead = lexer.next();
     }
-    Type next_stmt_type() const;
+
+    Type next_stmt_type() const;  // head of next statement
 
     Create create_stmt();
     Parser &decl_list(multimap<string, int> &defaults, vector<vector<string> > &keys);
@@ -41,6 +52,7 @@ public:
     Parser &_value_list(vector<int> &values);
 
     Delete delete_stmt();
+    // RVO is heavily used here
     Expr where_clause();
     Expr disjunct();
     Expr _disjunct();
@@ -59,12 +71,16 @@ public:
     Query query_stmt();
     Parser &select_list(vector<string> &columns);
 
+    // terminals
     string id();
     int num();
+    Parser &match(Type t);  // match a keyword/operator
 
-    Parser &match(Type t);
+    // Use this to move the lookahead and record the col/line.
+    // Don't call lexer.next() by hand.
     void advance();
 
+    // next lookahead is END
     bool isEnd() const {
         return lookahead == END;
     }

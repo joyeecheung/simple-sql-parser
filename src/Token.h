@@ -30,7 +30,21 @@ private:
     string msg;
 };
 
-// avoid RTTI since Token's value will be frequently needed
+/* Tokens (for terminals).
+ *
+ * Avoid RTTI since Token's value will be frequently needed.
+ * There are Four type of tokens:
+ *     1. Keyword. `type` is its type (e.g. CREATE), `data`=NULL,
+ *        `real_size`=0. Use `Type getKeyword()` to get it.
+ *     2. Operator. `type` is its type (e.g. CREATE), `data`=NULL,
+ *        `real_size`=0. Use `Type getKeyword()` to get it.
+ *     3. Identifier. `type`is ID, `data` contains
+ *         the raw string, `real_size` is string length + 1(for '\0').
+ *         use `string getId()` to get it.
+ *     4. Number. `type` is NUM, `data` contains an int,
+ *         `real_size` is the size of the int.
+ *         use `int getNumber()` to get it.
+ */
 class Token {
 public:
     Token(Type _type=NONE, const void *raw=NULL, const int size=0);
