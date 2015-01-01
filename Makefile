@@ -15,6 +15,7 @@ MAIN=src/main.cpp
 
 LEXIN=test/lexer.in
 PARSEIN=test/parser.in
+ALLIN=test/all.in
 
 SOURCES=$(TOKEN) $(LEXER) $(EXPR) $(PARSER) $(TABLE) $(ENGINE)
 OBJECTS=$(SOURCES:.cpp=.o)
@@ -25,7 +26,7 @@ PARSEMAINOBJ=$(PARSEMAIN:.cpp=.o)
 
 EXECUTABLE=bin/ssql
 
-all: $(SOURCES) $(EXECUTABLE)
+all: $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS) $(MAINOBJ)
 	$(CC) $(OBJECTS) $(MAINOBJ) -g -o $@
@@ -55,5 +56,8 @@ testlexer: $(OBJECTS) $(LEXMAINOBJ) $(LEXIN)
 
 checkmem: $(testparser)
 	valgrind --leak-check=full -v $(EXECUTABLE) $(PARSEIN)
+
+test: $(EXECUTABLE)
+	$(EXECUTABLE) $(ALLIN)
 
 .PHONY: testparser testlexer checkmem

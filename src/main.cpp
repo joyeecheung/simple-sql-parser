@@ -12,6 +12,24 @@ using std::ifstream;
 using std::ofstream;
 using namespace ssql;
 
+
+void print_data(const vector<string> &names, vector<vector<int> > &results) {
+    cout << "------------------------------------\n|";
+    for (const auto &name : names) {
+        cout << name << "\t|";
+    }
+    cout << "\n------------------------------------\n|";
+    for (const auto &record : results) {
+        for (auto col : record) {
+            cout << col << "\t|";
+        }
+        cout << "\n";
+    }
+    cout << "------------------------------------\n";
+}
+
+
+
 int main(int argc, char const *argv[]) {
     Lexer *lexptr;
     ofstream out;
@@ -63,17 +81,8 @@ int main(int argc, char const *argv[]) {
                         names = engine.getColumns(table_id);
                     }
 
-                    for (auto name : names) {
-                        cout << name << '\t';
-                    }
-                    cout << '\n';
+                    print_data(names, results);
 
-                    for (auto record : results) {
-                        for (auto col : record) {
-                            cout << col << '\t';
-                        }
-                        cout << '\n';
-                    }
                     cout << number << " matching rows in ";
                     cout << query_stmt.getId() << "\n";
                 } else {
