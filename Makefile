@@ -1,20 +1,22 @@
 CC=clang++
-#CFLAGS=-c -Wall -DTRACK -std=c++11
-CFLAGS=-c -Wall -std=c++11
+CFLAGS=-c -Wall -DTRACK -std=c++11
+#CFLAGS=-c -Wall -std=c++11
 
 TOKEN=src/Token.cpp
 LEXER=src/Lexer.cpp
 EXPR=src/Expr.cpp
 PARSER=src/Parser.cpp
+TABLE=src/Table.cpp
+ENGINE=src/Engine.cpp
 
 LEXMAIN=src/test_lexer.cpp
 PARSEMAIN=src/test_parser.cpp
-MAIN=src/test_parser.cpp
+MAIN=src/main.cpp
 
 LEXIN=test/lexer.in
 PARSEIN=test/parser.in
 
-SOURCES=$(TOKEN) $(LEXER) $(EXPR) $(PARSER)
+SOURCES=$(TOKEN) $(LEXER) $(EXPR) $(PARSER) $(TABLE) $(ENGINE)
 OBJECTS=$(SOURCES:.cpp=.o)
 
 MAINOBJ=$(MAIN:.cpp=.o)

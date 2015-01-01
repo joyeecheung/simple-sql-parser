@@ -12,7 +12,7 @@ namespace ssql{
 class Statement {
 public:
     Statement(string _id) : id(_id) {}
-    string getId() { return id; }
+    string getId() const { return id; }
 private:
     string id;
 };
