@@ -1,6 +1,6 @@
 CC=clang++
-CFLAGS=-c -Wall -DTRACK -std=c++11
-#CFLAGS=-c -Wall -std=c++11
+#CFLAGS=-c -Wall -DTRACK -std=c++11
+CFLAGS=-c -Wall -std=c++11
 
 TOKEN=src/Token.cpp
 LEXER=src/Lexer.cpp

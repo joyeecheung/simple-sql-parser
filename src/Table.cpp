@@ -45,6 +45,10 @@ Table &Table::insert(const vector<string> cols,
 }
 
 int Table::del(const Expr expr) {
+    if (data.size() <= 0) {
+        return 0;
+    }
+
     auto it = data.begin();
     int count = 0;
 
@@ -52,7 +56,7 @@ int Table::del(const Expr expr) {
     // should be in the schema of the table
     while (it != data.end()) {
         if (expr.eval(*it, indexes)) {
-            data.erase(it++);
+            it = data.erase(it);
             count++;
         } else {
             it++;

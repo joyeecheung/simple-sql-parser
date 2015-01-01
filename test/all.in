@@ -1,0 +1,7 @@
+CREATE TABLE Student(sid INT, age INT DEFAULT = 15, PRIMARY KEY(sid));
+INSERT INTO Student(sid, age) VALUES(1, 10);
+INSERT INTO Student(sid, age) VALUES(2, 13);
+DELETE FROM Student WHERE age + 7 > 5 && sid <> 2;
+SELECT * FROM Student;
+SELECT age FROM Student WHERE age + 7 > 5;
+DELETE FROM Student;
