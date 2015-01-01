@@ -5,6 +5,7 @@
 #include "Lexer.h"
 #include "Parser.h"
 #include "Engine.h"
+#include "Expr.h"
 
 using std::cin;
 using std::cout;
@@ -90,13 +91,24 @@ int main(int argc, char const *argv[]) {
                 }
             }
         } catch (LexError e) {
-            cout << lexptr->getLine() << ": " << e.what()  << '\n';
+            cout << "line " << parser.getLine() << ", ";
+            cout << "column " << parser.getCol() << ": ";
+            cout << e.what()  << '\n';
             exit(1);
         } catch (ParseError e) {
-            cout << lexptr->getLine() << ": " << e.what() << '\n';
+            cout << "line " << parser.getLine() << ", ";
+            cout << "column " << parser.getCol() << ": ";
+            cout << e.what() << '\n';
             exit(1);
         } catch(DataBaseError e) {
-            cout << lexptr->getLine() << ": " << e.what()  << '\n';
+            cout << "line " << parser.getLine() << ", ";
+            cout << "column " << parser.getCol() << ": ";
+            cout << e.what()  << '\n';
+        } catch(RuntimeError e) {
+            cout << "line " << parser.getLine() << ", ";
+            cout << "column " << parser.getCol() << ": ";
+            cout << e.what()  << '\n';
+            exit(1);
         }
     }
 
