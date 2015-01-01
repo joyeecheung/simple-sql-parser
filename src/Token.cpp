@@ -1,11 +1,11 @@
 #include "Token.h"
 
-namespace ssql{
+namespace ssql {
 
 map<Type, string> Token::name;
 
 Token::Token(Type _type, const void *raw, const int size) {
-    if (isValue(_type)) {
+    if (isValue(_type)) {  // number or identifier
         if (raw == NULL || size == 0) {
             throw TokenError("Expected non-keyword");
         } else {
@@ -19,7 +19,7 @@ Token::Token(Type _type, const void *raw, const int size) {
             data = new char[real_size];
             memcpy(data, (char *)raw, real_size);
         }
-    } else {
+    } else {  // keyword or operator
         type = _type;
         data = NULL;
         real_size = 0;
@@ -28,11 +28,11 @@ Token::Token(Type _type, const void *raw, const int size) {
 
 Token::Token(const Token &other) {
     type = other.type;
-    if (isValue(type)) {
+    if (isValue(type)) {  // number or identifier
         real_size = other.real_size;
         data = new char[real_size];
         memcpy(data, other.data, real_size);
-    } else {
+    } else {  // keyword or operator
         real_size = 0;
         data = NULL;
     }
@@ -125,16 +125,19 @@ ostream &operator<<(ostream &s, const Token &token) {
 
 Token &Token::operator=(const Token &rhs) {
     type = rhs.type;
+
+    // release old data
     if (data != NULL) {
         delete [] data;
         data = NULL;
         real_size = 0;
     }
-    if (isValue(type)) {
+
+    if (isValue(type)) {  // number or identifier
         real_size = rhs.real_size;
         data = new char[real_size];
         memcpy(data, rhs.data, real_size);
-    } else {
+    } else {  // keyword or operator
         real_size = 0;
         data = NULL;
     }

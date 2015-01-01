@@ -13,6 +13,7 @@ using std::string;
 using std::ostream;
 using std::map;
 
+// keywords and operators
 enum Type {
     ID, NUM, CREATE, TABLE, INT, DEFAULT, PRIMARY, KEY, INSERT,
     INTO, VALUES, DELETE, FROM, WHERE, SELECT, ASSIGN, LT, GT, NEQ, EQ,
@@ -34,6 +35,7 @@ class Token {
 public:
     Token(Type _type=NONE, const void *raw=NULL, const int size=0);
     Token(const Token &other);
+
     // number or identifier
     bool isValue(Type t) const {  // number or identifier
         return t == NUM || t == ID;
@@ -43,31 +45,34 @@ public:
         return type;
     }
 
-    // identifiers
+    // For identifiers. Need to guarded by getType() == ID
     string getId() const;
-    // keywords
+    // For keywords or operators. Need to guarded by !isValue(getType())
     Type getKeyword() const;
-    // numbers
+    // For numbers. Need to guarded by getType() == NUM
     int getNumber() const;
 
-    friend ostream &operator<<(ostream &s, const Token &token);
+    // Check type
     bool operator== (Type rhs) const {
         return type == rhs;
     }
     bool operator!= (Type rhs) const {
         return !(*this == rhs);
     }
+
     Token &operator=(const Token &rhs);
+    friend ostream &operator<<(ostream &s, const Token &token);
 
     ~Token();
 
-    static map<Type, string> name;
-    static void initNameMap();
+    static map<Type, string> name;  // uppercase name of types
 
 private:
-    Type type;
-    char *data;
-    int real_size;
+    static void initNameMap();  // statically init names
+
+    Type type;  // type of the token
+    char *data;  // raw data
+    int real_size;  // size of data[]
 };
 
 }

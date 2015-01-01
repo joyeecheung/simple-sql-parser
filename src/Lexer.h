@@ -44,35 +44,39 @@ public:
         return line;
     }
 
+    // can't be read anymore i.e. peek == EOF
     bool isEnd() {
         peek = stream.peek();
         return peek == EOF;
     }
 
+    // advance in the stream, return the read character
     char advance() {
         char last = stream.get();
         peek = stream.peek();
-        col++;
+        col++;  // record column
         return last;
     }
 
-    void retreat(char ch) {
+    void retreat(char ch) {  // put ch back to stream
         stream.putback(ch);
-        col--;
+        col--;  // record column
         peek = ch;
     }
 
-    static map<string, Type> words;
+    static map<string, Type> words;  // keywords
+    // operators that can be determined by one character
     static map<char, Type> singleOp;
-    static map<string, Type> ops;
+    static map<string, Type> ops;  // other operators
 private:
-    static void initLookups();
-    char peek;
-    char buffer[BUF_SIZE];
-    int num_buffer;
+    static void initLookups();  // init the maps
+
+    char peek;  // next character to read by advance()
+    char buffer[BUF_SIZE];  // for keywords, operators etc.
+    int num_buffer;  // for accumulating numbers
     int line;  // line number
     int col; // column number
-    istream &stream;
+    istream &stream;  // stream for lexer
 };
 
 }

@@ -120,7 +120,7 @@ int Expr::eval(vector<int> record, map<string, int> indexes) const {
         if (hasLeft()) {
             return left->eval(record, indexes) + right->eval(record, indexes);
         } else {
-            right->eval(record, indexes);
+            return right->eval(record, indexes);
         }
     } else if (type == MINUS) {
         if (hasLeft()) {

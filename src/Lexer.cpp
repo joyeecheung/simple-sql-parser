@@ -57,9 +57,6 @@ bool Lexer::isOp (char ch) const {
         || ch == ',' || ch == ';';
 }
 
-// after returen, peek and buffers will retain recent values,
-// in particular, peek may contain values put back in the stream during last call
-// so next time next() is called, we need to intialize them properly
 Token Lexer::next() {
     while(!isEnd()) {
         if (isdigit(peek)) {  // numbers

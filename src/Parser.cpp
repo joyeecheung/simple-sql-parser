@@ -86,6 +86,9 @@ int Parser::default_spec() {
         match(DEFAULT);
         match(ASSIGN);
         Expr spec = expr(true);
+#ifdef TRACK
+        std::cout << '\n' << spec << '\n';
+#endif
         return spec.eval();
     } else if (lookahead == COMMA || lookahead == R_PAREN) {
         // default_spec -> epsilon
@@ -148,6 +151,9 @@ Parser & Parser::value_list(vector<int> &values) {
         || lookahead == NUM || lookahead == L_PAREN) {
         // value_list -> expr[true] _value_list
         Expr value = expr(true);
+#ifdef TRACK
+        std::cout << '\n' << value << '\n';
+#endif
         values.push_back(value.eval());
         _value_list(values);
     } else {
@@ -161,6 +167,9 @@ Parser & Parser::_value_list(vector<int> &values) {
         // _value_list -> COMMA expr[true] _value_list
         match(COMMA);
         Expr value = expr(true);
+#ifdef TRACK
+        std::cout << '\n' << value << '\n';
+#endif
         values.push_back(value.eval());
         _value_list(values);
     } else if (lookahead == R_PAREN){
