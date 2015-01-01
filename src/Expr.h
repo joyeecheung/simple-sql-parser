@@ -13,6 +13,18 @@ using std::vector;
 using std::string;
 using std::map;
 
+
+class RuntimeError : std::exception {
+public:
+    RuntimeError(string _msg) : msg(_msg) {}
+    ~RuntimeError() throw () {} // Updated
+    const char *what() const throw() {
+        return msg.c_str();
+    }
+private:
+    string msg;
+};
+
 /* Expression class with a tree-like structure.
  *
  * There are three type of expressions:

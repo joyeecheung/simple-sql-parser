@@ -101,7 +101,11 @@ int Expr::eval(vector<int> record, map<string, int> indexes) const {
     if (type == NUM) {
         return value.getNumber();
     } else if (type == ID) {
-        return record[indexes[value.getId()]];
+        auto it = indexes.find(value.getId());
+        if (it == indexes.end()) {
+            throw RuntimeError(it->first + " not found in the scheme");
+        }
+        return record[it->second];
     } else if (type == AND) {
         return left->eval(record, indexes) && right->eval(record, indexes);
     } else if (type == EQ) {
@@ -131,8 +135,12 @@ int Expr::eval(vector<int> record, map<string, int> indexes) const {
     } else if (type == MUL) {
         return left->eval(record, indexes) * right->eval(record, indexes);
     } else if (type == DIV) {
-        // TODO: div by zero
-        return left->eval(record, indexes) / right->eval(record, indexes);
+        int left_result = left->eval(record, indexes);
+        int right_result = right->eval(record, indexes);
+        if (right_result == 0) {
+            throw RuntimeError("Division by zero");
+        }
+        return left_result / right_result;
     } else if (type == OR) {
         return left->eval(record, indexes) || right->eval(record, indexes);
     } else if (type == NOT) {
