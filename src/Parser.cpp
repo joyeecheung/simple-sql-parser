@@ -209,7 +209,7 @@ Expr Parser::disjunct() {
             return test;
         }
     } else {
-        throw ParseError("Syntax error");
+        throw ParseError("Syntax error when maching disjunct");
     }
 }
 
@@ -233,7 +233,7 @@ Expr Parser::_disjunct() {
     } else if (lookahead == SEMICOLON || lookahead == R_PAREN) {
         return NULL_EXPR;  // _disjunct-> epsilon
     } else {
-        throw ParseError("Syntax error");
+        throw ParseError("Syntax error when matching disjunct");
     }
 }
 
@@ -242,7 +242,7 @@ Expr Parser::conjunct() {
     if (lookahead == L_PAREN || lookahead == NOT
         || lookahead == PLUS || lookahead == MINUS
         || lookahead == NUM || lookahead == ID) {
-        // conjunct -> bool _conjunct_list
+        // conjunct -> bool _conjunct
         Expr temp = boolean();
         Expr test = _conjunct();
         if (test.isNull()) {  // test lack a left node
@@ -252,7 +252,7 @@ Expr Parser::conjunct() {
             return test;
         }
     } else {
-        throw ParseError("Syntax error");
+        throw ParseError("Syntax error when matching conjunct");
     }
 }
 
@@ -276,26 +276,29 @@ Expr Parser::_conjunct() {
             || lookahead == R_PAREN) {
         return NULL_EXPR;  // _conjunct -> epsilon
     } else {
-        throw ParseError("Syntax error");
+        throw ParseError("Syntax error when matching conjunct");
     }
 }
 
 Expr Parser::boolean() {
     if (lookahead == NUM || lookahead == ID
      || lookahead == PLUS || lookahead == MINUS) {
+        // bool -> comp
         return comp();
     } else if (lookahead == L_PAREN) {
+        // bool -> L_PAREN disjunct R_PAREN
         match(L_PAREN);
         Expr temp = disjunct();
         match(R_PAREN);
         return temp;
     } else if (lookahead == NOT) {
+        // bool -> NOT bool
         match(NOT);
         Expr temp(NOT);
-        temp.setRight(disjunct());
+        temp.setRight(boolean());
         return temp;
     } else {
-        throw ParseError("Syntax error");
+        throw ParseError("Syntax error when matching boolean");
     }
 }
 
@@ -309,7 +312,7 @@ Expr Parser::comp() {
         temp.setRight(expr(false));
         return temp;
     } else {
-        throw ParseError("Syntax error");
+        throw ParseError("Syntax error when maching comparisons");
     }
 }
 
@@ -322,12 +325,11 @@ Expr Parser::expr(bool simple) {
         if (test.isNull()) {  // test lack a left node
             return temp;
         } else {
-            test.setLeft(temp);
+            test.setLeftMost(temp);
             return test;
         }
-        return temp;
     } else {
-        throw ParseError("Syntax error");
+        throw ParseError("Syntax error when matching expressions");
     }
 }
 
@@ -345,9 +347,9 @@ Expr Parser::_expr(bool simple) {
             root.setRight(temp);
             return root;
         } else {
-            test.setLeft(temp);
-            root.setRight(test);
-            return root;
+            root.setRight(temp);
+            test.setLeft(root);
+            return test;
         }
     } else if (simple && (lookahead == COMMA || lookahead == R_PAREN)) {
         return NULL_EXPR;  // _expr[] -> epsilon
@@ -357,7 +359,7 @@ Expr Parser::_expr(bool simple) {
         || lookahead == SEMICOLON || lookahead == R_PAREN)) {
         return NULL_EXPR;  // _expr[] -> epsilon
     } else {
-        throw ParseError("Syntax error");
+        throw ParseError("Syntax error when matching expressions");
     }
 }
 
@@ -370,12 +372,11 @@ Expr Parser::term(bool simple) {
         if (test.isNull()) {  // test lack a left node
             return temp;
         } else {
-            test.setLeft(temp);
+            test.setLeftMost(temp);
             return test;
         }
-        return temp;
     } else {
-        throw ParseError("Syntax error");
+        throw ParseError("Syntax error when matching terms");
     }
 }
 
@@ -388,16 +389,18 @@ Expr Parser::_term(bool simple) {
         match(op);
         Expr root(op);
 
-        Expr temp = term(simple);
-        Expr test = _expr(simple);
+        Expr temp = unary(simple);
+        Expr test = _term(simple);
         if (test.isNull()) {
             root.setRight(temp);
             return root;
         } else {
-            test.setLeft(temp);
-            root.setRight(test);
-            return root;
+            root.setRight(temp);
+            test.setLeft(root);
+            return test;
         }
+    } else if (lookahead == PLUS || lookahead == MINUS) {
+        return NULL_EXPR;  // _term[] -> epsilon
     } else if (simple && (lookahead == COMMA || lookahead == R_PAREN)) {
         return NULL_EXPR;  // _term[] -> epsilon
     } else if (!simple && (lookahead == NEQ || lookahead == EQ
@@ -406,7 +409,7 @@ Expr Parser::_term(bool simple) {
         || lookahead == SEMICOLON || lookahead == R_PAREN)) {
         return NULL_EXPR;  // _term[]-> epsilon
     } else {
-        throw ParseError("Syntax error");
+        throw ParseError("Syntax error when matching terms");
     }
 }
 
@@ -431,14 +434,14 @@ Expr Parser::unary(bool simple) {
         Expr temp(ID);
         temp.setValue(Token(ID, result.c_str(), result.size()));
         return temp;
-    else if (simple && lookahead == L_PAREN) {
+    } else if (simple && lookahead == L_PAREN) {
         // unary[true] -> L_PAREN expr[true] R_PAREN
         match(L_PAREN);
         Expr temp = expr(true);
         match(R_PAREN);
         return temp;
     } else {
-        throw ParseError("Syntax error");
+        throw ParseError("Syntax error when matching unary");
     }
 }
 
@@ -450,7 +453,7 @@ Type Parser::rop() {
         match(result);
         return result;
     } else {
-        throw ParseError("Syntax error");
+        throw ParseError("Syntax error when matching relational operators");
     }
 }
 

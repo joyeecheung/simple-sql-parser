@@ -342,6 +342,8 @@ MUL:
     _term[] -> MUL unary[] _term[]
 DIV:
     _term[] -> DIV unary[] _term[]
+PLUS || MINUS:
+    _term[] -> epsilon
 true:
     COMMA || R_PAREN:
         _term[] -> epsilon
@@ -378,7 +380,7 @@ id && simple == false:
 -----------------------
 rop
 ------------
-{NEQ, EQ, LT, GT, LEQ, GEQ}, {nPLUS, MINUS, num, id}
+{NEQ, EQ, LT, GT, LEQ, GEQ}, {PLUS, MINUS, num, id}
 ------------
 NEQ:
 rop -> NEQ

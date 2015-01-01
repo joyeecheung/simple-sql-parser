@@ -100,10 +100,14 @@ int main(int argc, char const *argv[]) {
         } catch (LexError e) {
             cout << lexptr->getLine() << ", " << lexptr->getCol() << ": ";
             cout << e.what()  << '\n';
+            exit(1);
         } catch (ParseError e) {
             cout << parser.getLine() << ", " << parser.getCol() << ": ";
             cout << e.what() << '\n';
+            exit(1);
         }
     }
+
+    delete lexptr;
     return 0;
 }

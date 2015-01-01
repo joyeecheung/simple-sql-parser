@@ -38,6 +38,14 @@ void Expr::setRight(const Expr &other) {
     *right = other;
 }
 
+void Expr::setLeftMost(const Expr &other) {
+    Expr *cur = this;
+    while(cur->hasLeft()) {
+        cur = cur->left;
+    }
+    cur->setLeft(other);
+}
+
 Expr &Expr::operator=(const Expr &rhs) {
     if (rhs.left != NULL) {  // other has a left
         setLeft(*(rhs.left));
@@ -116,7 +124,7 @@ int Expr::eval(vector<int> record, map<string, int> indexes) const {
         if (hasLeft()) {
             return left->eval(record, indexes) - right->eval(record, indexes);
         } else {
-            0 - right->eval(record, indexes);
+            return 0 - right->eval(record, indexes);
         }
     } else if (type == MUL) {
         return left->eval(record, indexes) * right->eval(record, indexes);

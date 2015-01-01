@@ -33,7 +33,7 @@ void Lexer::initLookups() {
     ops["!"] = NOT;
     ops["<"] = LT;
     ops[">"] = GT;
-    ops["!="] = NEQ;
+    ops["<>"] = NEQ;
     ops["="] = ASSIGN;
     ops["=="] = EQ;
     ops[">="] = GEQ;
@@ -92,8 +92,9 @@ Token Lexer::next() {
             if (advance() == '\n') {
                 line++;
                 col = 1;
+            } else {
+                col++;
             }
-
         } else if (singleOp.find(peek) != singleOp.end()) {
             // deterministic single character operators
             return Token(singleOp[advance()]);

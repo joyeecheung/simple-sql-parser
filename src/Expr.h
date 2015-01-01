@@ -17,6 +17,8 @@ public:
     Expr(const Expr &other);
     void setLeft(const Expr &other);
     void setRight(const Expr &other);
+    void setLeftMost(const Expr &other);
+
     void setValue(Token v) {
         value = v;
     }
@@ -59,6 +61,7 @@ public:
     friend ostream &operator<<(ostream &s, const Expr &expr);
 
     int eval(vector<int> record, map<string, int> indexes) const;
+    int eval() const;
     ~Expr();
 private:
     Expr *left;

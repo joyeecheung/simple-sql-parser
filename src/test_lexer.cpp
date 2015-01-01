@@ -40,5 +40,6 @@ int main(int argc, char const *argv[]) {
     if (lookahead == END) {
         cout << lookahead << '\n';
     }
+    delete lexptr;
     return 0;
  }

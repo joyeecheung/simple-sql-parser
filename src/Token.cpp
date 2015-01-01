@@ -123,6 +123,11 @@ ostream &operator<<(ostream &s, const Token &token) {
 
 Token &Token::operator=(const Token &rhs) {
     type = rhs.type;
+    if (data != NULL) {
+        delete [] data;
+        data = NULL;
+        real_size = 0;
+    }
     if (isValue(type)) {
         real_size = rhs.real_size;
         data = new char[real_size];
@@ -136,7 +141,7 @@ Token &Token::operator=(const Token &rhs) {
 
 Token::~Token() {
     if (data != NULL) {
-        delete data;
+        delete [] data;
         data = NULL;
     }
 }

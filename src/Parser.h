@@ -44,11 +44,11 @@ public:
     Expr _conjunct();
     Expr boolean();
     Expr comp();
-    Expr expr();
-    Expr _expr();
-    Expr term();
-    Expr _term();
-    Expr unary();
+    Expr expr(bool simple);
+    Expr _expr(bool simple);
+    Expr term(bool simple);
+    Expr _term(bool simple);
+    Expr unary(bool simple);
 
     Type rop();
 
