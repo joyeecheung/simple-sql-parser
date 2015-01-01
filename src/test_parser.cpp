@@ -10,6 +10,7 @@ using std::cin;
 using std::cout;
 using std::ifstream;
 using std::ofstream;
+using namespace ssql;
 
 int main(int argc, char const *argv[]) {
     Lexer *lexptr;

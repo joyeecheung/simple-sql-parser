@@ -5,6 +5,8 @@
 #ifndef PARSER_H
 #define PARSER_H
 
+namespace ssql {
+
 class ParseError : std::exception {
 public:
     ParseError(string _msg) : msg(_msg) {}
@@ -81,5 +83,7 @@ private:
     int col;  // column number
     int line;  // line number
 };
+
+}
 
 #endif

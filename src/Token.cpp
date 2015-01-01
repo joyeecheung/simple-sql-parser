@@ -1,5 +1,7 @@
 #include "Token.h"
 
+namespace ssql{
+
 map<Type, string> Token::name;
 
 Token::Token(Type _type, const void *raw, const int size) {
@@ -144,4 +146,6 @@ Token::~Token() {
         delete [] data;
         data = NULL;
     }
+}
+
 }

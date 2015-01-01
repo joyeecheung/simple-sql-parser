@@ -3,12 +3,14 @@
 #include <cstdio>
 #include <cctype>
 
+#ifndef LEXER_H
+#define LEXER_H
+
+namespace ssql {
+
 using std::istream;
 using std::string;
 using std::map;
-
-#ifndef LEXER_H
-#define LEXER_H
 
 #define BUF_SIZE 256
 #define MAX_OP_SIZE 2
@@ -72,5 +74,7 @@ private:
     int col; // column number
     istream &stream;
 };
+
+}
 
 #endif

@@ -1,5 +1,7 @@
 #include "Lexer.h"
 
+namespace ssql {
+
 map<string, Type> Lexer::words;
 map<char, Type> Lexer::singleOp;
 map<string, Type> Lexer::ops;
@@ -126,4 +128,6 @@ Token Lexer::next() {
     // peek == EOF
     advance();
     return Token(END);  // $
+}
+
 }

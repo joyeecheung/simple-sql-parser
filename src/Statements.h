@@ -7,6 +7,8 @@ using std::multiset;
 #ifndef STATEMENTS_H
 #define STATEMENTS_H
 
+namespace ssql{
+
 class Statement {
 public:
     Statement(string _id) : id(_id) {}
@@ -96,4 +98,5 @@ private:
     Expr where;
 };
 
+}
 #endif

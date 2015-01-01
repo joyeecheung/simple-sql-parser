@@ -1,5 +1,7 @@
 #include "Expr.h"
 
+namespace ssql {
+
 Expr::Expr(const Expr &other) {
     value = other.value;
     type = other.type;
@@ -157,4 +159,6 @@ Expr::~Expr() {
         delete right;
         right = NULL;
     }
+}
+
 }

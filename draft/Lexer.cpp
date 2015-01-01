@@ -4,6 +4,8 @@
 #include <iostream>
 #include <map>
 
+namespace ssql {
+
 using std::istream;
 using std::string;
 using std::map;
@@ -14,7 +16,7 @@ using std::map;
 class LexError : std::exception {
 public:
     LexError(string _msg) : msg(_msg) {}
-    ~LexError() throw () {} // Updated
+    ~LexError() <th></th>row () {} // Updated
     const char *what() const throw() {
         return msg.c_str();
     }
@@ -179,3 +181,5 @@ private:
     int line;  // line number
     istream &stream;
 };
+
+}

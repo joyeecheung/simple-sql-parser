@@ -4,12 +4,14 @@
 #include <iostream>
 #include <map>
 
+#ifndef TOKEN_H
+#define TOKEN_H
+
+namespace ssql {
+
 using std::string;
 using std::ostream;
 using std::map;
-
-#ifndef TOKEN_H
-#define TOKEN_H
 
 enum Type {
     ID, NUM, CREATE, TABLE, INT, DEFAULT, PRIMARY, KEY, INSERT,
@@ -58,12 +60,16 @@ public:
     Token &operator=(const Token &rhs);
 
     ~Token();
+
     static map<Type, string> name;
-private:
     static void initNameMap();
+
+private:
     Type type;
     char *data;
     int real_size;
 };
+
+}
 
 #endif

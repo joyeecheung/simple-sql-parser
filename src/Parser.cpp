@@ -1,5 +1,7 @@
 #include "Parser.h"
 
+namespace ssql {
+
 using std::pair;
 
 Type Parser::next_stmt_type() const {
@@ -205,7 +207,7 @@ Expr Parser::disjunct() {
         if (test.isNull()) {  // test lack a left node
             return temp;
         } else {
-            test.setLeft(temp);
+            test.setLeftMost(temp);
             return test;
         }
     } else {
@@ -226,9 +228,9 @@ Expr Parser::_disjunct() {
             root.setRight(temp);
             return root;
         } else {
-            test.setLeft(temp);
-            root.setRight(test);
-            return root;
+            root.setRight(temp);
+            test.setLeft(root);
+            return test;
         }
     } else if (lookahead == SEMICOLON || lookahead == R_PAREN) {
         return NULL_EXPR;  // _disjunct-> epsilon
@@ -248,7 +250,7 @@ Expr Parser::conjunct() {
         if (test.isNull()) {  // test lack a left node
             return temp;
         } else {
-            test.setLeft(temp);
+            test.setLeftMost(temp);
             return test;
         }
     } else {
@@ -264,13 +266,14 @@ Expr Parser::_conjunct() {
 
         Expr temp = boolean();
         Expr test = _conjunct();
+
         if (test.isNull()) {
             root.setRight(temp);
             return root;
         } else {
-            test.setLeft(temp);
-            root.setRight(test);
-            return root;
+            root.setRight(temp);
+            test.setLeft(root);
+            return test;
         }
     } else if (lookahead == OR || lookahead == SEMICOLON
             || lookahead == R_PAREN) {
@@ -525,4 +528,6 @@ void Parser::advance() {
     col = lexer.getCol();
     line = lexer.getLine();
     lookahead = lexer.next();
+}
+
 }

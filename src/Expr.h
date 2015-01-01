@@ -4,12 +4,14 @@
 #include <string>
 #include <iostream>
 
+#ifndef EXPR_H
+#define EXPR_H
+
+namespace ssql {
+
 using std::vector;
 using std::string;
 using std::map;
-
-#ifndef EXPR_H
-#define EXPR_H
 
 class Expr {
 public:
@@ -71,5 +73,7 @@ private:
 };
 
 const Expr NULL_EXPR;
+
+}
 
 #endif
