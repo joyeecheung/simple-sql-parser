@@ -196,7 +196,7 @@ ops \quad\to\quad &
 \end{align*}
 \subsection{DFA}
 
-A simplified version is shown in Figure~\ref{fig:dfa}. After getting into accepting states for identifiers and operators, we need to further process the buffer to determine the right token to return.
+A simplified DFA is shown in Figure~\ref{fig:dfa}. After getting into accepting states for identifiers and operators, we need to further process the buffer to determine the right token to return.
 
 \begin{figure}[H]
 \centering
@@ -605,10 +605,18 @@ To handle expressions, we build expression trees during parsing, then attach the
 \end{figure}
 
 \subsection{Syntax-directed Translation}
-During parsing, we collect items for list-type components in statements. For example, when parsing a column list, we pass a vector around and pushing $id$s into it each time a terminal $id$ is consumed. Default specifications for a $Create$ statement is a map from strings to int, value list is a vector of int, etc.
+During parsing, we collect items for list-type components in statements. For example, when parsing a column list, we pass a vector around,  pushing $id$s into it each time a terminal $id$ is consumed. Similarly, default specifications for a $Create$ statement is a map from strings to int, value list is a vector of int, etc.
 
 
 \section{Database Design}
+
+As shown in Figure~\ref{fig:db}, we divide the backend into two parts: engine and table.
+
+Engine is responsible for inter-table operations. It receives statements produced by the parser, performs basic semantic analysis(those that can be done without knowing the data or schema in any table), and keeps track of tables in the memory. Engine can extract legal components inside statements (e.g. a vector of primary keys in a $Create$ statement), and pass it down to the right table to perform transactions.
+
+Table is responsible for intra-table operations. It receives components of statements from the engine, performs semantic analysis that needs the knowledge of its data and schema, and finishes transactions.
+
+Both engine and table provide services for creating tables, inserting records, deleting records and querying records, though at different levels.
 
 \begin{figure}[H]
 \centering
@@ -647,5 +655,13 @@ During parsing, we collect items for list-type components in statements. For exa
 \end{figure}
 
 \section{Complexity Analysis}
+
+Our implementation of the lexer is rather simple. It only needs to backtrack when matching operators that can be a prefix of another operator(e.g. $<$ and $<=$). Since in this language the length of an operator is no more than 2, the overhead of the backracking can be ignored.
+
+For this context-free grammar, we implement a LL(1) predictive parser. The overhead is also negligible.
+
+Since it is not a database course, we implement the backend in a naive way. The data is stored unsorted in a 2-dimensional vector of ints.
+
+The creation of tables has a negligible overhead when there are just a few tables in the database. The other three operations, however, has a bigger overhead because of the naive implementation. Assume that a table has $k$ columns, $N$ records, the complexity of insertion is about $O(Nk)$ since we need to check key constraints against every record. For a where clause containing an expression with $E$ operations, deleting a record costs about $O(NE)$, querying a record costs about $O(NEk)$ ($O(NE)$ if no reordering is needed). Again, this is not a database course, so we didn't build any special indexes for it. This performance is sufficient for testing our implementation of the language.
 
 \end{document}
