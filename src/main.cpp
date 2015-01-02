@@ -89,6 +89,8 @@ int main(int argc, char const *argv[]) {
                     cout << "No matching rows in ";
                     cout << query_stmt.getId() << "\n";
                 }
+            } else if (next == END) {
+                break;
             }
         } catch (LexError e) {
             cout << "line " << parser.getLine() << ", ";
@@ -99,10 +101,9 @@ int main(int argc, char const *argv[]) {
             cout << "line " << parser.getLine() << ", ";
             cout << "column " << parser.getCol() << ": ";
             cout << e.what() << '\n';
-            exit(1);
+            parser.consume_until_start();
         } catch(DataBaseError e) {
-            cout << "line " << parser.getLine() << ", ";
-            cout << "column " << parser.getCol() << ": ";
+            cout << "line " << parser.getLine() << ": ";
             cout << e.what()  << '\n';
         } catch(RuntimeError e) {
             cout << "line " << parser.getLine() << ", ";
