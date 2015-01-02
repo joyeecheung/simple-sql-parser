@@ -103,18 +103,20 @@ The system is divided into four parts, with functionalities shown in Figure~\ref
  ] (ENGINE)
  {\begin{tabular}{l}
      \textbf{Engine}\\[0.3em]
-     \parbox{4cm}{Analyze statments, \\
-     extract legal components
+     \parbox{4cm}{Analyze statments,
+     perform simple semantic analysis,
+     keep track of tables
      }
     \end{tabular}};
 
  \node[state,
  left of=ENGINE,
  node distance=10cm,
- text width=4cm] (TABLE) 
+ text width=4.5cm] (TABLE) 
  {\begin{tabular}{l}
       \textbf{Table}\\[0.3em]
-      \parbox{4cm}{Perform transactions
+      \parbox{4cm}{Perform transactions and
+      semantic analysis that needs the schema
       }
      \end{tabular}};
 
@@ -141,53 +143,53 @@ The system is divided into four parts, with functionalities shown in Figure~\ref
 
 \subsection {Token Specification}
 \begin{align*}
-num \quad\to\quad & \texttt{[0-9]+} \\
-id \quad\to\quad & \texttt{[\_A-Za-z][\_A-Za-z0-9]*} \\
-CREATE \quad\to\quad & \texttt{CREATE} \\
-TABLE \quad\to\quad & \texttt{TABLE} \\
-INT \quad\to\quad & \texttt{INT} \\
-DEFAULT \quad\to\quad & \texttt{DEFAULT} \\
-PRIMARY \quad\to\quad & \texttt{PRIMARY} \\
-KEY \quad\to\quad & \texttt{KEY} \\
-INSERT \quad\to\quad & \texttt{INSERT} \\
-INTO \quad\to\quad & \texttt{INTO} \\
-VALUES \quad\to\quad & \texttt{VALUES} \\
-DELETE \quad\to\quad & \texttt{DELETE} \\
-FROM \quad\to\quad & \texttt{FROM} \\
-WHERE \quad\to\quad & \texttt{WHERE} \\
-SELECT \quad\to\quad & \texttt{SELECT} \\
-LT \quad\to\quad & \texttt{<} \\
-GT \quad\to\quad & \texttt{>} \\
-NEQ \quad\to\quad & \texttt{<>} \\
-EQ \quad\to\quad & \texttt{==} \\
-GEQ \quad\to\quad & \texttt{>=} \\
-LEQ \quad\to\quad & \texttt{<=} \\
-PLUS \quad\to\quad & \texttt{+} \\
-MINUS \quad\to\quad & \texttt{-} \\
-MUL \quad\to\quad & \texttt{*} \\
-DIV \quad\to\quad & \texttt{/} \\
-AND \quad\to\quad & \texttt{\&\&} \\
-OR \quad\to\quad & \texttt{||} \\
-NOT \quad\to\quad & \texttt{!} \\
-COMMA \quad\to\quad & \texttt{,} \\
-SEMICOLON \quad\to\quad & \texttt{;} \\
-L\_PAREN \quad\to\quad & \texttt{(} \\
-R\_PAREN \quad\to\quad & \texttt{)} \\
-words \quad\to\quad & CREATE \quad | \quad TABLE  \quad | \quad INT \\
-&| \quad DEFAULT \quad | \quad PRIMARY \quad | \quad KEY \quad \\
-&| \quad INSERT \quad | \quad INTO \quad | \quad VALUES \quad \\
-&| \quad DELETE \quad | \quad FROM \quad \\
-&| \quad WHERE \quad | \quad SELECT \\
+\text{num}\quad\to\quad & \texttt{[0-9]+} \\
+\text{id}\quad\to\quad & \texttt{[\_A-Za-z][\_A-Za-z0-9]*} \\
+\text{CREATE}\quad\to\quad & \texttt{CREATE} \\
+\text{TABLE}\quad\to\quad & \texttt{TABLE} \\
+\text{INT}\quad\to\quad & \texttt{INT} \\
+\text{DEFAULT}\quad\to\quad & \texttt{DEFAULT} \\
+\text{PRIMARY}\quad\to\quad & \texttt{PRIMARY} \\
+\text{KEY}\quad\to\quad & \texttt{KEY} \\
+\text{INSERT}\quad\to\quad & \texttt{INSERT} \\
+\text{INTO}\quad\to\quad & \texttt{INTO} \\
+\text{VALUES}\quad\to\quad & \texttt{VALUES} \\
+\text{DELETE}\quad\to\quad & \texttt{DELETE} \\
+\text{FROM}\quad\to\quad & \texttt{FROM} \\
+\text{WHERE}\quad\to\quad & \texttt{WHERE} \\
+\text{SELECT}\quad\to\quad & \texttt{SELECT} \\
+\text{LT}\quad\to\quad & \texttt{<} \\
+\text{GT}\quad\to\quad & \texttt{>} \\
+\text{NEQ}\quad\to\quad & \texttt{<>} \\
+\text{EQ}\quad\to\quad & \texttt{==} \\
+\text{GEQ}\quad\to\quad & \texttt{>=} \\
+\text{LEQ}\quad\to\quad & \texttt{<=} \\
+\text{PLUS}\quad\to\quad & \texttt{+} \\
+\text{MINUS}\quad\to\quad & \texttt{-} \\
+\text{MUL}\quad\to\quad & \texttt{*} \\
+\text{DIV}\quad\to\quad & \texttt{/} \\
+\text{AND}\quad\to\quad & \texttt{\&\&} \\
+\text{OR}\quad\to\quad & \texttt{||} \\
+\text{NOT}\quad\to\quad & \texttt{!} \\
+\text{COMMA}\quad\to\quad & \texttt{,} \\
+\text{SEMICOLON}\quad\to\quad & \texttt{;} \\
+\text{L\_PAREN}\quad\to\quad & \texttt{(} \\
+\text{R\_PAREN}\quad\to\quad & \texttt{)} \\
+words \quad\to\quad & \text{CREATE} \quad | \quad \text{TABLE}  \quad | \quad \text{INT} \\
+&| \quad \text{DEFAULT} \quad | \quad \text{PRIMARY} \quad | \quad \text{KEY} \quad \\
+&| \quad \text{INSERT} \quad | \quad \text{INTO} \quad | \quad \text{VALUES} \quad \\
+&| \quad \text{DELETE} \quad | \quad \text{FROM} \quad \\
+&| \quad \text{WHERE} \quad | \quad \text{SELECT} \\
 singleOp \quad\to\quad &
-PLUS \quad | \quad MINUS \quad | \quad MUL \\
-&| \quad DIV \quad | \quad L\_PAREN \quad | \quad R\_PAREN \\
-&| \quad COMMA \quad | \quad SEMICOLON \\
+\text{PLUS} \quad | \quad \text{MINUS} \quad | \quad \text{MUL} \\
+&| \quad \text{DIV} \quad | \quad \text{L\_PAREN} \quad | \quad \text{R\_PAREN} \\
+&| \quad \text{COMMA} \quad | \quad \text{SEMICOLON} \\
 ops \quad\to\quad &
-AND \quad | \quad OR \quad | \quad NOT \quad | \quad LT \\
-&| \quad GT \quad | \quad NEQ \quad | \quad EQ \quad | \quad GEQ \\
-&| \quad LEQ \quad | \quad PLUS \quad | \quad MINUS \quad | \quad MUL \\
-&| \quad DIV \quad | \quad L\_PAREN \quad | \quad R\_PAREN \\
-&| \quad COMMA \quad | \quad SEMICOLON
+\text{AND} \quad | \quad \text{OR} \quad | \quad \text{NOT} \quad | \quad \text{LT} \\
+&| \quad \text{GT} \quad | \quad \text{NEQ} \quad | \quad \text{EQ} \quad | \quad \text{GEQ} \\
+&| \quad \text{LEQ} \quad | \quad \text{PLUS} \quad | \quad \text{MINUS} \quad | \quad \text{MUL} \\
+&| \quad \text{DIV} \quad | \quad \text{L\_PAREN} \quad | \quad \text{R\_PAREN} \\
+&| \quad \text{COMMA} \quad | \quad \text{SEMICOLON}
 \end{align*}
 \subsection{DFA}
 
@@ -197,79 +199,319 @@ AND \quad | \quad OR \quad | \quad NOT \quad | \quad LT \\
 
 \subsection{\texttt{First} Sets}
 \begin{align*}
-\textsc{first}(ssql\_stmt) & = \{CREATE, INSERT, DELETE, SELECT\} \\
-\textsc{first}(create\_stmt) & = \{CREATE\} \\
-\textsc{first}(decl\_list) & = \{id, PRIMARY\} \\
-\textsc{first}(\_decl\_list) & = \{COMMA, \epsilon\} \\
-\textsc{first}(decl) & = \{id, PRIMARY\} \\
-\textsc{first}(default\_spec) & = \{DEFAULT, \epsilon\} \\
-\textsc{first}(expr[simple=true]) & = \{PLUS, MINUS, num, L\_PAREN\} \\
-\textsc{first}(expr[simple=false]) & = \{PLUS, MINUS, num, id\} \\
-\textsc{first}(\_expr) & = \{PLUS, MINUS, \epsilon\} \\
-\textsc{first}(term[simple=true]) & = \{PLUS, MINUS, num, L\_PAREN\} \\
-\textsc{first}(term[simple=false]) & = \{PLUS, MINUS, num, id\} \\
-\textsc{first}(\_term) & = \{MUL, DIV, \epsilon\} \\
-\textsc{first}(unary[simple=true]) & = \{PLUS, MINUS, num, L\_PAREN\} \\
-\textsc{first}(unary[simple=false]) & = \{PLUS, MINUS, num, id\} \\
-\textsc{first}(column\_list) & = \{id\} \\
-\textsc{first}(\_column\_list) & = \{COMMA, \epsilon\} \\
-\textsc{first}(insert\_stmt) & = \{INSERT\} \\
-\textsc{first}(value\_list) & = \{PLUS, MINUS, num, L\_PAREN\} \\
-\textsc{first}(\_value\_list) & = \{COMMA, \epsilon\} \\
-\textsc{first}(delete\_stmt) & = \{DELETE\} \\
-\textsc{first}(where\_clause) & = \{WHERE, \epsilon\} \\
-\textsc{first}(disjunct) & = \{L\_PAREN, NOT, PLUS, MINUS, num, id\} \\
-\textsc{first}(\_disjunct) & = \{OR, \epsilon\} \\
-\textsc{first}(conjunct) & = \{L\_PAREN, NOT, PLUS, MINUS, num, id\} \\
-\textsc{first}(\_conjunct) & = \{AND, \epsilon\} \\
-\textsc{first}(bool) & = \{L\_PAREN, NOT, PLUS, MINUS, num, id\} \\
-\textsc{first}(comp) & = \{PLUS, MINUS, num, id\} \\
-\textsc{first}(rop) & = \{NEQ, EQ, LT, GT, LEQ, GEQ\} \\
-\textsc{first}(query\_stmt) & = \{SELECT\} \\
-\textsc{first}(select\_list) & = \{MUL, id\} \\
+\textsc{first}(ssql\_stmt) \quad =& \quad\{\text{CREATE, INSERT, DELETE, SELECT}\} \\
+\textsc{first}(create\_stmt) \quad =& \quad\{\text{CREATE}\} \\
+\textsc{first}(decl\_list) \quad =& \quad\{id\text{, PRIMARY}\} \\
+\textsc{first}(\_decl\_list) \quad =& \quad\{\text{COMMA,} \epsilon\} \\
+\textsc{first}(decl) \quad =& \quad\{{id\text, PRIMARY}\} \\
+\textsc{first}(default\_spec) \quad =& \quad\{\text{DEFAULT,} \epsilon\} \\
+\textsc{first}(expr[simple=true]) \quad =& \quad\{\text{PLUS, MINUS, } num \text{, L\_PAREN}\} \\
+\textsc{first}(expr[simple=false]) \quad =& \quad\{\text{PLUS, MINUS, }num\text{, }id\} \\
+\textsc{first}(\_expr) \quad =& \quad\{\text{PLUS, MINUS, }\epsilon\} \\
+\textsc{first}(term[simple=true]) \quad =& \quad\{\text{PLUS, MINUS, }num\text{, L\_PAREN}\} \\
+\textsc{first}(term[simple=false]) \quad =& \quad\{\text{PLUS, MINUS, }num\text{, }id\} \\
+\textsc{first}(\_term) \quad =& \quad\{\text{MUL, DIV, }\epsilon\} \\
+\textsc{first}(unary[simple=true]) \quad =& \quad\{\text{PLUS, MINUS, } num \text{, L\_PAREN}\} \\
+\textsc{first}(unary[simple=false]) \quad =& \quad\{\text{PLUS, MINUS, }num\text{, }id\} \\
+\textsc{first}(column\_list) \quad =& \quad\{id\} \\
+\textsc{first}(\_column\_list) \quad =& \quad\{\text{COMMA, }\epsilon\} \\
+\textsc{first}(insert\_stmt) \quad =& \quad\{\text{INSERT}\} \\
+\textsc{first}(value\_list) \quad =& \quad\{\text{PLUS, MINUS, } num \text{, L\_PAREN}\} \\
+\textsc{first}(\_value\_list) \quad =& \quad\{\text{COMMA, }\epsilon\} \\
+\textsc{first}(delete\_stmt) \quad =& \quad\{\text{DELETE}\} \\
+\textsc{first}(where\_clause) \quad =& \quad\{\text{WHERE,} \epsilon\} \\
+\textsc{first}(disjunct) \quad =& \quad\{\text{L\_PAREN, NOT, PLUS, MINUS, }num\text{, }id\} \\
+\textsc{first}(\_disjunct) \quad =& \quad\{\text{OR, }\epsilon\} \\
+\textsc{first}(conjunct) \quad =& \quad\{\text{L\_PAREN, NOT, PLUS, MINUS, }num\text{, }id\} \\
+\textsc{first}(\_conjunct) \quad =& \quad\{\text{AND, }\epsilon\} \\
+\textsc{first}(bool) \quad =& \quad\{\text{L\_PAREN, NOT, PLUS, MINUS, }num\text{, }id\} \\
+\textsc{first}(comp) \quad =& \quad\{\text{PLUS, MINUS, }num\text{, }id\} \\
+\textsc{first}(rop) \quad =& \quad\{\text{NEQ, EQ, LT, GT, LEQ, GEQ}\} \\
+\textsc{first}(query\_stmt) \quad =& \quad\{\text{SELECT}\} \\
+\textsc{first}(select\_list) \quad =& \quad\{\text{MUL, }id\} \\
 \end{align*}
 
 \subsection{\texttt{Follow} Sets}
 \begin{align*}
-\textsc{follow}(ssql\_stmt) =& \{\$\} \\
-\textsc{follow}(create\_stmt) =& \{\$\} \\
-\textsc{follow}(decl\_list) =& \{R\_PAREN\} \\
-\textsc{follow}(\_decl\_list) =& \{R\_PAREN\} \\
-\textsc{follow}(decl) =& \{COMMA, R\_PAREN\} \\
-\textsc{follow}(default\_spec) =& \{COMMA, R\_PAREN\} \\
-\textsc{follow}(expr[true]) =& \{COMMA, R\_PAREN\} \\
-\textsc{follow}(expr[false]) =& \{NEQ, EQ, LT, GT, LEQ,\\
- & GEQ, AND, OR, SEMICOLON, R\_PAREN\} \\
-\textsc{follow}(\_expr[true]) =& \{COMMA, R\_PAREN\} \\
-\textsc{follow}(\_expr[false]) =& \{NEQ, EQ, LT, GT, LEQ,\\
-& GEQ, AND, OR, SEMICOLON, R\_PAREN\} \\
-\textsc{follow}(term[true]) =& \{PLUS, MINUS, COMMA, R\_PAREN\} \\
-\textsc{follow}(term[false]) =& \{PLUS, MINUS, NEQ, EQ, LT, GT,\\
-& LEQ, GEQ, AND, OR, SEMICOLON, R\_PAREN\} \\
-\textsc{follow}(\_term[true]) =& \{PLUS, MINUS, COMMA, R\_PAREN\} \\
-\textsc{follow}(\_term[false]) =& \{PLUS, MINUS, NEQ, EQ, LT, GT,\\
-& LEQ, GEQ, AND, OR, SEMICOLON, R\_PAREN\} \\
-\textsc{follow}(unary[true]) =& \{MUL, DIV, PLUS, MINUS, COMMA, R\_PAREN\} \\
-\textsc{follow}(unary[false]) =& \{MUL, DIV, PLUS, MINUS, NEQ, EQ, LT,\\
-& GT, LEQ, GEQ, AND, OR, SEMICOLON, R\_PAREN\} \\
-\textsc{follow}(column\_list) =& \{FROM, R\_PAREN\} \\
-\textsc{follow}(\_column\_list) =& \{FROM, R\_PAREN\} \\
-\textsc{follow}(insert\_stmt) =& \{\$\} \\
-\textsc{follow}(value\_list) =& \{R\_PAREN\} \\
-\textsc{follow}(\_value\_list) =& \{R\_PAREN\} \\
-\textsc{follow}(delete\_stmt) =& \{\$\} \\
-\textsc{follow}(where\_clause) =& \{SEMICOLON\} \\
-\textsc{follow}(disjunct) =& \{SEMICOLON, R\_PAREN\} \\
-\textsc{follow}(\_disjunct) =& \{SEMICOLON, R\_PAREN\} \\
-\textsc{follow}(conjunct) =& \{OR, SEMICOLON, R\_PAREN\} \\
-\textsc{follow}(\_conjunct) =& \{OR, SEMICOLON, R\_PAREN\} \\
-\textsc{follow}(bool) =& \{AND, OR, SEMICOLON, R\_PAREN\} \\
-\textsc{follow}(comp) =& \{AND, OR, SEMICOLON, R\_PAREN\} \\
-\textsc{follow}(rop) =& \{PLUS, MINUS, num, id\} \\
-\textsc{follow}(query\_stmt) =& \{\$\} \\
-\textsc{follow}(select\_list) =& \{FROM\} 
+\textsc{follow}(ssql\_stmt)\quad =& \quad \{\text{\$}\} \\
+\textsc{follow}(create\_stmt)\quad =& \quad \{\text{\$}\} \\
+\textsc{follow}(decl\_list)\quad =& \quad \{\text{R\_PAREN}\} \\
+\textsc{follow}(\_decl\_list)\quad =& \quad \{\text{R\_PAREN}\} \\
+\textsc{follow}(decl)\quad =& \quad \{\text{COMMA, R\_PAREN}\} \\
+\textsc{follow}(default\_spec)\quad =& \quad \{\text{COMMA, R\_PAREN}\} \\
+\textsc{follow}(expr[true])\quad =& \quad \{\text{COMMA, R\_PAREN}\} \\
+\textsc{follow}(expr[false])\quad =& \quad \{\text{NEQ, EQ, LT, GT, LEQ,}\\
+ & \quad \text{GEQ, AND, OR, SEMICOLON, R\_PAREN}\} \\
+\textsc{follow}(\_expr[true])\quad =& \quad \{\text{COMMA, R\_PAREN}\} \\
+\textsc{follow}(\_expr[false])\quad =& \quad \{\text{NEQ, EQ, LT, GT, LEQ,}\\
+& \quad \text{GEQ, AND, OR, SEMICOLON, R\_PAREN}\} \\
+\textsc{follow}(term[true])\quad =& \quad \{\text{PLUS, MINUS, COMMA, R\_PAREN}\} \\
+\textsc{follow}(term[false])\quad =& \quad \{\text{PLUS, MINUS, NEQ, EQ, LT, GT,}\\
+& \quad \text{LEQ, GEQ, AND, OR, SEMICOLON, R\_PAREN}\} \\
+\textsc{follow}(\_term[true])\quad =& \quad \{\text{PLUS, MINUS, COMMA, R\_PAREN}\} \\
+\textsc{follow}(\_term[false])\quad =& \quad \{\text{PLUS, MINUS, NEQ, EQ, LT, GT,}\\
+& \quad \text{LEQ, GEQ, AND, OR, SEMICOLON, R\_PAREN}\} \\
+\textsc{follow}(unary[true])\quad =& \quad \{\text{MUL, DIV, PLUS, MINUS, COMMA, R\_PAREN}\} \\
+\textsc{follow}(unary[false])\quad =& \quad \{\text{MUL, DIV, PLUS, MINUS, NEQ, EQ, LT,}\\
+& \quad \text{GT, LEQ, GEQ, AND, OR, SEMICOLON, R\_PAREN}\} \\
+\textsc{follow}(column\_list)\quad =& \quad \{\text{FROM, R\_PAREN}\} \\
+\textsc{follow}(\_column\_list)\quad =& \quad \{\text{FROM, R\_PAREN}\} \\
+\textsc{follow}(insert\_stmt)\quad =& \quad \{\text{\$}\} \\
+\textsc{follow}(value\_list)\quad =& \quad \{\text{R\_PAREN}\} \\
+\textsc{follow}(\_value\_list)\quad =& \quad \{\text{R\_PAREN}\} \\
+\textsc{follow}(delete\_stmt)\quad =& \quad \{\text{\$}\} \\
+\textsc{follow}(where\_clause)\quad =& \quad \{\text{SEMICOLON}\} \\
+\textsc{follow}(disjunct)\quad =& \quad \{\text{SEMICOLON, R\_PAREN}\} \\
+\textsc{follow}(\_disjunct)\quad =& \quad \{\text{SEMICOLON, R\_PAREN}\} \\
+\textsc{follow}(conjunct)\quad =& \quad \{\text{OR, SEMICOLON, R\_PAREN}\} \\
+\textsc{follow}(\_conjunct)\quad =& \quad \{\text{OR, SEMICOLON, R\_PAREN}\} \\
+\textsc{follow}(bool)\quad =& \quad \{\text{AND, OR, SEMICOLON, R\_PAREN}\} \\
+\textsc{follow}(comp)\quad =& \quad \{\text{AND, OR, SEMICOLON, R\_PAREN}\} \\
+\textsc{follow}(rop)\quad =& \quad \{\text{PLUS, MINUS, }num \text{, } id\} \\
+\textsc{follow}(query\_stmt)\quad =& \quad \{\text{\$}\} \\
+\textsc{follow}(select\_list)\quad =& \quad \{\text{FROM}\} 
 \end{align*}
 \subsection{Parsing Table}
+
+Format:
+\begin{align*}
+\text{Current production} \quad  \to & \quad\\
+\text{Lookahead}: & \quad \text{Production body to match}
+\end{align*}
+
+For simplicity, we combine $simple\_expr$ and $expr$ into $expr[simple]$, distinguished by $expr[true]$ and $expr[false]$.
+
+\begin{align*}
+ssql\_stmt \quad  \to & \quad\\
+\text{CREATE}: & \quad create\_stmt \\
+\text{INSERT}: & \quad insert\_stmt \\
+\text{DELETE}: &  \quad delete\_stmt \\
+\text{SELECT}: & \quad query\_stmt
+\end{align*}
+
+\begin{align*}
+create\_stmt \quad  \to & \quad\\
+\text{CREATE:} & \quad \text{CREATE TABLE } id \text{ L\_PAREN } decl\_list \text{ R\_PAREN SEMICOLON}
+\end{align*}
+
+\begin{align*}
+decl\_list \quad  \to & \quad\\
+id: & \quad decl\text{ }\_decl\_list \\
+\text{PRIMARY}: & \quad decl\text{ }\_decl\_list
+\end{align*}
+
+\begin{align*}
+\_decl\_list \quad  \to & \quad\\
+\text{COMMA}: & \quad \text{COMMA } decl\text{ }\_decl\_list \\
+\text{R\_PAREN}: & \quad \epsilon
+\end{align*}
+
+\begin{align*}
+decl \quad  \to & \quad\\
+id: & \quad id \text{ INT } default\_spec \\
+\text{PRIMARY}: & \quad \text{PRIMARY KEY L\_PAREN }column\_list \text{ R\_PAREN}
+\end{align*}
+
+\begin{align*}
+default\_spec \quad  \to & \quad\\
+\text{DEFAULT}: & \quad \text{DEFAULT ASSIGN } expr[true] \\
+\text{COMMA}: & \quad \epsilon \\
+\text{R\_PAREN}: & \quad \epsilon
+\end{align*}
+
+\begin{align*}
+column\_list \quad  \to & \quad\\
+id: & \quad id \text{ } \_column\_list
+\end{align*}
+
+
+\begin{align*}
+\_column\_list \quad  \to & \quad\\
+\text{COMMA}: & \quad \text{COMMA } id \text{ } \_column\_list \\
+\text{FROM}: & \quad \epsilon \\
+\text{R\_PAREN}: & \quad \epsilon
+\end{align*}
+
+\begin{align*}
+insert\_stmt \quad  \to & \quad\\
+\text{INSERT}: & \quad \text{INSERT INTO } id \text{ L\_PAREN } column\_list \text{ R\_PAREN} \\
+& \quad \text{VALUES L\_PAREN } value\_list \text{ R\_PAREN SEMICOLON}
+\end{align*}
+
+\begin{align*}
+value\_list \quad  \to & \quad\\
+\text{PLUS}: & \quad expr[true] \text{ } \_value\_list \\
+\text{MINUS}: & \quad expr[true] \text{ } \_value\_list \\
+num: & \quad expr[true] \text{ } \_value\_list \\
+\text{L\_PAREN}: & \quad expr[true] \text{ } \_value\_list
+\end{align*}
+
+\begin{align*}
+\_value\_list \quad  \to & \quad\\
+\text{COMMA}: & \quad \text{COMMA } expr[true] \text{ } \_value\_list \\
+\text{R\_PAREN}: & \quad \epsilon
+\end{align*}
+
+\begin{align*}
+delete\_stmt \quad  \to & \quad\\
+\text{DELETE}: & \quad \text{DELETE FROM } id \text{ } where\_clause \text{ SEMICOLON}
+\end{align*}
+
+
+\begin{align*}
+disjunct \quad  \to & \quad\\
+\text{WHERE}: & \quad \text{WHERE } disjunct\\
+\text{SEMICOLON}: & \quad \epsilon
+\end{align*}
+
+\begin{align*}
+disjunct \quad  \to & \quad\\
+\text{L\_PAREN}: & \quad conjunct \text{ } \_disjunct \\
+\text{NOT}: & \quad conjunct \text{ } \_disjunct \\
+\text{PLUS}: & \quad conjunct \text{ } \_disjunct \\
+\text{MINUS}: & \quad conjunct \text{ } \_disjunct \\
+num: & \quad conjunct \text{ } \_disjunct \\
+id: & \quad conjunct \text{ } \_disjunct
+\end{align*}
+
+\begin{align*}
+\_disjunct \quad  \to & \quad\\
+\text{OR}: & \quad \text{OR } conjunct \text{ } \_disjunct\\
+\text{SEMICOLON}: & \quad \epsilon \\
+\text{R\_PAREN}: & \quad \epsilon
+\end{align*}
+
+\begin{align*}
+conjunct \quad  \to & \quad\\
+\text{L\_PAREN}: & \quad bool \text{ } \_conjunct \\
+\text{NOT}: & \quad bool \text{ } \_conjunct \\
+\text{PLUS}: & \quad bool \text{ } \_conjunct \\
+\text{MINUS}: & \quad bool \text{ } \_conjunct \\
+num: & \quad bool \text{ } \_conjunct \\
+id: & \quad  bool \text{ } \_conjunct
+\end{align*}
+
+\begin{align*}
+\_conjunct \quad  \to & \quad\\
+\text{AND}: & \quad \text{AND } bool \text{ } \_conjunct\\
+\text{OR}: & \quad \epsilon \\
+\text{SEMICOLON}: & \quad \epsilon \\
+\text{R\_PAREN}: & \quad \epsilon
+\end{align*}
+
+\begin{align*}
+bool \quad  \to & \quad\\
+\text{L\_PAREN}: & \quad \text{L\_PAREN } disjunct \text{ R\_PAREN} \\
+\text{NOT}: & \quad \text{NOT } bool \\
+\text{PLUS}: & \quad comp \\
+\text{MINUS}: & \quad comp \\
+num: & \quad comp \\
+id: & \quad comp
+\end{align*}
+
+\begin{align*}
+comp \quad  \to & \quad\\
+\text{PLUS}: & \quad expr[false] \text{ } rop  \text{ } expr[false] \\
+\text{MINUS}: & \quad expr[false] \text{ } rop  \text{ } expr[false] \\
+num: & \quad expr[false] \text{ } rop  \text{ } expr[false] \\
+id: & \quad expr[false] \text{ } rop  \text{ } expr[false]
+\end{align*}
+
+Here things like $term[simple]$ means passing down the current value $simple$.
+
+\begin{align*}
+expr[simple] \quad  \to & \quad\\
+\text{PLUS}: & \quad term[simple] \text{ } \_expr[simple] \\
+\text{MINUS}: & \quad term[simple] \text{ } \_expr[simple] \\
+num: & \quad term[simple] \text{ } \_expr[simple] \\
+if (simple == false): &\\
+\text{L\_PAREN}: & \quad term[simple] \text{ } \_expr[simple] \\
+if (simple == true): &\\
+id: & \quad term[simple] \text{ } \_expr[simple] 
+\end{align*}
+
+\begin{align*}
+\_expr[simple] \quad  \to & \quad\\
+\text{PLUS}: &\quad \text{PLUS }  term[simple] \text{ } \_expr[simple] \\
+\text{MINUS}: &\quad \text{MINUS }  term[simple] \text{ } \_expr[simple] \\
+if (simple == true): &\\
+\text{COMMA} : & \quad \epsilon \\
+\text{R\_PAREN} : & \quad \epsilon \\
+if (simple == true): &\\
+\text{NEQ} : & \quad \epsilon \\
+\text{EQ} : & \quad \epsilon \\
+\text{LT} : & \quad \epsilon \\
+\text{GT} : & \quad \epsilon \\
+\text{LEQ} : & \quad \epsilon \\
+\text{GEQ} : & \quad \epsilon \\
+\text{AND} : & \quad \epsilon \\
+\text{OR} : & \quad \epsilon \\
+\text{SEMICOLON} : & \quad \epsilon \\
+\text{R\_PAREN} :  & \quad \epsilon
+\end{align*}
+
+\begin{align*}
+term[simple] \quad  \to & \quad\\
+\text{PLUS}: & \quad unary[simple] \text{ } \_term[simple] \\
+\text{MINUS}: & \quad unary[simple] \text{ } \_term[simple] \\
+num: & \quad unary[simple] \text{ } \_term[simple] \\
+if (simple == false): &\\
+\text{L\_PAREN}: & \quad unary[simple] \text{ } \_term[simple] \\
+if (simple == true): &\\
+id: & \quad unary[simple] \text{ } \_term[simple] 
+\end{align*}
+
+\begin{align*}
+\_term[simple] \quad  \to & \quad\\
+\text{MUL}: &\quad \text{MUL }  unary[simple] \text{ } \_term[simple] \\
+\text{DIV}: &\quad \text{DIV }  unary[simple] \text{ } \_term[simple] \\
+if (simple == true): &\\
+\text{COMMA} : & \quad \epsilon \\
+\text{R\_PAREN} : & \quad \epsilon \\
+if (simple == true): &\\
+\text{NEQ} : & \quad \epsilon \\
+\text{EQ} : & \quad \epsilon \\
+\text{LT} : & \quad \epsilon \\
+\text{GT} : & \quad \epsilon \\
+\text{LEQ} : & \quad \epsilon \\
+\text{GEQ} : & \quad \epsilon \\
+\text{AND} : & \quad \epsilon \\
+\text{OR} : & \quad \epsilon \\
+\text{SEMICOLON} : & \quad \epsilon \\
+\text{R\_PAREN} :  & \quad \epsilon
+\end{align*}
+
+\begin{align*}
+unary[simple] \quad  \to & \quad\\
+\text{PLUS}: & \quad \text{PLUS } unary[simple]\\
+\text{MINUS}: & \quad \text{MINUS } unary[simple]\\
+num: & \quad num \\
+if (simple == false): &\\
+\text{L\_PAREN}: & \quad \text{L\_PRAEN } expr[true] \text{ R\_PRAEN}\\
+if (simple == true): &\\
+id: & \quad id
+\end{align*}
+
+\begin{align*}
+rop \quad  \to & \quad\\
+\text{NEQ} : & \quad \text{NEQ} \\
+\text{EQ} : & \quad \text{EQ} \\
+\text{LT} : & \quad \text{LT} \\
+\text{GT} : & \quad \text{GT} \\
+\text{LEQ} : & \quad \text{LEQ} \\
+\text{GEQ} : & \quad \text{GEQ}
+\end{align*}
+
+\begin{align*}
+query\_stmt \quad  \to & \quad\\
+\text{SELECT}: & \quad \text{SELECT } select\_list \text{ FROM } id \text{ } where\_clause \text{ SEMICOLON}
+\end{align*}
+
+\begin{align*}
+select\_list \quad  \to & \quad\\
+\text{MUL}: & \quad \text{MUL} \\
+id: & \quad column\_list
+\end{align*}
 
 \section{Database Design}
 
