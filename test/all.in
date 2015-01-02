@@ -57,3 +57,10 @@ INSERT INTO Student(sid) VALUES(1 + (9 + 3) / 2);
 CREATE TABLE Student(sid INT DEFAULT = 6 * 3 / 4 + 1,
 age INT DEFAULT = 32 * 3 - 6 / 2);
 INSERT INTO Student(sid, age) VALUES(6 * 3 / 4 + 1, 32 * 3 - 6 / 2);
+
+INSERT INTO Student(sid, age) VALUES(6 * 3 / 0, 32 * 3 - 6 / 2);
+SELECT age FROM Student WHERE age / 0 + 7 > sid;
+SELECT * FROM Student WHERE sid / age >= 0;
+
+INSERT INTO Student(sid, age) VALUES(77, 0);
+SELECT * FROM Student WHERE sid / age > sid;

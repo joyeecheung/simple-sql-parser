@@ -109,6 +109,7 @@ int main(int argc, char const *argv[]) {
             cout << "line " << parser.getLine() << ", ";
             cout << "column " << parser.getCol() << ": ";
             cout << e.what()  << '\n';
+            parser.consume_until_start();
         }
     }
 
