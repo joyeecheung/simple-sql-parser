@@ -1,0 +1,56 @@
+Created table Student
+line 8: Multiple definitions for age
+line 13: Multiple primary key definitions
+line 17: Undefined key height
+Inserted 1 rows into table Student
+line 20: Duplicate column age
+line 22: Column height is not in the schema
+line 23: Numbers of columns and values do not match
+Deleted 0 rows from table Student
+No matching rows in Student
+Deleted 1 rows from table Student
+No matching rows in Student
+Deleted 0 rows from table Student
+No matching rows in Student
+Inserted 1 rows into table Student
+line 35: Column height is not in the schema
+Inserted 1 rows into table Student
+line 38, column 48: height not found in the scheme
+Deleted 1 rows from table Student
+------------------------------------
+|age	|sid	|
+------------------------------------
+|13	|2	|
+------------------------------------
+1 matching rows in Student
+line 42, column 42: Syntax error when cosumeing terms
+Inserted 1 rows into table Student
+Inserted 1 rows into table Student
+------------------------------------
+|age	|
+------------------------------------
+|13	|
+------------------------------------
+|13	|
+------------------------------------
+|18	|
+------------------------------------
+3 matching rows in Student
+Inserted 1 rows into table Student
+------------------------------------
+|age	|sid	|
+------------------------------------
+|13	|2	|
+------------------------------------
+|13	|5	|
+------------------------------------
+|18	|9	|
+------------------------------------
+|18	|7	|
+------------------------------------
+4 matching rows in Student
+line 50: Key sid not found
+line 52, column 14: Syntax error
+line 54: Record already exists
+line 57: Table Student already exists
+line 58: Record already exists

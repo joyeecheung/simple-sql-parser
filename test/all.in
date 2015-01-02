@@ -28,11 +28,11 @@ SELECT sid, age FROM Student WHERE age < 18;
 DELETE FROM Student;
 SELECT sid, age FROM Student;
 
-DELETE FROM Student WHERE age < 18 && height > 180;
-SELECT * FROM Student;
-
 INSERT INTO Student(sid, age) VALUES(1, 10);
 SELECT sid, height FROM Student WHERE age < 18;
+
+DELETE FROM Student WHERE age < 18 && height > 180;
+SELECT * FROM Student;
 
 INSERT INTO Student(sid, age) VALUES(2, 13);
 SELECT sid, age FROM Student WHERE height < 180;
@@ -43,6 +43,7 @@ SELECT age FROM Student WHERE age + 7 > 5
 
 INSERT INTO Student(sid, age) VALUES(5, 13);
 INSERT INTO Student(sid) VALUES(9);
+SELECT * FROM Student;
 SELECT age FROM Student WHERE age / 5 + 7 > sid;
 
 INSERT INTO Student(sid) VALUES(1 + (9 + 3) / 2);
