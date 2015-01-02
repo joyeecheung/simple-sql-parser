@@ -9,6 +9,13 @@
 
 namespace ssql {
 
+/**
+ * Responsible for semantics analysis
+ * (those that doesn't need the knowledge of schema)
+ * and keeping track of tables in memory.
+ * Also responsible for extracting clean components inside statments,
+ * and pass them down to `Table`.
+ */
 class Engine {
 public:
     Engine() {}
@@ -19,6 +26,7 @@ public:
     int del(const Delete &delete_stmt);
     // query the records
     int query(const Query &query_stmt, vector<vector<int> > &results) const;
+    // get column names of the table with the given id
     const vector<string> &getColumns(string table_id) const;
     ~Engine() {}
 private:

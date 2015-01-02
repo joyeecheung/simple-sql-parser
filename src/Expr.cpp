@@ -101,9 +101,10 @@ int Expr::eval(vector<int> record, map<string, int> indexes) const {
     if (type == NUM) {
         return value.getNumber();
     } else if (type == ID) {
-        auto it = indexes.find(value.getId());
+        string id = value.getId();
+        auto it = indexes.find(id);
         if (it == indexes.end()) {
-            throw RuntimeError(it->first + " not found in the scheme");
+            throw RuntimeError(id + " not found in the scheme");
         }
         return record[it->second];
     } else if (type == AND) {

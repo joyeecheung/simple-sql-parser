@@ -27,6 +27,9 @@ private:
     string msg;
 };
 
+/**
+ * Unit of schema.
+ */
 struct Scheme {
     string name;
     int def;
@@ -35,32 +38,28 @@ struct Scheme {
         : name(_name), def(_def), is_key(_is_key) {}
 };
 
+/**
+ * Responsible for transactions.
+ * Perform semantics analysis that needs the knowledge of its schema.
+ */
 class Table {
 public:
     Table() {}
+    // create table with id, default mappins, primary keys
     Table(const string table_id, const map<string, int> defs,
-          const vector<string> primary)
-        : id(table_id), keys(primary.begin(), primary.end()) {
-        int counter = 0;
-        for (auto it = defs.begin(); it != defs.end(); ++it) {
-            Scheme new_scheme = Scheme(it->first, it->second,
-                                       keys.find(it->first) != keys.end());
-            indexes[it->first] = counter++;
-            schema.push_back(new_scheme);
-            columns.push_back(it->first);
-        }
-
-    }
-
+          const vector<string> primary);
+    // insert values
     Table &insert(const vector<string> cols, const vector<int> values);
+    // delete rows satisfying given expressions
     int del(const Expr expr);
+    // query rows satisfying given expressions
     int query(const vector<string> &names, const Expr expr,
               vector<vector<int> > &results) const;
-
+    // get column names of this table
     const vector<string> &getColumns() const {
         return columns;
     }
-
+    // check key conflicts for two records
     bool conflict(const vector<int> old_record,
                   const vector<int> new_record) const;
 
@@ -68,12 +67,12 @@ public:
 private:
     string id;
 
-    set<string> keys;
-    map<string, int> indexes;
+    set<string> keys;  // primary keys
+    map<string, int> indexes;  // string names to indexes
 
-    // same order
+    // with same order
     vector<Scheme> schema;
-    vector<string> columns;
+    vector<string> columns;  // column names
     vector<vector<int> > data;
 };
 

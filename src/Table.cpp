@@ -2,6 +2,19 @@
 
 namespace ssql {
 
+Table::Table(const string table_id, const map<string, int> defs,
+      const vector<string> primary)
+    : id(table_id), keys(primary.begin(), primary.end()) {
+    int counter = 0;
+    for (auto it = defs.begin(); it != defs.end(); ++it) {
+        Scheme new_scheme = Scheme(it->first, it->second,
+                                   keys.find(it->first) != keys.end());
+        indexes[it->first] = counter++;
+        schema.push_back(new_scheme);
+        columns.push_back(it->first);
+    }
+}
+
 Table &Table::insert(const vector<string> cols,
                      const vector<int> values) {
 
