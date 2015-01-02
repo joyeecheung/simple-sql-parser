@@ -1,6 +1,12 @@
 CC=clang++
-#CFLAGS=-c -Wall -DTRACK -std=c++11
-CFLAGS=-c -Wall -std=c++11
+CXXFLAGS=-c -Wall -std=c++11
+
+#For debug
+#CXXFLAGS=-c -Wall -DTRACK -std=c++11
+
+#For environment without clang++
+#CC=g++
+#CFLAG=-c -Wall -std=c++0x
 
 TOKEN=src/Token.cpp
 LEXER=src/Lexer.cpp
@@ -40,7 +46,7 @@ $(LEXMAINOBJ) : $(LEXMAIN)
 $(PARSEMAINOBJ) : $(PARSEMAIN)
 
 %.o: %.cpp
-	$(CC) $(CFLAGS) $< -g -o $@
+	$(CC) $(CXXFLAGS) $< -g -o $@
 
 clean:
 	rm -f src/*.o $(EXECUTABLE)
@@ -52,10 +58,9 @@ testparser: $(OBJECTS) $(PARSEMAINOBJ) $(PARSEIN)
 testlexer: $(OBJECTS) $(LEXMAINOBJ) $(LEXIN)
 	$(CC) $(OBJECTS) $(LEXMAINOBJ) -g -o $(EXECUTABLE)
 	$(EXECUTABLE) $(LEXIN) > test/lexer.out
-	diff test/lexer.out test/lexer.good
 
-checkmem: $(testparser)
-	valgrind --leak-check=full -v $(EXECUTABLE) $(PARSEIN)
+checkmem: $(EXECUTABLE)
+	valgrind --leak-check=full -v $(EXECUTABLE) $(ALLIN)
 
 test: $(EXECUTABLE)
 	$(EXECUTABLE) $(ALLIN)

@@ -2,6 +2,8 @@
 
 namespace ssql {
 
+using std::size_t;
+
 map<string, Type> Lexer::words;
 map<char, Type> Lexer::singleOp;
 map<string, Type> Lexer::ops;
@@ -78,7 +80,7 @@ Token Lexer::next() {
             }
 
             string str(buffer);
-            for (int i = 0; i < str.size(); ++i) {
+            for (size_t i = 0; i < str.size(); ++i) {
                 str[i] = tolower(str[i]); // case insensitive
             }
 

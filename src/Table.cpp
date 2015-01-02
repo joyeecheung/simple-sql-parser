@@ -2,6 +2,8 @@
 
 namespace ssql {
 
+using std::size_t;
+
 Table::Table(const string table_id, const map<string, int> defs,
       const vector<string> primary)
     : id(table_id), keys(primary.begin(), primary.end()) {
@@ -36,12 +38,12 @@ Table &Table::insert(const vector<string> cols,
 
     vector<int> new_record(columns.size());
     // fill in default data
-    for (int i = 0; i < columns.size(); ++i) {
+    for (size_t i = 0; i < columns.size(); ++i) {
         new_record[i] = schema[i].def;
     }
 
     // fill in available data
-    for (int i = 0; i < cols.size(); ++i) {
+    for (size_t i = 0; i < cols.size(); ++i) {
         int index = indexes[cols[i]];
         new_record[index] = values[i];
     }
