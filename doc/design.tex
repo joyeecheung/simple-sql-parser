@@ -31,7 +31,7 @@
 \usepackage[utf8]{inputenc}
 \usetikzlibrary{arrows,automata}
 \usetikzlibrary{positioning}
-
+\usepackage{tikz-qtree,tikz-qtree-compat}
 
 \tikzset{
     state/.style={
@@ -75,7 +75,8 @@ Zhu Lichen (Class 2) & 12330439 & Testing
 
 The system is divided into four parts, with functionalities shown in Figure~\ref{fig:sys}.
 
-\begin{figure}[H]
+\begin{figure}[]
+\centering
 \begin{tikzpicture}[->,>=stealth']
 
  \node[state, text width=4.5cm] (LEXER) 
@@ -157,7 +158,7 @@ The system is divided into four parts, with functionalities shown in Figure~\ref
 \text{DELETE}\quad\to\quad & \texttt{DELETE} \\
 \text{FROM}\quad\to\quad & \texttt{FROM} \\
 \text{WHERE}\quad\to\quad & \texttt{WHERE} \\
-\text{SELECT}\quad\to\quad & \texttt{SELECT} \\
+\text{SELECT}\quad\to\quad & \texttt{SELECT}
 \text{LT}\quad\to\quad & \texttt{<} \\
 \text{GT}\quad\to\quad & \texttt{>} \\
 \text{NEQ}\quad\to\quad & \texttt{<>} \\
@@ -174,7 +175,9 @@ The system is divided into four parts, with functionalities shown in Figure~\ref
 \text{COMMA}\quad\to\quad & \texttt{,} \\
 \text{SEMICOLON}\quad\to\quad & \texttt{;} \\
 \text{L\_PAREN}\quad\to\quad & \texttt{(} \\
-\text{R\_PAREN}\quad\to\quad & \texttt{)} \\
+\text{R\_PAREN}\quad\to\quad & \texttt{)}
+\end{align*}
+\begin{align*}
 words \quad\to\quad & \text{CREATE} \quad | \quad \text{TABLE}  \quad | \quad \text{INT} \\
 &| \quad \text{DEFAULT} \quad | \quad \text{PRIMARY} \quad | \quad \text{KEY} \quad \\
 &| \quad \text{INSERT} \quad | \quad \text{INTO} \quad | \quad \text{VALUES} \quad \\
@@ -192,6 +195,70 @@ ops \quad\to\quad &
 &| \quad \text{COMMA} \quad | \quad \text{SEMICOLON}
 \end{align*}
 \subsection{DFA}
+
+A simplified version is shown in Figure~\ref{fig:dfa}. After getting into accepting states for identifiers and operators, we need to further process the buffer to determine the right token to return.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[scale=0.2]
+\tikzstyle{every node}+=[inner sep=0pt]
+\draw [black] (32.8,-10.4) circle (3);
+\draw (32.8,-10.4) node {$1$};
+\draw [black] (63.1,-10.4) circle (3);
+\draw (63.1,-10.4) node {$2$};
+\draw [black] (63.1,-10.4) circle (2.4);
+\draw [black] (17.9,-19.6) circle (3);
+\draw (17.9,-19.6) node {$0$};
+\draw [black] (63.1,-19.6) circle (3);
+\draw (63.1,-19.6) node {$3$};
+\draw [black] (63.1,-19.6) circle (2.4);
+\draw [black] (42.6,-27.8) circle (3);
+\draw (42.6,-27.8) node {$4$};
+\draw [black] (35.1,-42.5) circle (3);
+\draw (35.1,-42.5) node {$5$};
+\draw [black] (61.9,-42.5) circle (3);
+\draw (61.9,-42.5) node {$6$};
+\draw [black] (61.9,-42.5) circle (2.4);
+\draw [black] (63,-27.8) circle (3);
+\draw (63,-27.8) node {$7$};
+\draw [black] (63,-27.8) circle (2.4);
+\draw [black] (20.45,-18.02) -- (30.25,-11.98);
+\fill [black] (30.25,-11.98) -- (29.3,-11.97) -- (29.83,-12.82);
+\draw (27.35,-15.5) node [below] {$0-9$};
+\draw [black] (35.8,-10.4) -- (60.1,-10.4);
+\fill [black] (60.1,-10.4) -- (59.3,-9.9) -- (59.3,-10.9);
+\draw (47.95,-9.9) node [above] {$non-digit$};
+\draw [black] (31.477,-7.72) arc (234:-54:2.25);
+\draw (32.8,-3.15) node [above] {$0-9$};
+\fill [black] (34.12,-7.72) -- (35,-7.37) -- (34.19,-6.78);
+\draw [black] (17.514,-22.563) arc (20.30993:-267.69007:2.25);
+\draw (8.36,-25.72) node [below] {$white-space$};
+\fill [black] (15.31,-21.1) -- (14.39,-20.9) -- (14.74,-21.84);
+\draw [black] (20.9,-19.6) -- (60.1,-19.6);
+\fill [black] (60.1,-19.6) -- (59.3,-19.1) -- (59.3,-20.1);
+\draw (40.5,-20.1) node [below] {$singleOp$};
+\draw [black] (20.75,-20.55) -- (39.75,-26.85);
+\fill [black] (39.75,-26.85) -- (39.15,-26.13) -- (38.84,-27.08);
+\draw (28.83,-24.26) node [below] {$op$};
+\draw [black] (43.923,-30.48) arc (54:-234:2.25);
+\draw (42.6,-35.05) node [below] {$op$};
+\fill [black] (41.28,-30.48) -- (40.4,-30.83) -- (41.21,-31.42);
+\draw [black] (19.7,-22) -- (33.3,-40.1);
+\fill [black] (33.3,-40.1) -- (33.22,-39.16) -- (32.42,-39.76);
+\draw (25.92,-32.45) node [left] {$_,\mbox{ }A-Z,\mbox{ }a-z$};
+\draw [black] (36.423,-45.18) arc (54:-234:2.25);
+\draw (35.1,-49.75) node [below] {$_,\mbox{ }a-z,\mbox{ }A-Z,\mbox{ }0-9$};
+\fill [black] (33.78,-45.18) -- (32.9,-45.53) -- (33.71,-46.12);
+\draw [black] (38.1,-42.5) -- (58.9,-42.5);
+\fill [black] (58.9,-42.5) -- (58.1,-42) -- (58.1,-43);
+\draw (48.5,-43) node [below] {$other\mbox{ }character$};
+\draw [black] (45.6,-27.8) -- (60,-27.8);
+\fill [black] (60,-27.8) -- (59.2,-27.3) -- (59.2,-28.3);
+\draw (52.8,-28.3) node [below] {$other\mbox{ }charcter$};
+\end{tikzpicture}
+\caption{Simplified DFA}
+\label{fig:dfa}
+\end{figure}
 
 \section{Parser Design}
 
@@ -212,7 +279,9 @@ ops \quad\to\quad &
 \textsc{first}(term[simple=false]) \quad =& \quad\{\text{PLUS, MINUS, }num\text{, }id\} \\
 \textsc{first}(\_term) \quad =& \quad\{\text{MUL, DIV, }\epsilon\} \\
 \textsc{first}(unary[simple=true]) \quad =& \quad\{\text{PLUS, MINUS, } num \text{, L\_PAREN}\} \\
-\textsc{first}(unary[simple=false]) \quad =& \quad\{\text{PLUS, MINUS, }num\text{, }id\} \\
+\textsc{first}(unary[simple=false]) \quad =& \quad\{\text{PLUS, MINUS, }num\text{, }id\}
+%\end{align*}
+%\begin{align*}
 \textsc{first}(column\_list) \quad =& \quad\{id\} \\
 \textsc{first}(\_column\_list) \quad =& \quad\{\text{COMMA, }\epsilon\} \\
 \textsc{first}(insert\_stmt) \quad =& \quad\{\text{INSERT}\} \\
@@ -252,8 +321,10 @@ ops \quad\to\quad &
 \textsc{follow}(\_term[false])\quad =& \quad \{\text{PLUS, MINUS, NEQ, EQ, LT, GT,}\\
 & \quad \text{LEQ, GEQ, AND, OR, SEMICOLON, R\_PAREN}\} \\
 \textsc{follow}(unary[true])\quad =& \quad \{\text{MUL, DIV, PLUS, MINUS, COMMA, R\_PAREN}\} \\
-\textsc{follow}(unary[false])\quad =& \quad \{\text{MUL, DIV, PLUS, MINUS, NEQ, EQ, LT,}\\
-& \quad \text{GT, LEQ, GEQ, AND, OR, SEMICOLON, R\_PAREN}\} \\
+\textsc{follow}(unary[false])\quad =& \quad \{\text{MUL, DIV, PLUS, MINUS, NEQ, EQ, LT,} \\
+& \quad \text{GT, LEQ, GEQ, AND, OR, SEMICOLON, R\_PAREN}\} 
+%\end{align*}
+%\begin{align*}
 \textsc{follow}(column\_list)\quad =& \quad \{\text{FROM, R\_PAREN}\} \\
 \textsc{follow}(\_column\_list)\quad =& \quad \{\text{FROM, R\_PAREN}\} \\
 \textsc{follow}(insert\_stmt)\quad =& \quad \{\text{\$}\} \\
@@ -513,7 +584,67 @@ select\_list \quad  \to & \quad\\
 id: & \quad column\_list
 \end{align*}
 
+\subsection{About expressions}
+
+To handle expressions, we build expression trees during parsing, then attach them to statements as a component for later evaluation(in-order). An example is shown in Figure~\ref{fig:tree}.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[level 1/.style={level distance=1.5cm}]
+\Tree
+[.GT
+  [.PLUS
+    [.DIV [.MUL [.MINUS [.NONE   ] [.ID age ] ] [.NUM 5 ] ] [.NUM 3 ] ] 
+    [.MUL [.ID height ] [.NUM 2 ] ]
+  ] 
+  [.NUM 5 ]
+]
+\end{tikzpicture}
+\caption{Expression tree for $-age * 5 / 3 + height * 2 > 5$}
+\label{fig:tree}
+\end{figure}
+
+\subsection{Syntax-directed Translation}
+During parsing, we collect items for list-type components in statements. For example, when parsing a column list, we pass a vector around and pushing $id$s into it each time a terminal $id$ is consumed. Default specifications for a $Create$ statement is a map from strings to int, value list is a vector of int, etc.
+
+
 \section{Database Design}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[->,>=stealth']
+ \node[state,
+ node distance=3cm,
+ text width=4.5cm,
+ ] (ENGINE)
+ {\begin{tabular}{l}
+     \textbf{Engine}\\[0.3em]
+     \parbox{4cm}{Analyze statments,
+     perform simple semantic analysis,
+     keep track of tables
+     }
+    \end{tabular}};
+
+ \node[state,
+ right of=ENGINE,
+ node distance=10cm,
+ text width=4.5cm] (TABLE) 
+ {\begin{tabular}{l}
+      \textbf{Table}\\[0.3em]
+      \parbox{4cm}{Perform transactions and
+      semantic analysis that needs the schema
+      }
+     \end{tabular}};
+
+ \path (ENGINE) edge node[anchor=west,above]
+   {
+     Components of Statements
+   }(TABLE)
+ ;
+\end{tikzpicture}
+\caption{Database Design}
+\label{fig:db}
+\end{figure}
 
 \section{Complexity Analysis}
 
