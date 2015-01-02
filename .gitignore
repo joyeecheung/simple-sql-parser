@@ -2,3 +2,6 @@ bin/*
 *.o
 *.out
 core
+doc/*
+!doc/*.tex
+*~
