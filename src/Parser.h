@@ -35,9 +35,10 @@ public:
         col = lexer.getCol();
         line = lexer.getLine();
         lookahead = lexer.next();
+        delay = false;
     }
 
-    Type next_stmt_type() const;  // head of next statement
+    Type next_stmt_type();  // head of next statement
 
     Create create_stmt();
     Parser &decl_list(multimap<string, int> &defaults, vector<vector<string> > &keys);
@@ -74,7 +75,7 @@ public:
     // terminals
     string id();
     int num();
-    Parser &match(Type t);  // match a keyword/operator
+    Parser &cosume(Type t);  // cosume a keyword/operator
 
     // Use this to move the lookahead and record the col/line.
     // Don't call lexer.next() by hand.
@@ -93,6 +94,21 @@ public:
         return line;
     }
 
+    bool match(Type t) {
+        if (delay) {
+            advance();
+        }
+        return lookahead == t;
+    }
+
+    Parser &consume_until_start() {
+        while (!match(CREATE) && !match(INSERT) && !match(DELETE)
+               && !match(SELECT) && !match(END)) {
+            advance();
+        }
+        return *this;
+    }
+
     ~Parser() {}
 
 private:
@@ -100,6 +116,7 @@ private:
     Lexer &lexer;
     int col;  // column number
     int line;  // line number
+    bool delay;
 };
 
 }
