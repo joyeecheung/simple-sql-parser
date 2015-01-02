@@ -539,12 +539,11 @@ void Parser::advance() {
     if (lookahead == SEMICOLON)
         std::cout << '\n';
 #endif
-    col = lexer.getCol();
-    line = lexer.getLine();
-
     if (lookahead == SEMICOLON && !delay) {
         delay = true;
     } else {
+        col = lexer.getCol();
+        line = lexer.getLine();
         lookahead = lexer.next();
         delay = false;
     }

@@ -1,6 +1,28 @@
+DELETE
+FROM
+(ID, Student)
+WHERE
+(ID, age)
+PLUS
+(NUM, 7)
+LT
+(NUM, 19)
+PLUS
+(NUM, 6)
+AND
+(ID, sid)
+NEQ
+(NUM, 6)
+DIV
+(NUM, 3)
+MUL
+(NUM, 5)
+MINUS
+(NUM, 2)
+SEMICOLON
 CREATE
 TABLE
-(ID, student)
+(ID, Student)
 L_PAREN
 (ID, sid)
 INT
@@ -23,19 +45,20 @@ SELECT
 COMMA
 (ID, age)
 FROM
-(ID, student)
+(ID, Student)
 WHERE
 (ID, age)
-GT
+GEQ
 (NUM, 15)
 AND
+NOT
 (ID, age)
 LT
 (NUM, 18)
 SEMICOLON
 INSERT
 INTO
-(ID, student)
+(ID, Student)
 L_PAREN
 (ID, sid)
 COMMA
@@ -50,10 +73,10 @@ R_PAREN
 SEMICOLON
 DELETE
 FROM
-(ID, student)
+(ID, Student)
 WHERE
 (ID, age)
-LT
+LEQ
 (NUM, 18)
 AND
 (ID, age)
@@ -62,44 +85,84 @@ GT
 SEMICOLON
 DELETE
 FROM
-(ID, student)
-WHERE
-(ID, age)
-PLUS
-(NUM, 18)
-DIV
-(NUM, 5)
-MINUS
-(NUM, 6)
-MUL
-(NUM, 1)
-EQ
-(NUM, 7)
-OR
-(ID, age)
-NEQ
-(NUM, 14)
-SEMICOLON
-DELETE
-FROM
-(ID, student)
-WHERE
-(ID, age)
-GEQ
-(NUM, 1)
-AND
-(ID, age)
-LEQ
-(NUM, 14)
+(ID, Student)
 SEMICOLON
 SELECT
 MUL
 FROM
-(ID, student)
+(ID, Student)
 WHERE
-NOT
 (ID, age)
+PLUS
+(NUM, 7)
 GT
-(NUM, 15)
+(NUM, 19)
+PLUS
+(NUM, 6)
+OR
+(ID, sid)
+EQ
+(NUM, 6)
+DIV
+(NUM, 3)
+MINUS
+(NUM, 2)
+SEMICOLON
+CREATE
+TABLE
+(ID, Student)
+L_PAREN
+(ID, sid)
+INT
+DEFAULT
+ASSIGN
+(NUM, 6)
+MUL
+(NUM, 3)
+DIV
+MINUS
+(NUM, 4)
+PLUS
+(NUM, 1)
+COMMA
+(ID, age)
+INT
+DEFAULT
+ASSIGN
+(NUM, 32)
+MUL
+(NUM, 3)
+MINUS
+(NUM, 6)
+DIV
+(NUM, 2)
+R_PAREN
+SEMICOLON
+INSERT
+INTO
+(ID, Student)
+L_PAREN
+(ID, sid)
+COMMA
+(ID, _age)
+R_PAREN
+VALUES
+L_PAREN
+(NUM, 6)
+MUL
+(NUM, 3)
+DIV
+(NUM, 4)
+PLUS
+(NUM, 1)
+COMMA
+(NUM, 2332)
+MUL
+(NUM, 3)
+MINUS
+(NUM, 6)
+DIV
+(NUM, 2)
+R_PAREN
 SEMICOLON
 END

@@ -87,6 +87,7 @@ Token Lexer::next() {
             if (words.find(str) != words.end()) {  // keyword
                 return Token(words[str]);
             } else {
+                str = buffer;  // case sensitive for identifier
                 return Token(ID, str.c_str(), str.size());
             }
         } else if (isspace(peek)) {  // white space
@@ -102,7 +103,7 @@ Token Lexer::next() {
             int count = 0;
             do {
                 buffer[count++] = advance();
-            } while (isOp(peek));
+            } while (isOp(peek) && count << MAX_OP_SIZE);
 
             string str(buffer);
 

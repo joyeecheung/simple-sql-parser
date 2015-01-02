@@ -1,0 +1,72 @@
+Until line: 1, col 70
+insert ID: Student
+insert values
+sid: -3
+age: 93
+
+Until line: 2, col 91
+create ID: Student
+create defaults
+age: 93
+sid: 5
+create keys:
+
+Until line: 3, col 67
+delete ID: Student
+delete clause
+((((ID, age) PLUS (NUM, 7)) GT ((NUM, 19) PLUS (NUM, 6))) AND ((ID, sid) NEQ ((((NUM, 6) DIV (NUM, 3)) MUL (NUM, 5)) MINUS (NUM, 2))))
+
+Until line: 4, col 71
+create ID: Student
+create defaults
+age: 18
+sid: 0
+create keys:
+sid
+
+Until line: 5, col 47
+insert ID: Student
+insert values
+sid: 1111
+age: 18
+
+Until line: 6, col 47
+delete ID: Student
+delete clause
+(((ID, age) LT (NUM, 18)) AND ((ID, age) GT (NUM, 14)))
+
+Until line: 7, col 20
+delete ID: Student
+delete clause
+()
+
+Until line: 8, col 65
+query ID: Student
+query columns: * 
+query clause
+((((ID, age) PLUS (NUM, 7)) GT ((NUM, 19) PLUS (NUM, 6))) AND ((ID, sid) NEQ (((NUM, 6) DIV (NUM, 3)) MINUS (NUM, 2))))
+
+Until line: 9, col 69
+query ID: Student
+query columns: sid age 
+query clause
+(((( MINUS (ID, age)) GT ( PLUS (NUM, 15))) OR ((ID, age) LT (NUM, 18))) OR ((ID, sid) GT (NUM, 5)))
+
+Until line: 10, col 89
+create ID: Student
+create defaults
+age: 18
+sid: 0
+create keys:
+sid
+sid
+
+Until line: 11, col 96
+create ID: Student
+create defaults
+age: 18
+age: 7
+sid: 0
+create keys:
+sid
+
