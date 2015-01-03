@@ -64,3 +64,7 @@ SELECT * FROM Student WHERE sid / age >= 0;
 
 INSERT INTO Student(sid, age) VALUES(77, 0);
 SELECT * FROM Student WHERE sid / age > sid;
+
+INSERT # INTO Student(sid, age) VALUES(55, 0);
+
+INSERT INTO Student(sid, age) VALUES(9, 0);

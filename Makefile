@@ -35,6 +35,7 @@ EXECUTABLE=bin/ssql
 all: $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS) $(MAINOBJ)
+	mkdir -p bin
 	$(CC) $(OBJECTS) $(MAINOBJ) -g -o $@
 
 $(OBJECTS) : $(SOURCES)
@@ -52,11 +53,13 @@ clean:
 	rm -f src/*.o $(EXECUTABLE)
 
 testparser: $(OBJECTS) $(PARSEMAINOBJ) $(PARSEIN)
+	mkdir -p bin
 	$(CC) $(OBJECTS) $(PARSEMAINOBJ) -g -o $(EXECUTABLE)
 	$(EXECUTABLE) $(PARSEIN) > test/parser.out
 	diff test/parser.out test/parser.good
 
 testlexer: $(OBJECTS) $(LEXMAINOBJ) $(LEXIN)
+	mkdir -p bin
 	$(CC) $(OBJECTS) $(LEXMAINOBJ) -g -o $(EXECUTABLE)
 	$(EXECUTABLE) $(LEXIN) > test/lexer.out
 	diff test/lexer.out test/lexer.good

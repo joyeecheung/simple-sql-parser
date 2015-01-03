@@ -249,7 +249,7 @@ Expr Parser::_disjunct() {
     } else if (match(SEMICOLON) || match(R_PAREN)) {
         return NULL_EXPR;  // _disjunct-> epsilon
     } else {
-        throw ParseError("Syntax error when cosumeing disjunct");
+        throw ParseError("Syntax error when matching disjunct");
     }
 }
 
@@ -268,7 +268,7 @@ Expr Parser::conjunct() {
             return test;
         }
     } else {
-        throw ParseError("Syntax error when cosumeing conjunct");
+        throw ParseError("Syntax error when matching conjunct");
     }
 }
 
@@ -293,7 +293,7 @@ Expr Parser::_conjunct() {
                || match(R_PAREN)) {
         return NULL_EXPR;  // _conjunct -> epsilon
     } else {
-        throw ParseError("Syntax error when cosumeing conjunct");
+        throw ParseError("Syntax error when matching conjunct");
     }
 }
 
@@ -315,7 +315,7 @@ Expr Parser::boolean() {
         temp.setRight(boolean());
         return temp;
     } else {
-        throw ParseError("Syntax error when cosumeing boolean");
+        throw ParseError("Syntax error when matching boolean");
     }
 }
 
@@ -346,7 +346,7 @@ Expr Parser::expr(bool simple) {
             return test;
         }
     } else {
-        throw ParseError("Syntax error when cosumeing expressions");
+        throw ParseError("Syntax error when matching expressions");
     }
 }
 
@@ -376,7 +376,7 @@ Expr Parser::_expr(bool simple) {
                            || match(SEMICOLON) || match(R_PAREN))) {
         return NULL_EXPR;  // _expr[] -> epsilon
     } else {
-        throw ParseError("Syntax error when cosumeing expressions");
+        throw ParseError("Syntax error when matching expressions");
     }
 }
 
@@ -393,7 +393,7 @@ Expr Parser::term(bool simple) {
             return test;
         }
     } else {
-        throw ParseError("Syntax error when cosumeing terms");
+        throw ParseError("Syntax error when matching terms");
     }
 }
 
@@ -426,7 +426,7 @@ Expr Parser::_term(bool simple) {
                            || match(SEMICOLON) || match(R_PAREN))) {
         return NULL_EXPR;  // _term[]-> epsilon
     } else {
-        throw ParseError("Syntax error when cosumeing terms");
+        throw ParseError("Syntax error when matching terms");
     }
 }
 
@@ -458,7 +458,7 @@ Expr Parser::unary(bool simple) {
         cosume(R_PAREN);
         return temp;
     } else {
-        throw ParseError("Syntax error when cosumeing unary");
+        throw ParseError("Syntax error when matching unary");
     }
 }
 
@@ -470,7 +470,7 @@ Type Parser::rop() {
         cosume(result);
         return result;
     } else {
-        throw ParseError("Syntax error when cosumeing relational operators");
+        throw ParseError("Syntax error when matching relational operators");
     }
 }
 

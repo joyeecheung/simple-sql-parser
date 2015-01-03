@@ -119,7 +119,9 @@ Token Lexer::next() {
 
             return Token(ops[str]);
         } else {  // error
-            throw LexError("Invalid lexeme");
+            string msg = "Invalid lexeme ";
+            msg.push_back(advance());
+            throw LexError(msg);
         }
     }
 
