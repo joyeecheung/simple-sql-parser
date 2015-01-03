@@ -75,7 +75,9 @@ Zhu Lichen (Class 2) & 12330439 & Testing
 
 The system is divided into four parts, with functionalities shown in Figure~\ref{fig:sys}.
 
-\begin{figure}[]
+The parser doesn't need to concern individual characters, the engine doesn't need to know about tokens and schema/data of tables, and the table doesn't need to know about (raw) statemets. In this way, we make the coupling between modules as loose as possible.
+
+\begin{figure}[H]
 \centering
 \begin{tikzpicture}[->,>=stealth']
 
@@ -431,12 +433,6 @@ delete\_stmt \quad  \to & \quad\\
 
 \begin{align*}
 disjunct \quad  \to & \quad\\
-\text{WHERE}: & \quad \text{WHERE } disjunct\\
-\text{SEMICOLON}: & \quad \epsilon
-\end{align*}
-
-\begin{align*}
-disjunct \quad  \to & \quad\\
 \text{L\_PAREN}: & \quad conjunct \text{ } \_disjunct \\
 \text{NOT}: & \quad conjunct \text{ } \_disjunct \\
 \text{PLUS}: & \quad conjunct \text{ } \_disjunct \\
@@ -604,9 +600,8 @@ To handle expressions, we build expression trees during parsing, then attach the
 \label{fig:tree}
 \end{figure}
 
-\subsection{Syntax-directed Translation}
-During parsing, we collect items for list-type components in statements. For example, when parsing a column list, we pass a vector around,  pushing $id$s into it each time a terminal $id$ is consumed. Similarly, default specifications for a $Create$ statement is a map from strings to int, value list is a vector of int, etc.
-
+\subsection{Statements}
+During parsing, we collect items for list-type components in statements. For example, when parsing a column list, we pass a vector around,  pushing $id$s into it each time a terminal $id$ is consumed. Similarly, default specifications for a $Create$ statement is a map from strings to int, value list is a vector of int, etc. In this way, we can completely seperate the parser from the table.
 
 \section{Database Design}
 
@@ -653,6 +648,12 @@ Both engine and table provide services for creating tables, inserting records, d
 \caption{Database Design}
 \label{fig:db}
 \end{figure}
+
+\subsection{Error Recovery}
+
+For errors ocurred during lexical analysis, if the invalid lexeme appears as a start symbol, we stop the program since this can lead to numerous parse errors. Otherwise we simply igonre this lexeme, and ignore the whole statement if necessary.
+
+For parse errors, runtime errors(division by zero, column can't be found in the schema) and database errors, we skip to the next start symbol, and parse the next statement.
 
 \section{Complexity Analysis}
 
