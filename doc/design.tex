@@ -160,7 +160,7 @@ The parser doesn't need to concern individual characters, the engine doesn't nee
 \text{DELETE}\quad\to\quad & \texttt{DELETE} \\
 \text{FROM}\quad\to\quad & \texttt{FROM} \\
 \text{WHERE}\quad\to\quad & \texttt{WHERE} \\
-\text{SELECT}\quad\to\quad & \texttt{SELECT}
+\text{SELECT}\quad\to\quad & \texttt{SELECT} \\
 \text{LT}\quad\to\quad & \texttt{<} \\
 \text{GT}\quad\to\quad & \texttt{>} \\
 \text{NEQ}\quad\to\quad & \texttt{<>} \\
@@ -281,7 +281,7 @@ A simplified DFA is shown in Figure~\ref{fig:dfa}. After getting into accepting 
 \textsc{first}(term[simple=false]) \quad =& \quad\{\text{PLUS, MINUS, }num\text{, }id\} \\
 \textsc{first}(\_term) \quad =& \quad\{\text{MUL, DIV, }\epsilon\} \\
 \textsc{first}(unary[simple=true]) \quad =& \quad\{\text{PLUS, MINUS, } num \text{, L\_PAREN}\} \\
-\textsc{first}(unary[simple=false]) \quad =& \quad\{\text{PLUS, MINUS, }num\text{, }id\}
+\textsc{first}(unary[simple=false]) \quad =& \quad\{\text{PLUS, MINUS, }num\text{, }id\} \\
 %\end{align*}
 %\begin{align*}
 \textsc{first}(column\_list) \quad =& \quad\{id\} \\
@@ -324,7 +324,7 @@ A simplified DFA is shown in Figure~\ref{fig:dfa}. After getting into accepting 
 & \quad \text{LEQ, GEQ, AND, OR, SEMICOLON, R\_PAREN}\} \\
 \textsc{follow}(unary[true])\quad =& \quad \{\text{MUL, DIV, PLUS, MINUS, COMMA, R\_PAREN}\} \\
 \textsc{follow}(unary[false])\quad =& \quad \{\text{MUL, DIV, PLUS, MINUS, NEQ, EQ, LT,} \\
-& \quad \text{GT, LEQ, GEQ, AND, OR, SEMICOLON, R\_PAREN}\} 
+& \quad \text{GT, LEQ, GEQ, AND, OR, SEMICOLON, R\_PAREN}\} \\
 %\end{align*}
 %\begin{align*}
 \textsc{follow}(column\_list)\quad =& \quad \{\text{FROM, R\_PAREN}\} \\
