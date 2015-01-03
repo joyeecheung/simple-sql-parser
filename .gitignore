@@ -4,4 +4,5 @@ bin/*
 core
 doc/*
 !doc/*.tex
+!doc/*.md
 *~
