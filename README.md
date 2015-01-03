@@ -1,4 +1,5 @@
 ## Dependencies
+
 1. `clang++` 3.4 or higher / `g++` 4.6.3 or higher (needs `C++11/C++0x` support)
 2. GNU Make
 3. Linux
@@ -11,11 +12,11 @@ If your `clang++` can't be invoked with `clang++`, e.g. has to be invoked with `
 
 	CC=clang++
 
-into 
+into
 
 	CC=clang++-3.4
 
-If you only have `g++`, uncomment these lines in the `Makefile` 
+If you only have `g++`, uncomment these lines in the `Makefile`
 
     CC=g++
     CXXFLAGS=-c -Wall -std=c++0x
@@ -71,6 +72,8 @@ If you have valgrind installed, you can check the memory usage with
 
 
 ##Directory structure
+
+    .
     |-- Makefile
     |-- README.md
     |
