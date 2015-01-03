@@ -14,6 +14,7 @@ EXPR=src/Expr.cpp
 PARSER=src/Parser.cpp
 TABLE=src/Table.cpp
 ENGINE=src/Engine.cpp
+IO=src/IO.cpp
 
 LEXMAIN=src/test_lexer.cpp
 PARSEMAIN=src/test_parser.cpp
@@ -23,7 +24,7 @@ LEXIN=test/lexer.in
 PARSEIN=test/parser.in
 ALLIN=test/all.in
 
-SOURCES=$(TOKEN) $(LEXER) $(EXPR) $(PARSER) $(TABLE) $(ENGINE)
+SOURCES=$(TOKEN) $(LEXER) $(EXPR) $(PARSER) $(TABLE) $(ENGINE) $(IO)
 OBJECTS=$(SOURCES:.cpp=.o)
 
 MAINOBJ=$(MAIN:.cpp=.o)
@@ -68,6 +69,7 @@ checkmem: $(EXECUTABLE)
 	valgrind --leak-check=full -v $(EXECUTABLE) $(ALLIN)
 
 test: $(EXECUTABLE)
-	$(EXECUTABLE) $(ALLIN)
+	$(EXECUTABLE) $(ALLIN) > test/all.out
+	diff test/all.out test/all.good
 
 .PHONY: testparser testlexer checkmem test
