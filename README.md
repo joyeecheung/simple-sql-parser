@@ -71,6 +71,44 @@ If you have valgrind installed, you can check the memory usage with
 
 
 ##Directory structure
+    |-- Makefile
+    |-- README.md
+    |
+    |-- bin
+    |   `-- ssql (the program. will show up after make)
+    |
+    |-- doc (documents)
+    |   |-- design.pdf
+    |   `-- test.pdf
+    |
+    |-- src  (sorce code)
+    |   |-- Engine.cpp
+    |   |-- Engine.h
+    |   |-- Expr.cpp
+    |   |-- Expr.h
+    |   |-- IO.cpp
+    |   |-- IO.h
+    |   |-- Lexer.cpp
+    |   |-- Lexer.h
+    |   |-- Parser.cpp
+    |   |-- Parser.h
+    |   |-- Statements.cpp
+    |   |-- Statements.h
+    |   |-- Table.cpp
+    |   |-- Table.h
+    |   |-- Token.cpp
+    |   |-- Token.h
+    |   |-- main.cpp
+    |   |-- test_lexer.cpp
+    |   `-- test_parser.cpp
+    |
+    `-- test  (test cases)
+        |-- all.good
+        |-- all.in
+        |-- lexer.good
+        |-- lexer.in
+        |-- parser.good
+        `-- parser.in
 
 
 ##About
