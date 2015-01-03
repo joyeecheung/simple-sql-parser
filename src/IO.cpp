@@ -11,11 +11,14 @@ void IO::printLine(int length, char ch) {
 
 void IO::printData(const vector<string> &names,
                    vector<vector<int> > &results) {
+    // print header
     printLine(names.size() * WIDTH_PER_COL);
     for (const auto &name : names) {
         cout << "|" << setw(WIDTH_PER_COL - 1) << name;
     }
     cout << "|\n";
+
+    // print data
     printLine(names.size() * WIDTH_PER_COL);
     for (const auto &record : results) {
         for (auto col : record) {
@@ -68,25 +71,26 @@ void IO::execute(Type next) {
         cout << delete_stmt.getId() << "\n";
     } else if (next == SELECT) {
         Query query_stmt = parser.query_stmt();
-        string table_id = query_stmt.getId();
 
+        string table_id = query_stmt.getId();
         vector<vector<int> > results;
         vector<string> names = query_stmt.getColumns();
 
         int number = engine.query(query_stmt, results);
         if (number > 0) {
+            // replace * with column names
             if (std::find(names.begin(), names.end(), "*")
                     != names.end()) {
                 names = engine.getColumns(table_id);
             }
-
+            // print results
             printData(names, results);
 
             cout << number << " matching rows in ";
-            cout << query_stmt.getId() << "\n";
+            cout << table_id << "\n";
         } else {
             cout << "No matching rows in ";
-            cout << query_stmt.getId() << "\n";
+            cout << table_id << "\n";
         }
     } else if (next == END) {
         return;

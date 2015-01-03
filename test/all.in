@@ -16,55 +16,65 @@ CREATE TABLE Student4(sid INT,
 PRIMARY KEY (sid, height),
 age INT DEFAULT = 18);
 
+CREATE TABLE Student(sid INT,
+age INT DEFAULT = 18,
+PRIMARY KEY (sid));
+
 INSERT INTO Student(sid, age) VALUES(1111, 18);
 INSERT INTO Student(sid, age, age) VALUES(1111, 18, 19);
-
 INSERT INTO Student(sid, height) VALUES(1111, 18);
 INSERT INTO Student(sid, age) VALUES(1111, 18, 19);
+INSERT INTO Student(sid, age) VALUES(1111, 18);
+INSERT INTO Student5(sid, age) VALUES(1111, 18);
+INSERT INTO Student(age) VALUES(20);
+INSERT INTO Student(sid) VALUES(20);
 
-DELETE FROM Student WHERE age < 18 && age > 14;
+SELECT * FROM Student;
+SELECT sid, age FROM Student;
+SELECT age FROM Student;
 SELECT sid, age FROM Student WHERE age < 18;
+SELECT sid, age FROM Student WHERE age < sid;
+SELECT sid, height FROM Student WHERE age < 18;
+SELECT sid, age FROM Student WHERE height < 180;
+
+INSERT INTO Student(sid, age) VALUES(90, 25);
+SELECT * FROM Student
+WHERE age + 7 > 19 + 6 && sid <> 6 / 3 - 2;
+SELECT sid, age FROM Student WHERE age + 1 / 2 >= 18 && sid <> 1111;
+INSERT INTO Student(sid, age) VALUES(6 * 3 / 4 + 1, 32 * 3 - 6 / 2);
+SELECT * FROM Student;
+
+CREATE TABLE Student2(sid INT DEFAULT = 6 * 3 / 4 + 1,
+age INT DEFAULT = 32 * 3 - 6 / 2, PRIMARY KEY (sid));
+INSERT INTO Student2(sid) VALUES(0);
+SELECT * FROM Student2;
+
+SELECT * FROM Student;
+DELETE FROM Student
+WHERE age + 7 > 19 + 6 && sid <> 6 / 3 - 2;
+SELECT * FROM Student;
+
+INSERT INTO Student(age, sid) VALUES(17, 25);
+SELECT * FROM Student;
+DELETE FROM Student WHERE age < 18 && age > 14;
+SELECT * FROM Student;
 
 DELETE FROM Student;
-SELECT sid, age FROM Student;
+SELECT * FROM Student;
 
 INSERT INTO Student(sid, age) VALUES(1, 10);
-SELECT sid, height FROM Student WHERE age < 18;
-
+SELECT * FROM Student;
 DELETE FROM Student WHERE age < 18 && height > 180;
 SELECT * FROM Student;
 
-INSERT INTO Student(sid, age) VALUES(2, 13);
-SELECT sid, age FROM Student WHERE height < 180;
-
-DELETE FROM Student WHERE age + 7 > 5 && sid <> 2;
-SELECT * FROM Student;
-SELECT age FROM Student WHERE age + 7 > 5
-
-INSERT INTO Student(sid, age) VALUES(5, 13);
-INSERT INTO Student(sid) VALUES(9);
-SELECT * FROM Student;
-SELECT age FROM Student WHERE age / 5 + 7 > sid;
-
-INSERT INTO Student(sid) VALUES(1 + (9 + 3) / 2);
-SELECT * FROM Student;
-INSERT INTO Student(age) VALUES(1 + (9 + 3) / 2);
-
-SELECT height / FROM Student;
-
-INSERT INTO Student(sid) VALUES(1 + (9 + 3) / 2);
-
-CREATE TABLE Student(sid INT DEFAULT = 6 * 3 / 4 + 1,
-age INT DEFAULT = 32 * 3 - 6 / 2);
-INSERT INTO Student(sid, age) VALUES(6 * 3 / 4 + 1, 32 * 3 - 6 / 2);
-
 INSERT INTO Student(sid, age) VALUES(6 * 3 / 0, 32 * 3 - 6 / 2);
 SELECT age FROM Student WHERE age / 0 + 7 > sid;
-SELECT * FROM Student WHERE sid / age >= 0;
 
 INSERT INTO Student(sid, age) VALUES(77, 0);
+SELECT * FROM Student;
 SELECT * FROM Student WHERE sid / age > sid;
 
-INSERT # INTO Student(sid, age) VALUES(55, 0);
-
-INSERT INTO Student(sid, age) VALUES(9, 0);
+SELECT / FROM Student;
+SELECT * FROM Student;
+INSERT # INTO Student(sid, age) VALUES(55, 5);
+SELECT * FROM Student;

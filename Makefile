@@ -33,7 +33,7 @@ PARSEMAINOBJ=$(PARSEMAIN:.cpp=.o)
 
 EXECUTABLE=bin/ssql
 
-all: $(EXECUTABLE)
+all: main
 
 main: $(OBJECTS) $(MAINOBJ)
 	mkdir -p bin
@@ -65,7 +65,7 @@ testlexer: $(OBJECTS) $(LEXMAINOBJ) $(LEXIN)
 	$(EXECUTABLE) $(LEXIN) > test/lexer.out
 	diff test/lexer.out test/lexer.good
 
-checkmem: $(EXECUTABLE)
+checkmem: main
 	valgrind --leak-check=full -v $(EXECUTABLE) $(ALLIN)
 
 test: main
