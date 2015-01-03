@@ -2,6 +2,8 @@
 
 namespace ssql {
 
+using std::size_t;
+
 map<string, Type> Lexer::words;
 map<char, Type> Lexer::singleOp;
 map<string, Type> Lexer::ops;
@@ -78,13 +80,14 @@ Token Lexer::next() {
             }
 
             string str(buffer);
-            for (int i = 0; i < str.size(); ++i) {
+            for (size_t i = 0; i < str.size(); ++i) {
                 str[i] = tolower(str[i]); // case insensitive
             }
 
             if (words.find(str) != words.end()) {  // keyword
                 return Token(words[str]);
             } else {
+                str = buffer;  // case sensitive for identifier
                 return Token(ID, str.c_str(), str.size());
             }
         } else if (isspace(peek)) {  // white space
@@ -100,7 +103,7 @@ Token Lexer::next() {
             int count = 0;
             do {
                 buffer[count++] = advance();
-            } while (isOp(peek));
+            } while (isOp(peek) && count << MAX_OP_SIZE);
 
             string str(buffer);
 
@@ -116,7 +119,9 @@ Token Lexer::next() {
 
             return Token(ops[str]);
         } else {  // error
-            throw LexError("Invalid lexeme");
+            string msg = "Invalid lexeme ";
+            msg.push_back(advance());
+            throw LexError(msg);
         }
     }
 

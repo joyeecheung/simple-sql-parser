@@ -1,5 +1,5 @@
-CREATE TABLE Student(sid INT DEFAULT = 6 * -3 / -4 + 1, age INT DEFAULT = +32 * 3 - 6 / 2);
 INSERT INTO Student(sid, age) VALUES(-6 * 3 / 4 + 1, +32 * 3 - 6 / 2);
+CREATE TABLE Student(sid INT DEFAULT = 6 * -3 / -4 + 1, age INT DEFAULT = +32 * 3 - 6 / 2);
 DELETE FROM Student WHERE age + 7 > 19 + 6 && sid <> 6 / 3 * 5 - 2;
 CREATE TABLE Student(sid INT, age INT DEFAULT = 18, PRIMARY KEY (sid));
 INSERT INTO Student(sid, age) VALUES(1111, 18);

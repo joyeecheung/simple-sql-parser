@@ -5,240 +5,240 @@
 # if epsilon in first(A) and $ in follow(A), add A -> alpha to [A, $]
 
 
-ssql_stmt -> create_stmt | insert_stmt | delete_stmt | query_stmt
+ssql\_stmt -> create\_stmt | insert\_stmt | delete\_stmt | query\_stmt
 {CREATE, INSERT, DELETE, SELECT}, {$}
 -----------
-CREATE: create_stmt ->  CREATE TABLE id L_PAREN decl_list R_PAREN SEMICOLON
-INSERT: insert_stmt -> INSERT INTO id L_PAREN column_list R_PAREN VALUES L_PAREN value_list R_PAREN SEMICOLON
-DELETE: delete_stmt -> DELETE FROM id where_clause SEMICOLON
-SELECT: query_stmt -> SELECT select_list FROM id where_clause SEMICOLON
+CREATE: create\_stmt ->  CREATE TABLE id L\_PAREN decl\_list R\_PAREN SEMICOLON
+INSERT: insert\_stmt -> INSERT INTO id L\_PAREN column\_list R\_PAREN VALUES L\_PAREN value\_list R\_PAREN SEMICOLON
+DELETE: delete\_stmt -> DELETE FROM id where\_clause SEMICOLON
+SELECT: query\_stmt -> SELECT select\_list FROM id where\_clause SEMICOLON
 
 
 -----------------------
-create_stmt
--> CREATE TABLE id L_PAREN decl_list R_PAREN SEMICOLON
+create\_stmt
+-> CREATE TABLE id L\_PAREN decl\_list R\_PAREN SEMICOLON
 ------------
 {CREATE}, {$}
 ------------
 CREATE:
-create_stmt ->  CREATE TABLE id L_PAREN decl_list R_PAREN SEMICOLON
+create\_stmt ->  CREATE TABLE id L\_PAREN decl\_list R\_PAREN SEMICOLON
 
 
 ------------------------
-decl_list
--> decl _decl_list
+decl\_list
+-> decl \_decl\_list
 ------------
-{id, PRIMARY}, {R_PAREN}
+{id, PRIMARY}, {R\_PAREN}
 ------------
 id:
-decl_list -> decl _decl_list
+decl\_list -> decl \_decl\_list
 PRIMARY:
-decl_list -> decl _decl_list
+decl\_list -> decl \_decl\_list
 
 ------------------------
-_decl_list
--> COMMA decl _decl_list
+\_decl\_list
+-> COMMA decl \_decl\_list
 -> epsilon
 ------------
-{COMMA, epsilon}, {R_PAREN}
+{COMMA, epsilon}, {R\_PAREN}
 ------------
 COMMA:
-_decl_list -> COMMA decl _decl_list
-R_PAREN:
-_decl_list -> epsilon
+\_decl\_list -> COMMA decl \_decl\_list
+R\_PAREN:
+\_decl\_list -> epsilon
 
 ------------------------
 decl
--> id INT default_spec
--> PRIMARY KEY L_PAREN column_list R_PAREN
+-> id INT default\_spec
+-> PRIMARY KEY L\_PAREN column\_list R\_PAREN
 ------------
-{id, PRIMARY}, {COMMA, R_PAREN}
+{id, PRIMARY}, {COMMA, R\_PAREN}
 ------------
 id:
-decl -> id INT default_spec
+decl -> id INT default\_spec
 PRIMARY:
-PRIMARY KEY L_PAREN column_list R_PAREN
+PRIMARY KEY L\_PAREN column\_list R\_PAREN
 
 ------------------------
-default_spec
+default\_spec
 -> DEFAULT ASSIGN expr[true]
 -> epsilon
 ------------
-{DEFAULT, epsilon}, {COMMA, R_PAREN}
+{DEFAULT, epsilon}, {COMMA, R\_PAREN}
 ------------
 DEFAULT:
-default_spec -> DEFAULT ASSIGN expr[true]
+default\_spec -> DEFAULT ASSIGN expr[true]
 COMMA:
-default_spec -> epsilon
-R_PAREN:
-default_spec -> epsilon
+default\_spec -> epsilon
+R\_PAREN:
+default\_spec -> epsilon
 
 -----------------------
-column_list
--> id _column_list
+column\_list
+-> id \_column\_list
 ------------
-{id}, {FROM, R_PAREN}
+{id}, {FROM, R\_PAREN}
 ------------
 id:
-column_list ->  id _column_list
+column\_list ->  id \_column\_list
 
 -----------------------
-_column_list
--> COMMA id _column_list
+\_column\_list
+-> COMMA id \_column\_list
 -> epsilon
 ------------
-{COMMA, epsilon}, {FROM, R_PAREN}
+{COMMA, epsilon}, {FROM, R\_PAREN}
 ------------
 COMMA:
-_column_list -> COMMA id _column_list
+\_column\_list -> COMMA id \_column\_list
 FROM:
-_column_list -> epsilon
-R_PAREN:
-_column_list -> epsilon
+\_column\_list -> epsilon
+R\_PAREN:
+\_column\_list -> epsilon
 
 
 -----------------------
-insert_stmt
+insert\_stmt
 ------------
 {INSERT}, {$}
 ------------
 INSERT:
-insert_stmt -> INSERT INTO id L_PAREN column_list R_PAREN VALUES L_PAREN value_list R_PAREN SEMICOLON
+insert\_stmt -> INSERT INTO id L\_PAREN column\_list R\_PAREN VALUES L\_PAREN value\_list R\_PAREN SEMICOLON
 
 
 -----------------------
-value_list
--> expr[true] _value_list
+value\_list
+-> expr[true] \_value\_list
 ------------
-{PLUS, MINUS, num, L_PAREN}, {R_PAREN}
+{PLUS, MINUS, num, L\_PAREN}, {R\_PAREN}
 ------------
 PLUS:
-value_list -> expr[true] _value_list
+value\_list -> expr[true] \_value\_list
 MINUS:
-value_list -> expr[true] _value_list
+value\_list -> expr[true] \_value\_list
 num:
-value_list -> expr[true] _value_list
-L_PAREN:
-value_list -> expr[true] _value_list
+value\_list -> expr[true] \_value\_list
+L\_PAREN:
+value\_list -> expr[true] \_value\_list
 
 
 -----------------------
-_value_list
--> COMMA expr[true] _value_list
+\_value\_list
+-> COMMA expr[true] \_value\_list
 -> epsilon
 ------------
-{COMMA, epsilon}, {R_PAREN}
+{COMMA, epsilon}, {R\_PAREN}
 ------------
 COMMA:
-_value_list -> COMMA expr[true] _value_list
-R_PAREN:
-_value_list -> epsilon
+\_value\_list -> COMMA expr[true] \_value\_list
+R\_PAREN:
+\_value\_list -> epsilon
 
 
 -----------------------
-delete_stmt
+delete\_stmt
 ------------
 {DELETE}, {$}
 ------------
 DELETE:
-delete_stmt -> DELETE FROM id where_clause SEMICOLON
+delete\_stmt -> DELETE FROM id where\_clause SEMICOLON
 
 
 -----------------------
-where_clause
+where\_clause
 -> WHERE disjunct
 -> epsilon
 ------------
 {WHERE, epsilon}, {SEMICOLON}
 ------------
 WHERE:
-where_clause -> WHERE conjunct_list
+where\_clause -> WHERE disjunct
 SEMICOLON:
-where_clause -> epsilon
+where\_clause -> epsilon
 
 
 -----------------------
 disjunct
--> conjunct _disjunct
+-> conjunct \_disjunct
 ------------
-{L_PAREN, NOT, PLUS, MINUS, num, id}, {SEMICOLON, R_PAREN}
+{L\_PAREN, NOT, PLUS, MINUS, num, id}, {SEMICOLON, R\_PAREN}
 ------------
-L_PAREN:
-disjunct -> conjunct _disjunct
+L\_PAREN:
+disjunct -> conjunct \_disjunct
 NOT:
-disjunct -> conjunct _disjunct
+disjunct -> conjunct \_disjunct
 PLUS:
-disjunct -> conjunct _disjunct
+disjunct -> conjunct \_disjunct
 MINUS:
-disjunct -> conjunct _disjunct
+disjunct -> conjunct \_disjunct
 num:
-disjunct -> conjunct _disjunct
+disjunct -> conjunct \_disjunct
 id:
-disjunct -> conjunct _disjunct
+disjunct -> conjunct \_disjunct
 
 
 -----------------------
-_disjunct
--> OR conjunct _disjunct
+\_disjunct
+-> OR conjunct \_disjunct
 -> epsilon
 ------------
-{OR, epsilon}, {SEMICOLON, R_PAREN}
+{OR, epsilon}, {SEMICOLON, R\_PAREN}
 ------------
 OR:
-_disjunct -> OR conjunct _disjunct
+\_disjunct -> OR conjunct \_disjunct
 SEMICOLON:
-_disjunct-> epsilon
-R_PAREN:
-_disjunct-> epsilon
+\_disjunct-> epsilon
+R\_PAREN:
+\_disjunct-> epsilon
 
 
 -----------------------
 conjunct
--> bool _conjunct
+-> bool \_conjunct
 ------------
-{L_PAREN, NOT, PLUS, MINUS, num, id}, {OR, SEMICOLON, R_PAREN}
+{L\_PAREN, NOT, PLUS, MINUS, num, id}, {OR, SEMICOLON, R\_PAREN}
 ------------
-L_PAREN:
-conjunct -> bool _conjunct
+L\_PAREN:
+conjunct -> bool \_conjunct
 NOT:
-conjunct -> bool _conjunct
+conjunct -> bool \_conjunct
 PLUS:
-conjunct -> bool _conjunct
+conjunct -> bool \_conjunct
 MINUS:
-conjunct -> bool _conjunct
+conjunct -> bool \_conjunct
 num:
-conjunct -> bool _conjunct
+conjunct -> bool \_conjunct
 id:
-conjunct -> bool _conjunct
+conjunct -> bool \_conjunct
 
 
 -----------------------
-_conjunct
--> AND bool _conjunct
+\_conjunct
+-> AND bool \_conjunct
 -> epsilon
 ------------
-{AND, epsilon}, {OR, SEMICOLON, R_PAREN}
+{AND, epsilon}, {OR, SEMICOLON, R\_PAREN}
 ------------
 AND:
-conjunct_list -> bool _conjunct
+conjunct\_list -> bool \_conjunct
 OR:
-_conjunct -> epsilon
+\_conjunct -> epsilon
 SEMICOLON:
-_conjunct -> epsilon
-R_PAREN:
-_conjunct -> epsilon
+\_conjunct -> epsilon
+R\_PAREN:
+\_conjunct -> epsilon
 
 
 -----------------------
 bool
--> L_PAREN disjunct R_PAREN
+-> L\_PAREN disjunct R\_PAREN
 -> NOT bool
 -> comp
 ------------
-{L_PAREN, NOT, PLUS, MINUS, num, id}, {AND, OR, SEMICOLON, R_PAREN}
+{L\_PAREN, NOT, PLUS, MINUS, num, id}, {AND, OR, SEMICOLON, R\_PAREN}
 ------------
-L_PAREN:
-    bool -> L_PAREN disjunct R_PAREN
+L\_PAREN:
+    bool -> L\_PAREN disjunct R\_PAREN
 NOT:
     bool -> NOT bool
 PLUS:
@@ -255,7 +255,7 @@ id:
 comp
 -> expr[false] rop expr[false]
 ------------
-{PLUS, MINUS, num, id}, {AND, OR, SEMICOLON, R_PAREN}
+{PLUS, MINUS, num, id}, {AND, OR, SEMICOLON, R\_PAREN}
 ------------
 PLUS:
     comp -> expr[false] rop expr[false]
@@ -269,87 +269,87 @@ id:
 
 -----------------------
 expr[]
--> term[] _expr[]
+-> term[] \_expr[]
 ------------
-{PLUS, MINUS, num} true{L_PAREN} false{id}
-true{COMMA, R_PAREN} false{NEQ, EQ, LT, GT, LEQ, GEQ, AND, OR, SEMICOLON, R_PAREN}
+{PLUS, MINUS, num} true{L\_PAREN} false{id}
+true{COMMA, R\_PAREN} false{NEQ, EQ, LT, GT, LEQ, GEQ, AND, OR, SEMICOLON, R\_PAREN}
 ------------
 PLUS:
-    expr[] -> term[] _expr[]
+    expr[] -> term[] \_expr[]
 MINUS:
-    expr[] -> term[] _expr[]
+    expr[] -> term[] \_expr[]
 num:
-    expr[] -> term[] _expr[]
-L_PAREN && simple == true:
-    expr[true] -> term[true] _expr[true]
+    expr[] -> term[] \_expr[]
+L\_PAREN && simple == true:
+    expr[true] -> term[true] \_expr[true]
 id && simple == false:
-    expr[false] -> term[false] _expr[false]
+    expr[false] -> term[false] \_expr[false]
 
 
 -----------------------
-_expr[]
--> PLUS term[] _expr[]
--> MINUS term[] _expr[]
+\_expr[]
+-> PLUS term[] \_expr[]
+-> MINUS term[] \_expr[]
 -> epsilon
 ------------
 {PLUS, MINUS, epsilon},
-true{COMMA, R_PAREN}
-false{NEQ, EQ, LT, GT, LEQ, GEQ, AND, OR, SEMICOLON, R_PAREN}
+true{COMMA, R\_PAREN}
+false{NEQ, EQ, LT, GT, LEQ, GEQ, AND, OR, SEMICOLON, R\_PAREN}
 ------------
 PLUS:
-    _expr[] -> PLUS term[] _expr[]
+    \_expr[] -> PLUS term[] \_expr[]
 MINUS:
-    _expr[] -> MINUS term[] _expr[]
+    \_expr[] -> MINUS term[] \_expr[]
 true:
-    COMMA || R_PAREN:
-        _expr[] -> epsilon
+    COMMA || R\_PAREN:
+        \_expr[] -> epsilon
 false:
-    NEQ || EQ || LT || GT || LEQ || GEQ || AND || OR || SEMICOLON || R_PAREN
-        _expr[] -> epsilon
+    NEQ || EQ || LT || GT || LEQ || GEQ || AND || OR || SEMICOLON || R\_PAREN
+        \_expr[] -> epsilon
 
 
 -----------------------
 term[]
--> unary[] _term[]
+-> unary[] \_term[]
 ------------
-{PLUS, MINUS, num} true{L_PAREN} false{id}
-true{PLUS, MINUS, COMMA, R_PAREN}
-false{PLUS, MINUS, NEQ, EQ, LT, GT, LEQ, GEQ, AND, OR, SEMICOLON, R_PAREN}
+{PLUS, MINUS, num} true{L\_PAREN} false{id}
+true{PLUS, MINUS, COMMA, R\_PAREN}
+false{PLUS, MINUS, NEQ, EQ, LT, GT, LEQ, GEQ, AND, OR, SEMICOLON, R\_PAREN}
 ------------
 PLUS:
-    term[] -> unary[] _term[]
+    term[] -> unary[] \_term[]
 MINUS:
-    term[] -> unary[] _term[]
+    term[] -> unary[] \_term[]
 num:
-    term[] -> unary[] _term[]
-L_PAREN && simple == true:
-    term[true] -> unary[true] _term[true]
+    term[] -> unary[] \_term[]
+L\_PAREN && simple == true:
+    term[true] -> unary[true] \_term[true]
 id && simple == false:
-    term[false] -> unary[false] _term[false]
+    term[false] -> unary[false] \_term[false]
 
 
 -----------------------
-_term[]
--> MUL unary[] _term[]
--> DIV unary[] _term[]
+\_term[]
+-> MUL unary[] \_term[]
+-> DIV unary[] \_term[]
 -> epsilon
 ------------
 {MUL, DIV, epsilon},
-true{PLUS, MINUS, COMMA, R_PAREN}
-false{PLUS, MINUS, NEQ, EQ, LT, GT, LEQ, GEQ, AND, OR, SEMICOLON, R_PAREN}
+true{PLUS, MINUS, COMMA, R\_PAREN}
+false{PLUS, MINUS, NEQ, EQ, LT, GT, LEQ, GEQ, AND, OR, SEMICOLON, R\_PAREN}
 ------------
 MUL:
-    _term[] -> MUL unary[] _term[]
+    \_term[] -> MUL unary[] \_term[]
 DIV:
-    _term[] -> DIV unary[] _term[]
+    \_term[] -> DIV unary[] \_term[]
 PLUS || MINUS:
-    _term[] -> epsilon
+    \_term[] -> epsilon
 true:
-    COMMA || R_PAREN:
-        _term[] -> epsilon
+    COMMA || R\_PAREN:
+        \_term[] -> epsilon
 false:
-    NEQ || EQ || LT || GT || LEQ || GEQ || AND || OR || SEMICOLON || R_PAREN
-        _term[] -> epsilon
+    NEQ || EQ || LT || GT || LEQ || GEQ || AND || OR || SEMICOLON || R\_PAREN
+        \_term[] -> epsilon
 
 
 
@@ -358,12 +358,12 @@ unary[]
 -> PLUS unary[]
 -> MINUS unary[]
 -> num
-[true] -> L_PAREN expr[true] R_PAREN
+[true] -> L\_PAREN expr[true] R\_PAREN
 [false] -> id
 ------------
-{PLUS, MINUS, num, L_PAREN}
-true {MUL, DIV, PLUS, MINUS, COMMA, R_PAREN}
-false {MUL, DIV, PLUS, MINUS, NEQ, EQ, LT, GT, LEQ, GEQ, AND, OR, SEMICOLON, R_PAREN}
+{PLUS, MINUS, num, L\_PAREN}
+true {MUL, DIV, PLUS, MINUS, COMMA, R\_PAREN}
+false {MUL, DIV, PLUS, MINUS, NEQ, EQ, LT, GT, LEQ, GEQ, AND, OR, SEMICOLON, R\_PAREN}
 ------------
 PLUS:
     unary[] -> PLUS unary[]
@@ -371,8 +371,8 @@ MINUS:
     unary[] -> MINUS unary[]
 num:
     unary[] -> num
-L_PAREN && simple == true:
-    unary[true] -> L_PAREN expr[true] R_PAREN
+L\_PAREN && simple == true:
+    unary[true] -> L\_PAREN expr[true] R\_PAREN
 id && simple == false:
     unary[false] -> id
 
@@ -396,19 +396,19 @@ GEQ:
 rop -> GEQ
 
 -----------------------
-query_stmt
+query\_stmt
 ------------
 {SELECT}, {$}
 ------------
 SELECT:
-query_stmt -> SELECT select_list FROM id where_clause SEMICOLON
+query\_stmt -> SELECT select\_list FROM id where\_clause SEMICOLON
 
 -----------------------
-select_list
+select\_list
 ------------
 {MUL, id}, {FROM, $}
 ------------
 MUL:
-select_list -> MUL
+select\_list -> MUL
 id:
-select_list -> column_list
+select\_list -> column\_list

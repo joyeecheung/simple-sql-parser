@@ -1,0 +1,174 @@
+Created table Student
+line 8: Multiple definitions for age
+line 13: Multiple primary key definitions
+line 17: Undefined key height
+line 21: Table Student already exists
+Inserted 1 rows into table Student
+line 24: Duplicate column age
+line 25: Column height is not in the schema
+line 26: Numbers of columns and values do not match
+line 27: Record already exists
+line 28: Cannot find table Student5
+line 29: Key sid not found
+Inserted 1 rows into table Student
+------------------------------
+|           age|           sid|
+------------------------------
+|            18|          1111|
+------------------------------
+|            18|            20|
+------------------------------
+2 matching rows in Student
+------------------------------
+|           sid|           age|
+------------------------------
+|          1111|            18|
+------------------------------
+|            20|            18|
+------------------------------
+2 matching rows in Student
+---------------
+|           age|
+---------------
+|            18|
+---------------
+|            18|
+---------------
+2 matching rows in Student
+No matching rows in Student
+------------------------------
+|           sid|           age|
+------------------------------
+|          1111|            18|
+------------------------------
+|            20|            18|
+------------------------------
+2 matching rows in Student
+line 37: Column height is not in the schema
+line 38, height not found in the scheme
+Inserted 1 rows into table Student
+------------------------------
+|           age|           sid|
+------------------------------
+|            25|            90|
+------------------------------
+1 matching rows in Student
+------------------------------
+|           sid|           age|
+------------------------------
+|            20|            18|
+------------------------------
+|            90|            25|
+------------------------------
+2 matching rows in Student
+Inserted 1 rows into table Student
+------------------------------
+|           age|           sid|
+------------------------------
+|            18|          1111|
+------------------------------
+|            18|            20|
+------------------------------
+|            25|            90|
+------------------------------
+|            93|             5|
+------------------------------
+4 matching rows in Student
+Created table Student2
+Inserted 1 rows into table Student2
+------------------------------
+|           age|           sid|
+------------------------------
+|            93|             0|
+------------------------------
+1 matching rows in Student2
+------------------------------
+|           age|           sid|
+------------------------------
+|            18|          1111|
+------------------------------
+|            18|            20|
+------------------------------
+|            25|            90|
+------------------------------
+|            93|             5|
+------------------------------
+4 matching rows in Student
+Deleted 2 rows from table Student
+------------------------------
+|           age|           sid|
+------------------------------
+|            18|          1111|
+------------------------------
+|            18|            20|
+------------------------------
+2 matching rows in Student
+Inserted 1 rows into table Student
+------------------------------
+|           age|           sid|
+------------------------------
+|            18|          1111|
+------------------------------
+|            18|            20|
+------------------------------
+|            17|            25|
+------------------------------
+3 matching rows in Student
+Deleted 1 rows from table Student
+------------------------------
+|           age|           sid|
+------------------------------
+|            18|          1111|
+------------------------------
+|            18|            20|
+------------------------------
+2 matching rows in Student
+Deleted 2 rows from table Student
+No matching rows in Student
+Inserted 1 rows into table Student
+------------------------------
+|           age|           sid|
+------------------------------
+|            10|             1|
+------------------------------
+1 matching rows in Student
+line 67, height not found in the scheme
+------------------------------
+|           age|           sid|
+------------------------------
+|            10|             1|
+------------------------------
+1 matching rows in Student
+line 70, Division by zero
+line 71, Division by zero
+Inserted 1 rows into table Student
+------------------------------
+|           age|           sid|
+------------------------------
+|            10|             1|
+------------------------------
+|             0|            77|
+------------------------------
+2 matching rows in Student
+line 75, Division by zero
+line 77, column 7: Syntax error
+------------------------------
+|           age|           sid|
+------------------------------
+|            10|             1|
+------------------------------
+|             0|            77|
+------------------------------
+2 matching rows in Student
+line 79, column 9: Invalid lexeme #
+Inserted 1 rows into table Student
+------------------------------
+|           age|           sid|
+------------------------------
+|            10|             1|
+------------------------------
+|             0|            77|
+------------------------------
+|             5|            55|
+------------------------------
+3 matching rows in Student

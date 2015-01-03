@@ -1,20 +1,30 @@
 CC=clang++
-#CFLAGS=-c -Wall -DTRACK -std=c++11
-CFLAGS=-c -Wall -std=c++11
+CXXFLAGS=-c -Wall -std=c++11
+
+#For debug
+#CXXFLAGS=-c -Wall -DTRACK -std=c++11
+
+#For environment without clang++
+#CC=g++
+#CXXFLAGS=-c -Wall -std=c++0x
 
 TOKEN=src/Token.cpp
 LEXER=src/Lexer.cpp
 EXPR=src/Expr.cpp
 PARSER=src/Parser.cpp
+TABLE=src/Table.cpp
+ENGINE=src/Engine.cpp
+IO=src/IO.cpp
 
 LEXMAIN=src/test_lexer.cpp
 PARSEMAIN=src/test_parser.cpp
-MAIN=src/test_parser.cpp
+MAIN=src/main.cpp
 
 LEXIN=test/lexer.in
 PARSEIN=test/parser.in
+ALLIN=test/all.in
 
-SOURCES=$(TOKEN) $(LEXER) $(EXPR) $(PARSER)
+SOURCES=$(TOKEN) $(LEXER) $(EXPR) $(PARSER) $(TABLE) $(ENGINE) $(IO)
 OBJECTS=$(SOURCES:.cpp=.o)
 
 MAINOBJ=$(MAIN:.cpp=.o)
@@ -23,10 +33,11 @@ PARSEMAINOBJ=$(PARSEMAIN:.cpp=.o)
 
 EXECUTABLE=bin/ssql
 
-all: $(SOURCES) $(EXECUTABLE)
+all: main
 
-$(EXECUTABLE): $(OBJECTS) $(MAINOBJ)
-	$(CC) $(OBJECTS) $(MAINOBJ) -g -o $@
+main: $(OBJECTS) $(MAINOBJ)
+	mkdir -p bin
+	$(CC) $(OBJECTS) $(MAINOBJ) -g -o $(EXECUTABLE)
 
 $(OBJECTS) : $(SOURCES)
 
@@ -37,21 +48,28 @@ $(LEXMAINOBJ) : $(LEXMAIN)
 $(PARSEMAINOBJ) : $(PARSEMAIN)
 
 %.o: %.cpp
-	$(CC) $(CFLAGS) $< -g -o $@
+	$(CC) $(CXXFLAGS) $< -g -o $@
 
 clean:
 	rm -f src/*.o $(EXECUTABLE)
 
 testparser: $(OBJECTS) $(PARSEMAINOBJ) $(PARSEIN)
+	mkdir -p bin
 	$(CC) $(OBJECTS) $(PARSEMAINOBJ) -g -o $(EXECUTABLE)
-	$(EXECUTABLE) $(PARSEIN)
+	$(EXECUTABLE) $(PARSEIN) > test/parser.out
+	diff test/parser.out test/parser.good
 
 testlexer: $(OBJECTS) $(LEXMAINOBJ) $(LEXIN)
+	mkdir -p bin
 	$(CC) $(OBJECTS) $(LEXMAINOBJ) -g -o $(EXECUTABLE)
 	$(EXECUTABLE) $(LEXIN) > test/lexer.out
 	diff test/lexer.out test/lexer.good
 
-checkmem: $(testparser)
-	valgrind --leak-check=full -v $(EXECUTABLE) $(PARSEIN)
+checkmem: main
+	valgrind --leak-check=full -v $(EXECUTABLE) $(ALLIN)
 
-.PHONY: testparser testlexer checkmem
+test: main
+	$(EXECUTABLE) $(ALLIN) > test/all.out
+	diff test/all.out test/all.good
+
+.PHONY: testparser testlexer checkmem test
