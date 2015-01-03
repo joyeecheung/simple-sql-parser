@@ -6,7 +6,7 @@ CXXFLAGS=-c -Wall -std=c++11
 
 #For environment without clang++
 #CC=g++
-#CFLAG=-c -Wall -std=c++0x
+#CXXFLAGS=-c -Wall -std=c++0x
 
 TOKEN=src/Token.cpp
 LEXER=src/Lexer.cpp
@@ -35,9 +35,9 @@ EXECUTABLE=bin/ssql
 
 all: $(EXECUTABLE)
 
-$(EXECUTABLE): $(OBJECTS) $(MAINOBJ)
+main: $(OBJECTS) $(MAINOBJ)
 	mkdir -p bin
-	$(CC) $(OBJECTS) $(MAINOBJ) -g -o $@
+	$(CC) $(OBJECTS) $(MAINOBJ) -g -o $(EXECUTABLE)
 
 $(OBJECTS) : $(SOURCES)
 
@@ -68,7 +68,7 @@ testlexer: $(OBJECTS) $(LEXMAINOBJ) $(LEXIN)
 checkmem: $(EXECUTABLE)
 	valgrind --leak-check=full -v $(EXECUTABLE) $(ALLIN)
 
-test: $(EXECUTABLE)
+test: main
 	$(EXECUTABLE) $(ALLIN) > test/all.out
 	diff test/all.out test/all.good
 

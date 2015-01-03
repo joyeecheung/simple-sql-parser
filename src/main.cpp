@@ -29,6 +29,8 @@ int main(int argc, char const *argv[]) {
     Parser parser(*lexptr);
     Engine engine;
     IO io(parser, *lexptr, engine);
+
+    // try-catch in case the first lexeme is invalid
     try {
         io.loop();
     } catch (LexError e) {

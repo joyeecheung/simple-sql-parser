@@ -19,10 +19,14 @@ using std::setw;
 class IO {
 public:
     IO(Parser &p, Lexer &l, Engine &e) : parser(p), lexer(l), engine(e) {}
+    // print a line of ch with given length
     void printLine(int length, char ch = '-');
+    // print the data inside  given results and column names
     void printData(const vector<string> &names,
                     vector<vector<int> > &results);
+    // loop to execute statements
     void loop();
+    // execute statements, output error prompts
     void execute(Type next);
 private:
     Parser &parser;
